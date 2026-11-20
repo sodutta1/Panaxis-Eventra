@@ -30,3 +30,31 @@ Commands run and findings:
 4. Root .gitignore added: **/.env, **/.env.* (except .env.example), vendor,
    node_modules, storage logs, build output.
 5. GitHub repo creation + push: GATED - waiting on owner's `gh auth login`.
+
+## Phase 1 - Run backend and database
+
+Toolchain (no root, no Docker in sandbox):
+- PHP 8.5.8 static cli (static-php.dev), Composer 2.11.2 phar - matches composer.json `php: ^8.5`.
+- MySQL Server 8.0.46 (Ubuntu mysql-server-core-8.0 deb extracted, no root),
+  port 3307, socket in /downloads/mysqlsrv/run.
+
+Commands run:
+- mysqld --initialize-insecure + start on 127.0.0.1:3307 - OK
+- CREATE DATABASE panaxis_eventra (utf8mb4); CREATE USER eventra_app@localhost/127.0.0.1
+  with GRANT on panaxis_eventra.* only (least privilege, not root). Password:
+  40-hex random, stored only in backend/.env (gitignored).
+- composer install - OK (exit 0)
+- cp .env.example .env; DB_* set; php artisan key:generate - OK
+  (note: .env.example ships DB_* lines commented out; sed of uncommented
+  lines is required - gotcha hit and fixed)
+- php artisan migrate:fresh --seed - OK: 11 migrations, seed OK
+  (6 users, 8 roles, 7 events, 2 leads, 2 invoices)
+- php artisan test - PASS: 10 tests, 23 assertions, 0 failures (exit 0)
+- php artisan route:list saved to docs/route-list.txt - 82 web routes
+- php artisan serve (127.0.0.1:8000): /login 200, / 200, /events 302 (auth redirect) - OK
+
+Changes made:
+- config/database.php: replaced deprecated PDO::MYSQL_ATTR_SSL_CA with a
+  compat constant (Pdo\Mysql::ATTR_SSL_CA when available). One remaining
+  deprecation comes from Laravel's own merged vendor config on PHP 8.5 -
+  upstream framework issue, does not fail tests; tracked for Phase 6.

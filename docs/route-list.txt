@@ -1,0 +1,90 @@
+
+Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in /home/sandbox/panaxis-eventra/Panaxis-Eventra/backend/vendor/laravel/framework/config/database.php on line 61
+
+Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in /home/sandbox/panaxis-eventra/Panaxis-Eventra/backend/vendor/laravel/framework/config/database.php on line 81
+
+  GET|HEAD        / .......................................................... 
+  GET|HEAD        clients ............. clients.index › ClientController@index
+  POST            clients ............. clients.store › ClientController@store
+  GET|HEAD        clients/create .... clients.create › ClientController@create
+  GET|HEAD        clients/{client} ...... clients.show › ClientController@show
+  PUT|PATCH       clients/{client} .. clients.update › ClientController@update
+  DELETE          clients/{client} clients.destroy › ClientController@destroy
+  GET|HEAD        clients/{client}/edit . clients.edit › ClientController@edit
+  GET|HEAD        dashboard ............ dashboard › DashboardController@index
+  GET|HEAD        demo-login/{id} ...... demo.login › AuthController@demoLogin
+  GET|HEAD        events ................ events.index › EventController@index
+  POST            events ................ events.store › EventController@store
+  GET|HEAD        events/create ....... events.create › EventController@create
+  GET|HEAD        events/{event} .......... events.show › EventController@show
+  PUT|PATCH       events/{event} ...... events.update › EventController@update
+  DELETE          events/{event} .... events.destroy › EventController@destroy
+  GET|HEAD        events/{event}/edit ..... events.edit › EventController@edit
+  POST            events/{event}/schedules events.schedules.store › EventCont…
+  POST            events/{event}/status events.status › EventController@updat…
+  POST            events/{event}/tasks events.tasks.store › EventController@a…
+  GET|HEAD        expenses .......... expenses.index › ExpenseController@index
+  POST            expenses .......... expenses.store › ExpenseController@store
+  POST            expenses/{expense}/approve expenses.approve › ExpenseContro…
+  GET|HEAD        guests ................ guests.index › GuestController@index
+  POST            guests ................ guests.store › GuestController@store
+  POST            guests/{guest}/checkin guests.checkin › GuestController@tog…
+  GET|HEAD        inventory ...... inventory.index › InventoryController@index
+  POST            inventory ...... inventory.store › InventoryController@store
+  GET|HEAD        invoices .......... invoices.index › InvoiceController@index
+  POST            invoices .......... invoices.store › InvoiceController@store
+  GET|HEAD        invoices/create . invoices.create › InvoiceController@create
+  GET|HEAD        invoices/{invoice} .. invoices.show › InvoiceController@show
+  PUT|PATCH       invoices/{invoice} invoices.update › InvoiceController@upda…
+  DELETE          invoices/{invoice} invoices.destroy › InvoiceController@des…
+  GET|HEAD        invoices/{invoice}/edit invoices.edit › InvoiceController@e…
+  POST            invoices/{invoice}/payments invoices.payments.store › Invoi…
+  GET|HEAD        invoices/{invoice}/print invoices.print › InvoiceController…
+  GET|HEAD        leads ................... leads.index › LeadController@index
+  POST            leads ................... leads.store › LeadController@store
+  GET|HEAD        leads/create .......... leads.create › LeadController@create
+  GET|HEAD        leads/{lead} .............. leads.show › LeadController@show
+  PUT|PATCH       leads/{lead} .......... leads.update › LeadController@update
+  DELETE          leads/{lead} ........ leads.destroy › LeadController@destroy
+  POST            leads/{lead}/convert leads.convert › LeadController@convert
+  GET|HEAD        leads/{lead}/edit ......... leads.edit › LeadController@edit
+  POST            leads/{lead}/status leads.status › LeadController@updateSta…
+  GET|HEAD        login ..................... login › AuthController@showLogin
+  POST            login .................... login.post › AuthController@login
+  POST            logout ...................... logout › AuthController@logout
+  GET|HEAD        portal/client portal.client › PortalController@clientPortal
+  GET|HEAD        portal/vendor portal.vendor › PortalController@vendorPortal
+  GET|HEAD        quotations .... quotations.index › QuotationController@index
+  POST            quotations .... quotations.store › QuotationController@store
+  GET|HEAD        quotations/create quotations.create › QuotationController@c…
+  GET|HEAD        quotations/{quotation} quotations.show › QuotationControlle…
+  PUT|PATCH       quotations/{quotation} quotations.update › QuotationControl…
+  DELETE          quotations/{quotation} quotations.destroy › QuotationContro…
+  GET|HEAD        quotations/{quotation}/edit quotations.edit › QuotationCont…
+  GET|HEAD        quotations/{quotation}/print quotations.print › QuotationCo…
+  GET|HEAD        reports ............. reports.index › ReportController@index
+  GET|HEAD        storage/{path} ............................... storage.local
+  POST            tasks/{task}/toggle tasks.toggle › EventController@toggleTa…
+  GET|HEAD        tickets ............. tickets.index › TicketController@index
+  POST            tickets ............. tickets.store › TicketController@store
+  POST            tickets/types tickets.types.store › TicketController@storeT…
+  POST            tickets/verify tickets.verify › TicketController@verifyTick…
+  GET|HEAD        tickets/{ticket}/print tickets.print › TicketController@pri…
+  GET|HEAD        up ......................................................... 
+  GET|HEAD        vendors ............. vendors.index › VendorController@index
+  POST            vendors ............. vendors.store › VendorController@store
+  GET|HEAD        vendors/create .... vendors.create › VendorController@create
+  GET|HEAD        vendors/{vendor} ...... vendors.show › VendorController@show
+  PUT|PATCH       vendors/{vendor} .. vendors.update › VendorController@update
+  DELETE          vendors/{vendor} vendors.destroy › VendorController@destroy
+  GET|HEAD        vendors/{vendor}/edit . vendors.edit › VendorController@edit
+  GET|HEAD        venues ................ venues.index › VenueController@index
+  POST            venues ................ venues.store › VenueController@store
+  GET|HEAD        venues/create ....... venues.create › VenueController@create
+  GET|HEAD        venues/{venue} .......... venues.show › VenueController@show
+  PUT|PATCH       venues/{venue} ...... venues.update › VenueController@update
+  DELETE          venues/{venue} .... venues.destroy › VenueController@destroy
+  GET|HEAD        venues/{venue}/edit ..... venues.edit › VenueController@edit
+
+                                                           Showing [82] routes
+
