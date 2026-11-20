@@ -37,6 +37,11 @@ const ICONS = {
   guests: { d: ['M8 3h8l1 3H7l1-3z', 'M7 6h10v15H7z', 'M9.5 13.5l2 2 3.5-4'] },
   tickets: { d: 'M3 9V7h18v2a2.5 2.5 0 000 5v2H3v-2a2.5 2.5 0 000-5zM13 7v2m0 3v2m0 3v2' },
   invoices: { d: ['M6 2h12v20l-3-2-3 2-3-2-3 2V2z', 'M9 8h6', 'M9 12h6'] },
+  workorders: { d: ['M4 7h10v10H4z', 'M14 10h4l3 3v4h-7', 'M7 21a2 2 0 100-4 2 2 0 000-4z'], circle: { cx: 17, cy: 19, r: 2 } },
+  scanner: { d: ['M3 8V4h4', 'M17 4h4v4', 'M20 16v4h-4', 'M7 20H3v-4', 'M3 12h18'] },
+  portal: { d: ['M12 3a9 9 0 100 18 9 9 0 000-18z', 'M3.5 9h17', 'M3.5 15h17', 'M12 3c3 3.5 3 14.5 0 18', 'M12 3c-3 3.5-3 14.5 0 18'] },
+  reports: { d: ['M4 20V10', 'M10 20V4', 'M16 20v-8', 'M2 20h20', 'M16 6l4-2'] },
+  admin: { d: ['M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z'] },
 }
 
 const NAV = [
@@ -47,10 +52,17 @@ const NAV = [
   { to: '/venues', label: 'Venues', icon: ICONS.venues },
   { to: '/vendors', label: 'Vendors', icon: ICONS.vendors },
   { to: '/quotations', label: 'Quotations', icon: ICONS.quotations },
-  { to: '/expenses', label: 'Budgets & Expenses', icon: ICONS.budgets },
+  { to: '/expenses', label: 'Expenses', icon: ICONS.budgets },
   { to: '/guests', label: 'Guests & RSVP', icon: ICONS.guests },
   { to: '/tickets', label: 'Tickets & Gate', icon: ICONS.tickets },
   { to: '/invoices', label: 'Invoices & GST', icon: ICONS.invoices },
+  { to: '/budgets', label: 'Budgets', icon: ICONS.budgets },
+  { to: '/work-orders', label: 'Work Orders', icon: ICONS.workorders },
+  { to: '/gate', label: 'Gate Scanner', icon: ICONS.scanner },
+  { to: '/portal/client', label: 'Client Portal', icon: ICONS.portal },
+  { to: '/portal/vendor', label: 'Vendor Portal', icon: ICONS.portal },
+  { to: '/reports', label: 'Reports', icon: ICONS.reports },
+  { to: '/admin', label: 'Admin', icon: ICONS.admin },
 ]
 
 function initials(name?: string) {

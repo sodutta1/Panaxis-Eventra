@@ -15,6 +15,13 @@ import Invoices from './pages/Invoices'
 import Expenses from './pages/Expenses'
 import Guests from './pages/Guests'
 import Tickets from './pages/Tickets'
+import GateScanner from './pages/GateScanner'
+import Budgets from './pages/Budgets'
+import WorkOrders from './pages/WorkOrders'
+import ClientPortal from './pages/ClientPortal'
+import VendorPortal from './pages/VendorPortal'
+import Reports from './pages/Reports'
+import Admin from './pages/Admin'
 
 function RequireAuth({ children }: { children: React.ReactElement }) {
   return getToken() ? children : <Navigate to="/login" replace />
@@ -45,6 +52,13 @@ export default function App() {
         <Route path="expenses" element={<Expenses />} />
         <Route path="guests" element={<Guests />} />
         <Route path="tickets" element={<Tickets />} />
+        <Route path="gate" element={<GateScanner />} />
+        <Route path="budgets" element={<Budgets />} />
+        <Route path="work-orders" element={<WorkOrders />} />
+        <Route path="portal/client" element={<ClientPortal />} />
+        <Route path="portal/vendor" element={<VendorPortal />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="admin" element={<Admin />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

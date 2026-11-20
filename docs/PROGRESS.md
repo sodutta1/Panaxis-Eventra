@@ -122,3 +122,14 @@ Changes made:
 - New endpoints: event budget show/add-item/update-item with auto-recomputed totals; vendor work orders over vendor_assignments (create blocks blacklisted vendors; payment endpoint caps paid_amount at contract_amount and auto-marks paid); admin-only tenant user management (list/create/update role+status, role whitelist).
 - Tests: 26/26 passing (105 assertions). New: budget totals recompute, work-order overpayment cap, admin RBAC (403 for sales, full flow for admin).
 - Debugging note: Sanctum's test guard memoizes the first bearer user across multiple requests in one test — multi-role tests must be split per user.
+
+## 2026-11-21 03:05 IST — Phase 4 screens: Budgets, Work Orders, Portals, Gate Scanner, Reports, Admin
+- Budgets page: per-event budget with server-recomputed totals, item add, actual-cost capture, variance column.
+- Work Orders page: per-event vendor assignments, inline payments (server caps at contract amount), status transitions.
+- Client Portal and Vendor Portal pages (live /portal/client, /portal/vendor): events, invoices, quotations; vendor work orders and expense claims.
+- Gate Scanner page: native BarcodeDetector camera QR scanning with 3s debounce, scan log, graceful fallback message on browsers without the API; manual entry stays on Tickets.
+- Reports page: server-computed financials, pipeline, guest check-in, events-by-category bars (from /dashboard).
+- Admin page: tenant user list, role change, activate/deactivate, create user (admin roles only).
+- Sidebar: added Budgets, Work Orders, Gate Scanner, both portals, Reports, Admin; renamed old entry to Expenses.
+- All pages verified by screenshot on real seeded data; tsc clean.
+- Scope note: deployment phase dropped at owner's direction; code-in-GitHub is the end state. deploy.yml stays as documented scaffolding.

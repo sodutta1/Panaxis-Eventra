@@ -191,4 +191,47 @@ export const STATUS_COLORS: Record<string, string> = {
   approved: 'bg-emerald-100 text-emerald-800',
   valid: 'bg-emerald-100 text-emerald-800',
   checked_in: 'bg-sky-100 text-sky-800',
+  assigned: 'bg-sky-100 text-sky-800',
+  in_progress: 'bg-amber-100 text-amber-800',
+  inactive: 'bg-slate-200 text-slate-700',
+}
+
+export type BudgetItem = {
+  id: number
+  category: string
+  item_name: string
+  estimated_cost: string
+  actual_cost?: string
+  notes?: string
+}
+
+export type Budget = {
+  id: number
+  event_id: number
+  status: string
+  total_estimated_cost: string
+  total_actual_cost: string
+  contingency_percent: string
+  contingency_amount: string
+  items: BudgetItem[]
+}
+
+export type WorkOrder = {
+  id: number
+  event_id: number
+  vendor_id: number
+  service_title: string
+  scope_of_work?: string
+  contract_amount: string
+  paid_amount: string
+  status: string
+  vendor?: Vendor
+}
+
+export type AdminUser = {
+  id: number
+  name: string
+  email: string
+  role: string
+  status: string
 }

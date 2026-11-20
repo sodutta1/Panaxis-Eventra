@@ -19,7 +19,7 @@ class BudgetController extends Controller
 
         return EventBudget::firstOrCreate(
             ['event_id' => $event->id, 'company_id' => $event->company_id],
-            ['status' => 'draft', 'contingency_percent' => 0, 'contingency_amount' => 0]
+            ['status' => 'draft', 'contingency_percent' => 0, 'contingency_amount' => 0, 'total_estimated_income' => 0, 'total_estimated_cost' => 0, 'total_actual_cost' => 0]
         );
     }
 
