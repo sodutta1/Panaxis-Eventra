@@ -1,0 +1,12 @@
+# Copy to deploy/Caddyfile and set real hostnames (Phase 8 gate).
+# Caddy handles Let's Encrypt issuance + renewal automatically.
+{$APP_HOST} {
+    reverse_proxy frontend:80
+}
+{$API_HOST} {
+    reverse_proxy backend:9000 {
+        transport fastcgi {
+            env DOCUMENT_ROOT /var/www/html/public
+        }
+    }
+}

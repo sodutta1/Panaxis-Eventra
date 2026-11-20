@@ -1,0 +1,58 @@
+# Production stack. App does not use queues or schedulers today (checked
+# 2026-11-21: jobs table exists but nothing dispatches; no Schedule:: calls),
+# so no worker/scheduler containers. Add them here if that changes.
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: panaxis_eventra
+      MYSQL_USER: eventra_app
+      MYSQL_PASSWORD: ${DB_PASSWORD:?}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # no public port: backend-only access on the internal network
+    networks: [internal]
+
+  backend:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-panaxis}/eventra-backend:${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?}
+      APP_URL: https://${API_HOST:?}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: panaxis_eventra
+      DB_USERNAME: eventra_app
+      DB_PASSWORD: ${DB_PASSWORD}
+      FRONTEND_URL: https://${APP_HOST:?}
+    depends_on: [mysql]
+    networks: [internal]
+
+  frontend:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-panaxis}/eventra-frontend:${TAG:-latest}
+    restart: unless-stopped
+    networks: [internal]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [backend, frontend]
+    networks: [internal]
+
+volumes:
+  mysql-data:
+  caddy-data:
+
+networks:
+  internal:
