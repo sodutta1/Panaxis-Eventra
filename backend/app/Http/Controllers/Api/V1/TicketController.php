@@ -51,7 +51,7 @@ class TicketController extends Controller
                 'event_id' => $event->id,
                 'ticket_type_id' => $ticketType->id,
                 'ticket_number' => 'TCK-' . date('Y') . '-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999),
-                'qr_token' => 'QR-' . strtoupper(Str::random(4)) . '-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999),
+                'qr_token' => 'QR-' . Str::random(40),
                 'holder_name' => $validated['holder_name'] . ($qty > 1 ? ' (#' . ($i + 1) . ')' : ''),
                 'holder_email' => $validated['holder_email'] ?? null,
                 'holder_phone' => $validated['holder_phone'] ?? null,

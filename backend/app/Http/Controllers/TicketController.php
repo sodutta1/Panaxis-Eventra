@@ -64,7 +64,7 @@ class TicketController extends Controller
 
         for ($i = 0; $i < $qty; $i++) {
             $ticketNumber = 'TCK-' . date('Y') . '-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999);
-            $qrToken = 'QR-' . strtoupper(Str::random(4)) . '-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999);
+            $qrToken = 'QR-' . Str::random(40);
 
             $ticket = Ticket::create([
                 'company_id' => $companyId,

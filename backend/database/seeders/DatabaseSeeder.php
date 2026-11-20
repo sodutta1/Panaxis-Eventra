@@ -54,6 +54,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->environment('production') && ! env('ALLOW_DEMO_SEED', false)) {
+            throw new \RuntimeException('Demo seeder is disabled in production (known passwords). Set ALLOW_DEMO_SEED=true only for a deliberate throwaway environment.');
+        }
         // 1. Company
         $company = Company::create([
             'name' => 'GrandVibe Events & Productions Pvt. Ltd.',

@@ -89,3 +89,27 @@ Changes made:
   #185838, tint #C8E0D0, app bg #F3F4F6), typography, layout, components,
   screen map, and the list of PRD screens without samples.
 - Tailwind token plan defined; encoding happens in Phase 4 after approval.
+
+## Phase 4 - Frontend foundation (design spec approved by owner 02:43 IST)
+
+- Base: the React + Vite + TS + Tailwind v4 app built against /api/v1 on
+  2026-11-20, now aligned to the measured tokens (#105830/#185838 brand,
+  #C8E0D0 tint, #F3F4F6 app bg) and rebranded to Panaxis Eventra.
+- npm install OK; npm run build OK (tsc + vite, 305 KB js / 23 KB css).
+- frontend/.env.example documents VITE_API_URL and VITE_DEMO_MODE.
+- Existing pages: Login, Dashboard, Leads, Clients, Events, EventDetail,
+  Venues, Vendors, Quotations, Invoices, Expenses, Guests, Tickets.
+  Still to build: kanban drag, Run of Show editor, Tasks board, Work Orders,
+  Budgets, Gate Scanner camera UI, PDF print, Client/Vendor portals, Admin.
+
+## Phase 6 - Security review (in progress; report in docs/SECURITY.md)
+
+- FIXED: demo-login passwordless auth, token expiry, web login throttle,
+  QR token strength, production seeder guard, security headers middleware.
+- gitleaks full history: clean. No raw-user-input SQL, no unescaped Blade.
+- OPEN: 5 laravel/framework advisories (upgrade decision), legacy Blade
+  portal scoping bug (retire or fix).
+- Correction to Phase 1 note: /events unauthenticated returned 200 in the
+  first smoke because an older dev server was briefly on port 8000; re-tested
+  against this repo: 302 redirect to /login as expected. Web routes ARE
+  behind auth middleware.
