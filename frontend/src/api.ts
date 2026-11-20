@@ -62,3 +62,18 @@ export type Paginated<T> = {
   data: T[]
   meta: { total: number; current_page: number; last_page: number }
 }
+
+// Download an authenticated PDF (Bearer token) and trigger a browser save.
+export async function downloadPdf(path: string, filename: string) {
+  const res = await fetch(`${API_URL}${path}`, {
+    headers: { Authorization: `Bearer ${getToken() ?? ''}`, Accept: 'application/pdf' },
+  })
+  if (!res.ok) throw new ApiError(res.status, `PDF download failed (${res.status})`)
+  const blob = await res.blob()
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}

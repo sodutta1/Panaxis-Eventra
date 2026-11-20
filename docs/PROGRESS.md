@@ -133,3 +133,9 @@ Changes made:
 - Sidebar: added Budgets, Work Orders, Gate Scanner, both portals, Reports, Admin; renamed old entry to Expenses.
 - All pages verified by screenshot on real seeded data; tsc clean.
 - Scope note: deployment phase dropped at owner's direction; code-in-GitHub is the end state. deploy.yml stays as documented scaffolding.
+
+## 2026-11-21 03:08 IST — Phase 4 complete: PDF print views
+- GET /api/v1/invoices/{id}/pdf and /api/v1/quotations/{id}/pdf (dompdf, A4): GST-style documents with company header, billed-to, item lines, GST totals, payment history (invoices), status badge.
+- Frontend: PDF download buttons on Invoices and Quotations rows (authenticated blob download).
+- Test: pdf download returns %PDF content-type and bytes. Suite: 28 tests passing.
+- Owner direction applied: no deploy phase; demo videos must run on the live MySQL backend; e2e tests to confirm frontend-backend integration.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, type Paginated } from '../api'
+import { api, downloadPdf, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type Invoice } from '../types'
 
@@ -51,7 +51,7 @@ export default function Invoices() {
         </Card>
       )}
       <Card>
-        <Table head={['Number', 'Client', 'Due date', 'Total', 'Paid', 'Balance', 'Status', '']}>
+        <Table head={['Number', 'Client', 'Due date', 'Total', 'Paid', 'Balance', 'Status', '', '']}>
           {items.map((inv) => (
             <tr key={inv.id} className="hover:bg-slate-50">
               <td className="px-4 py-3 font-mono text-xs text-slate-500">{inv.invoice_number}</td>
@@ -65,6 +65,14 @@ export default function Invoices() {
                 {inv.status !== 'paid' && (
                   <button className={btnGhostCls} onClick={() => setPayFor(inv)}>Record payment</button>
                 )}
+              </td>
+              <td className="px-4 py-3 text-right">
+                <button
+                  className="text-pa-700 font-bold text-xs hover:underline"
+                  onClick={() => downloadPdf(`/invoices/${inv.id}/pdf`, `${inv.invoice_number}.pdf`).catch(setError)}
+                >
+                  PDF
+                </button>
               </td>
             </tr>
           ))}

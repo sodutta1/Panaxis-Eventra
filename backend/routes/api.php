@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\PortalController;
 use App\Http\Controllers\Api\V1\BudgetController;
 use App\Http\Controllers\Api\V1\WorkOrderController;
 use App\Http\Controllers\Api\V1\AdminController;
+use App\Http\Controllers\Api\V1\PdfController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,6 +125,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('/events/{event}/work-orders', [WorkOrderController::class, 'store'])->name('work-orders.store')->middleware($ops);
             Route::post('/work-orders/{workOrder}/payment', [WorkOrderController::class, 'addPayment'])->name('work-orders.payment')->middleware($finance);
             Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus'])->name('work-orders.status')->middleware($ops);
+
+            // PDF documents
+            Route::get('/invoices/{invoice}/pdf', [PdfController::class, 'invoice'])->name('invoices.pdf');
+            Route::get('/quotations/{quotation}/pdf', [PdfController::class, 'quotation'])->name('quotations.pdf');
 
             // Admin: tenant user management
             Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users')->middleware($admins);
