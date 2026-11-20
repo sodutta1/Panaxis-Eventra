@@ -31,3 +31,4 @@ backend/public/docs/
 backend/public/vendor/scribe/
 backend/storage/app/private/scribe/
 backend/.phpunit.result.cache
+backend/.phpunit.result.cache

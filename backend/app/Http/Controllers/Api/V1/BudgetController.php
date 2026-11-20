@@ -41,7 +41,8 @@ class BudgetController extends Controller
         ]);
 
         $budget = $this->budgetFor($request, $event);
-        $item = $budget->items()->create($data);
+        // actual_cost is NOT NULL in the schema - omit it when not provided
+        $item = $budget->items()->create(array_filter($data, fn ($v) => $v !== null));
         $this->recalc($budget);
 
         return response()->json(['data' => $item], 201);
@@ -58,7 +59,7 @@ class BudgetController extends Controller
         ]);
 
         $model = EventBudgetItem::whereHas('budget', fn ($q) => $q->where('company_id', $this->companyId($request)))->findOrFail($item);
-        $model->update($data);
+        $model->update(array_filter($data, fn ($v) => $v !== null));
         $this->recalc($model->budget);
 
         return response()->json(['data' => $model->fresh()]);

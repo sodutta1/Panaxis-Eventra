@@ -41,7 +41,15 @@ test('leads kanban drag moves a card between stages via the API', async ({ page 
   const countOf = async (i: number) =>
     Number(await columns.nth(i).locator('span.rounded-full').first().innerText())
 
-  // find the first non-empty stage column and drag its first card to the next stage
+  // seed a fresh lead in the first column so the drag is deterministic
+  const dragTitle = `E2E Drag ${Date.now() % 100000}`
+  await page.getByRole('button', { name: '+ New lead' }).click()
+  await page.fill('input[placeholder="Lead title"]', dragTitle)
+  await page.fill('input[placeholder="Contact name"]', 'Drag Contact')
+  await page.getByRole('button', { name: 'Create lead' }).click()
+  await expect(page.locator(`text=${dragTitle}`)).toBeVisible({ timeout: 8000 })
+
+  // drag the first card of the first non-empty column to the next stage
   let src = -1
   for (let i = 0; i < (await columns.count()) - 1; i++) {
     if ((await countOf(i)) > 0) { src = i; break }

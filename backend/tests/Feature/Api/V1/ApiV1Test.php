@@ -229,6 +229,7 @@ class ApiV1Test extends TestCase
 
         $this->postJson("/api/v1/events/{$eventId}/budget/items", [
             'category' => 'Decor', 'item_name' => 'Stage flowers', 'estimated_cost' => 50000,
+            'actual_cost' => null, 'notes' => null,
         ], $this->auth($token))->assertCreated();
 
         $this->postJson("/api/v1/events/{$eventId}/budget/items", [
