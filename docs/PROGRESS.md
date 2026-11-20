@@ -113,3 +113,7 @@ Changes made:
   first smoke because an older dev server was briefly on port 8000; re-tested
   against this repo: 302 redirect to /login as expected. Web routes ARE
   behind auth middleware.
+
+## Owner-requested additions (2026-11-21 02:50 IST)
+- A demo of each module (walkthrough recordings on the live frontend with real
+  API data) and a consolidated testing report - both fold into Phase 9 handover.
