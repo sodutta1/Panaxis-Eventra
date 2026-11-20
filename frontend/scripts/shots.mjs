@@ -1,0 +1,14 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.launch();
+const pg = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await pg.goto('http://127.0.0.1:5173/login');
+await pg.fill('input[type="email"]', 'admin@eventflow.test');
+await pg.fill('input[type="password"]', 'password');
+await pg.keyboard.press('Enter');
+await pg.waitForTimeout(2500);
+await pg.screenshot({ path: '/tmp/shot-dashboard.png' });
+await pg.goto('http://127.0.0.1:5173/leads');
+await pg.waitForTimeout(1500);
+await pg.screenshot({ path: '/tmp/shot-leads.png' });
+await b.close();
+console.log('shots saved');

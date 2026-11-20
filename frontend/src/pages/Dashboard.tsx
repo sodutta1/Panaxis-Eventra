@@ -86,10 +86,10 @@ export default function Dashboard() {
         {stats.map((s) => (
           <Card key={s.label} className="p-4">
             <div className="text-[11px] font-bold uppercase tracking-wider text-pamuted">{s.label}</div>
-            <div className={`text-[26px] leading-tight font-extrabold mt-1.5 ${s.warn ? 'text-paamber' : 'text-pa-900'}`}>
+            <div className={`text-[26px] leading-tight font-extrabold mt-1.5 ${s.warn ? 'text-paamber' : 'text-ink'}`}>
               {s.value}
             </div>
-            <div className="text-xs font-semibold text-pa-500 mt-1">{s.sub}</div>
+            <div className="text-xs font-semibold text-pamuted mt-1">{s.sub}</div>
           </Card>
         ))}
       </div>
@@ -111,7 +111,7 @@ export default function Dashboard() {
               {data.upcoming_events.map((e) => (
                 <tr key={e.id} className="border-b border-slate-100 last:border-0">
                   <td className="py-3 pr-4">
-                    <Link to={`/events/${e.id}`} className="font-semibold text-pa-700 hover:underline">
+                    <Link to={`/events/${e.id}`} className="font-semibold text-ink hover:text-pa-700 hover:underline">
                       {e.title}
                     </Link>
                   </td>
