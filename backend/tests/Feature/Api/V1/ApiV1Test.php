@@ -221,4 +221,54 @@ class ApiV1Test extends TestCase
                 ->assertJsonStructure(['data' => ['id']]);
         }
     }
+
+    public function test_budget_items_recompute_totals(): void
+    {
+        $token = $this->tokenFor('admin@eventflow.test');
+        $eventId = $this->getJson('/api/v1/events', $this->auth($token))->json('data.0.id');
+
+        $this->postJson("/api/v1/events/{$eventId}/budget/items", [
+            'category' => 'Decor', 'item_name' => 'Stage flowers', 'estimated_cost' => 50000,
+        ], $this->auth($token))->assertCreated();
+
+        $this->postJson("/api/v1/events/{$eventId}/budget/items", [
+            'category' => 'Sound', 'item_name' => 'PA system', 'estimated_cost' => 30000, 'actual_cost' => 28000,
+        ], $this->auth($token))->assertCreated();
+
+        $budget = $this->getJson("/api/v1/events/{$eventId}/budget", $this->auth($token))->json('data');
+        $this->assertCount(2, $budget['items']);
+        $this->assertEquals(80000, (float) $budget['total_estimated_cost']);
+        $this->assertEquals(28000, (float) $budget['total_actual_cost']);
+    }
+
+    public function test_work_order_payment_caps_at_contract_amount(): void
+    {
+        $token = $this->tokenFor('admin@eventflow.test');
+        $eventId = $this->getJson('/api/v1/events', $this->auth($token))->json('data.0.id');
+        $vendorId = $this->getJson('/api/v1/vendors', $this->auth($token))->json('data.0.id');
+
+        $wo = $this->postJson("/api/v1/events/{$eventId}/work-orders", [
+            'vendor_id' => $vendorId, 'service_title' => 'Catering', 'contract_amount' => 100000,
+        ], $this->auth($token))->assertCreated()->json('data');
+
+        $res = $this->postJson("/api/v1/work-orders/{$wo['id']}/payment", ['amount' => 150000], $this->auth($token))
+            ->assertOk()->json('data');
+        $this->assertEquals(100000, (float) $res['paid_amount']);
+        $this->assertSame('paid', $res['status']);
+    }
+
+    public function test_admin_endpoints_reject_non_admin(): void
+    {
+        $salesToken = $this->tokenFor('sales@eventflow.test');
+        $this->getJson('/api/v1/admin/users', $this->auth($salesToken))->assertForbidden();
+    }
+
+    public function test_admin_can_manage_users(): void
+    {
+        $adminToken = $this->tokenFor('admin@eventflow.test');
+        $this->getJson('/api/v1/admin/users', $this->auth($adminToken))->assertOk()->assertJsonStructure(['data', 'roles']);
+        $this->postJson('/api/v1/admin/users', [
+            'name' => 'Test Staff', 'email' => 'teststaff@eventflow.test', 'password' => 'secret-pass-1', 'role' => 'staff',
+        ], $this->auth($adminToken))->assertCreated();
+    }
 }

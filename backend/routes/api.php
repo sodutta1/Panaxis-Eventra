@@ -14,6 +14,9 @@ use App\Http\Controllers\Api\V1\ExpenseController;
 use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\TicketController;
 use App\Http\Controllers\Api\V1\PortalController;
+use App\Http\Controllers\Api\V1\BudgetController;
+use App\Http\Controllers\Api\V1\WorkOrderController;
+use App\Http\Controllers\Api\V1\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +113,22 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::get('/expenses/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
             Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store')->middleware($finance);
             Route::post('/expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve')->middleware($finance);
+
+            // Budgets
+            Route::get('/events/{event}/budget', [BudgetController::class, 'show'])->name('budgets.show');
+            Route::post('/events/{event}/budget/items', [BudgetController::class, 'addItem'])->name('budgets.items.store')->middleware($ops);
+            Route::patch('/budget-items/{item}', [BudgetController::class, 'updateItem'])->name('budgets.items.update')->middleware($finance);
+
+            // Vendor work orders
+            Route::get('/events/{event}/work-orders', [WorkOrderController::class, 'index'])->name('work-orders.index');
+            Route::post('/events/{event}/work-orders', [WorkOrderController::class, 'store'])->name('work-orders.store')->middleware($ops);
+            Route::post('/work-orders/{workOrder}/payment', [WorkOrderController::class, 'addPayment'])->name('work-orders.payment')->middleware($finance);
+            Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus'])->name('work-orders.status')->middleware($ops);
+
+            // Admin: tenant user management
+            Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users')->middleware($admins);
+            Route::post('/admin/users', [AdminController::class, 'createUser'])->name('admin.users.store')->middleware($admins);
+            Route::patch('/admin/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update')->middleware($admins);
 
             // Guests & RSVP
             Route::get('/guests', [GuestController::class, 'index'])->name('guests.index');

@@ -117,3 +117,8 @@ Changes made:
 ## Owner-requested additions (2026-11-21 02:50 IST)
 - A demo of each module (walkthrough recordings on the live frontend with real
   API data) and a consolidated testing report - both fold into Phase 9 handover.
+
+## 2026-11-21 02:59 IST — Phase 4 support APIs: budgets, work orders, admin users
+- New endpoints: event budget show/add-item/update-item with auto-recomputed totals; vendor work orders over vendor_assignments (create blocks blacklisted vendors; payment endpoint caps paid_amount at contract_amount and auto-marks paid); admin-only tenant user management (list/create/update role+status, role whitelist).
+- Tests: 26/26 passing (105 assertions). New: budget totals recompute, work-order overpayment cap, admin RBAC (403 for sales, full flow for admin).
+- Debugging note: Sanctum's test guard memoizes the first bearer user across multiple requests in one test — multi-role tests must be split per user.
