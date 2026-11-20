@@ -1,0 +1,14 @@
+{
+  "token": "<redacted-local-demo-token>",
+  "token_type": "Bearer",
+  "user": {
+    "id": 4,
+    "company_id": 1,
+    "branch_id": 1,
+    "name": "Anita Desai",
+    "email": "finance@eventflow.test",
+    "phone": "+91 98204 66666",
+    "role": "accountant",
+    "status": "active"
+  }
+}

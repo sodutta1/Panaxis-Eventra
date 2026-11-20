@@ -1,0 +1,14 @@
+{
+  "token": "<redacted-local-demo-token>",
+  "token_type": "Bearer",
+  "user": {
+    "id": 1,
+    "company_id": 1,
+    "branch_id": 1,
+    "name": "Vikramaditya Singhania",
+    "email": "admin@eventflow.test",
+    "phone": "+91 98201 99999",
+    "role": "super_admin",
+    "status": "active"
+  }
+}

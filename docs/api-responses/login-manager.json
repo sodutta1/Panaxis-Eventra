@@ -1,0 +1,14 @@
+{
+  "token": "<redacted-local-demo-token>",
+  "token_type": "Bearer",
+  "user": {
+    "id": 2,
+    "company_id": 1,
+    "branch_id": 1,
+    "name": "Priya Sharma",
+    "email": "manager@eventflow.test",
+    "phone": "+91 98202 88888",
+    "role": "event_manager",
+    "status": "active"
+  }
+}

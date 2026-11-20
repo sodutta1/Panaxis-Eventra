@@ -1,0 +1,14 @@
+{
+  "token": "<redacted-local-demo-token>",
+  "token_type": "Bearer",
+  "user": {
+    "id": 3,
+    "company_id": 1,
+    "branch_id": 2,
+    "name": "Rajesh Verma",
+    "email": "sales@eventflow.test",
+    "phone": "+91 98203 77777",
+    "role": "sales_executive",
+    "status": "active"
+  }
+}

@@ -599,3 +599,37 @@ Use this repeatable method for any backend repo.
 A useful shortcut: give the discovery steps in Section 5 to a coding
 agent such as Claude Code, ask it to fill Section 8 with real data and
 write the gap list, then update this PRD with the results.
+
+---
+
+## API inventory (filled during Phase 2, 2026-11-21)
+
+Live REST API: `/api/v1`, Sanctum Bearer tokens, tenant-scoped (`company_id`),
+role-gated writes. Full machine-readable spec: `docs/openapi.json` (Scribe,
+42 paths). Real captured requests/responses: `docs/api-responses/`.
+
+| Group | Endpoint | Methods | Role gate |
+|---|---|---|---|
+| Auth | /auth/login | POST | public, throttle 5/min |
+| Auth | /auth/me, /auth/logout | GET, POST | any token |
+| Dashboard | /dashboard | GET | staff roles |
+| Leads | /leads, /leads/{id}, /leads/{id}/status, /leads/{id}/convert | GET, POST, PUT/PATCH, DELETE, POST | read: staff; write: sales group; delete: admins |
+| Clients | /clients, /clients/{id} | GET, POST, PUT/PATCH, DELETE | read: staff; write: sales; delete: admins |
+| Events | /events, /events/{id}, /events/{id}/status, /events/{id}/schedules, /events/{id}/tasks, /tasks/{id}/toggle | GET, POST, PUT/PATCH, DELETE, POST | read: staff; write: ops group; delete: admins |
+| Venues | /venues, /venues/{id} | GET, POST, PUT/PATCH, DELETE | read: staff; write: admins |
+| Vendors | /vendors, /vendors/{id} | GET, POST, PUT/PATCH, DELETE | read: staff; write: ops; delete: admins |
+| Quotations | /quotations, /quotations/{id} | GET, POST, DELETE | read: staff; create: sales; delete: admins |
+| Invoices | /invoices, /invoices/{id}, /invoices/{id}/payments | GET, POST, DELETE, POST | read: staff; write: finance; delete: admins |
+| Expenses | /expenses, /expenses/{id}, /expenses/{id}/approve | GET, POST | read: staff; write: finance |
+| Guests | /guests, /guests/{id}, /guests/{id}/checkin | GET, POST | read: staff; write: ops |
+| Tickets | /tickets, /tickets/{id}, /tickets/types, /tickets/verify | GET, POST | read: staff; write: ops; verify: staff, throttle 30/min |
+| Portals | /portal/client, /portal/vendor | GET | client role / vendor role (+ admins) |
+
+Role groups: staff = super_admin, company_admin, admin, event_manager,
+sales_executive, accountant, staff; admins = super_admin, company_admin,
+admin; finance adds accountant; sales adds event_manager + sales_executive;
+ops adds event_manager + staff.
+
+Verified live against the seeded DB: login per role, all list + show
+endpoints, 401 without token, 403 on wrong-role write and cross-portal
+access (see docs/api-responses/).

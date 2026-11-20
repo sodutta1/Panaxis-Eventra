@@ -1,0 +1,3463 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Laravel API Documentation",
+        "description": "",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Endpoints",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "summary": "Issue a Sanctum personal access token.",
+                "operationId": "issueASanctumPersonalAccessToken",
+                "description": "POST /api/v1/auth/login",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "gbailey@example.net"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "device_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "summary": "Current token's user.",
+                "operationId": "currentTokensUser",
+                "description": "GET /api/v1/auth/me",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "summary": "Revoke the current token.",
+                "operationId": "revokeTheCurrentToken",
+                "description": "POST /api/v1/auth/logout",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            }
+        },
+        "/api/v1/dashboard": {
+            "get": {
+                "summary": "Dashboard summary - mirrors DashboardController@index from the web app.",
+                "operationId": "dashboardSummaryMirrorsDashboardControllerindexFromTheWebApp",
+                "description": "GET /api/v1/dashboard",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            }
+        },
+        "/api/v1/leads": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Leads",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Leads",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "contact_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "event_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "event_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34",
+                                        "nullable": true
+                                    },
+                                    "estimated_guests": {
+                                        "type": "integer",
+                                        "description": "",
+                                        "example": 16,
+                                        "nullable": true
+                                    },
+                                    "estimated_budget": {
+                                        "type": "number",
+                                        "description": "",
+                                        "example": 4326.41688,
+                                        "nullable": true
+                                    },
+                                    "assigned_to": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "requirements": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "contact_name",
+                                    "source"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/leads/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1LeadsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "put": {
+                "summary": "",
+                "operationId": "putApiV1LeadsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "contact_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "event_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "event_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34",
+                                        "nullable": true
+                                    },
+                                    "estimated_guests": {
+                                        "type": "integer",
+                                        "description": "",
+                                        "example": 16,
+                                        "nullable": true
+                                    },
+                                    "estimated_budget": {
+                                        "type": "number",
+                                        "description": "",
+                                        "example": 4326.41688,
+                                        "nullable": true
+                                    },
+                                    "assigned_to": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "requirements": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1LeadsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the lead.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/leads/{lead}": {
+            "patch": {
+                "summary": "",
+                "operationId": "patchApiV1LeadsLead",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "contact_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "event_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "event_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34",
+                                        "nullable": true
+                                    },
+                                    "estimated_guests": {
+                                        "type": "integer",
+                                        "description": "",
+                                        "example": 16,
+                                        "nullable": true
+                                    },
+                                    "estimated_budget": {
+                                        "type": "number",
+                                        "description": "",
+                                        "example": 4326.41688,
+                                        "nullable": true
+                                    },
+                                    "assigned_to": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "requirements": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "lead",
+                    "description": "The lead.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/leads/{lead}/status": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1LeadsLeadStatus",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                },
+                                "required": [
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "lead",
+                    "description": "The lead.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/leads/{lead}/convert": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1LeadsLeadConvert",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "lead",
+                    "description": "The lead.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/clients": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Clients",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Clients",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "company_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "alternate_phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "client_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "client_type"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/clients/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1ClientsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "put": {
+                "summary": "",
+                "operationId": "putApiV1ClientsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "company_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "alternate_phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "client_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1ClientsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the client.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/clients/{client}": {
+            "patch": {
+                "summary": "",
+                "operationId": "patchApiV1ClientsClient",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "company_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "alternate_phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "client_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "client",
+                    "description": "The client.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/events": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Events",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Events",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "client_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "event_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "event_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "venue_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date. Must be a date after or equal to <code>start_date</code>.",
+                                        "example": "2052-12-13"
+                                    },
+                                    "expected_guests": {
+                                        "type": "integer",
+                                        "description": "Must be at least 0.",
+                                        "example": 39,
+                                        "nullable": true
+                                    },
+                                    "estimated_budget": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84,
+                                        "nullable": true
+                                    },
+                                    "contract_value": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 12,
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "theme_concept": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "Eius et animi quos velit et.",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "client_id",
+                                    "event_category_id",
+                                    "event_type",
+                                    "start_date",
+                                    "end_date",
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/events/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1EventsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "put": {
+                "summary": "",
+                "operationId": "putApiV1EventsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "client_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null
+                                    },
+                                    "event_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null
+                                    },
+                                    "event_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "venue_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date. Must be a date after or equal to <code>start_date</code>.",
+                                        "example": "2052-12-13"
+                                    },
+                                    "expected_guests": {
+                                        "type": "integer",
+                                        "description": "Must be at least 0.",
+                                        "example": 39,
+                                        "nullable": true
+                                    },
+                                    "estimated_budget": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84,
+                                        "nullable": true
+                                    },
+                                    "contract_value": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 12,
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "theme_concept": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "Eius et animi quos velit et.",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1EventsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the event.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/events/{event}": {
+            "patch": {
+                "summary": "",
+                "operationId": "patchApiV1EventsEvent",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "client_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null
+                                    },
+                                    "event_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null
+                                    },
+                                    "event_type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "venue_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "manager_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date. Must be a date after or equal to <code>start_date</code>.",
+                                        "example": "2052-12-13"
+                                    },
+                                    "expected_guests": {
+                                        "type": "integer",
+                                        "description": "Must be at least 0.",
+                                        "example": 39,
+                                        "nullable": true
+                                    },
+                                    "estimated_budget": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84,
+                                        "nullable": true
+                                    },
+                                    "contract_value": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 12,
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "theme_concept": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "Eius et animi quos velit et.",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "event",
+                    "description": "The event.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/events/{event}/status": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1EventsEventStatus",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                },
+                                "required": [
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "event",
+                    "description": "The event.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/events/{event_id}/schedules": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1EventsEvent_idSchedules",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "event_day_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "start_time": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "location_within_venue": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "g",
+                                        "nullable": true
+                                    },
+                                    "speaker_performer": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "z",
+                                        "nullable": true
+                                    },
+                                    "activity_description": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "in_charge_person": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "start_time",
+                                    "title"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "event_id",
+                    "description": "The ID of the event.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/events/{event_id}/tasks": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1EventsEvent_idTasks",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "assigned_to": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "due_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34",
+                                        "nullable": true
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "Eius et animi quos velit et.",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "priority"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "event_id",
+                    "description": "The ID of the event.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/tasks/{task}/toggle": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1TasksTaskToggle",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "task",
+                    "description": "The task.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/venues": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Venues",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Venues",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "capacity": {
+                                        "type": "integer",
+                                        "description": "Must be at least 1.",
+                                        "example": 22
+                                    },
+                                    "rental_cost_per_day": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84
+                                    },
+                                    "contact_person": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "contact_phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "contact_email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "zbailey@example.net",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "amenities": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "type",
+                                    "capacity",
+                                    "rental_cost_per_day",
+                                    "city"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/venues/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1VenuesId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "put": {
+                "summary": "",
+                "operationId": "putApiV1VenuesId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "capacity": {
+                                        "type": "integer",
+                                        "description": "Must be at least 1.",
+                                        "example": 22
+                                    },
+                                    "rental_cost_per_day": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84
+                                    },
+                                    "contact_person": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "contact_phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "contact_email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "zbailey@example.net",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "amenities": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1VenuesId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the venue.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/venues/{venue}": {
+            "patch": {
+                "summary": "",
+                "operationId": "patchApiV1VenuesVenue",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "capacity": {
+                                        "type": "integer",
+                                        "description": "Must be at least 1.",
+                                        "example": 22
+                                    },
+                                    "rental_cost_per_day": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84
+                                    },
+                                    "contact_person": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "contact_phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "contact_email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "zbailey@example.net",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "amenities": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "venue",
+                    "description": "The venue.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/vendors": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Vendors",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Vendors",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "business_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    },
+                                    "vendor_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "zbailey@example.net",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "services_offered": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "payment_terms": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "bank_details": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "vendor_category_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/vendors/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1VendorsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "put": {
+                "summary": "",
+                "operationId": "putApiV1VendorsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "business_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    },
+                                    "vendor_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "services_offered": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "payment_terms": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "bank_details": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1VendorsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the vendor.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/vendors/{vendor}": {
+            "patch": {
+                "summary": "",
+                "operationId": "patchApiV1VendorsVendor",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "business_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n",
+                                        "nullable": true
+                                    },
+                                    "vendor_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "services_offered": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "payment_terms": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "bank_details": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "vendor",
+                    "description": "The vendor.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/quotations": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Quotations",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Quotations",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "client_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "event_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "issue_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "valid_until": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34",
+                                        "nullable": true
+                                    },
+                                    "tax_rate": {
+                                        "type": "number",
+                                        "description": "",
+                                        "example": 4326.41688
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "description": "Must have at least 1 items.",
+                                        "example": [
+                                            []
+                                        ],
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "item_name": {
+                                                    "type": "string",
+                                                    "description": "",
+                                                    "example": "architecto"
+                                                },
+                                                "quantity": {
+                                                    "type": "number",
+                                                    "description": "Must be at least 1.",
+                                                    "example": 22
+                                                },
+                                                "unit_price": {
+                                                    "type": "number",
+                                                    "description": "Must be at least 0.",
+                                                    "example": 84
+                                                }
+                                            },
+                                            "required": [
+                                                "item_name",
+                                                "quantity",
+                                                "unit_price"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "client_id",
+                                    "issue_date",
+                                    "tax_rate",
+                                    "items"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/quotations/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1QuotationsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1QuotationsId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the quotation.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/invoices": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Invoices",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Invoices",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "client_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "event_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "invoice_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "due_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "tax_rate": {
+                                        "type": "number",
+                                        "description": "",
+                                        "example": 4326.41688
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "description": "Must have at least 1 items.",
+                                        "example": [
+                                            []
+                                        ],
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "description": {
+                                                    "type": "string",
+                                                    "description": "",
+                                                    "example": "Eius et animi quos velit et."
+                                                },
+                                                "quantity": {
+                                                    "type": "number",
+                                                    "description": "Must be at least 1.",
+                                                    "example": 16
+                                                },
+                                                "unit_price": {
+                                                    "type": "number",
+                                                    "description": "Must be at least 0.",
+                                                    "example": 42
+                                                }
+                                            },
+                                            "required": [
+                                                "description",
+                                                "quantity",
+                                                "unit_price"
+                                            ]
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "client_id",
+                                    "invoice_date",
+                                    "due_date",
+                                    "tax_rate",
+                                    "items"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/invoices/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1InvoicesId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "deleteApiV1InvoicesId",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the invoice.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/invoices/{invoice_id}/payments": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1InvoicesInvoice_idPayments",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Must be at least 1. Must not be greater than 0.",
+                                        "example": 4326.41688
+                                    },
+                                    "payment_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "transaction_reference": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "amount",
+                                    "payment_date",
+                                    "payment_method"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "invoice_id",
+                    "description": "The ID of the invoice.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/expenses": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Expenses",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Expenses",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "event_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "expense_category_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "vendor_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "b"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Must be at least 1.",
+                                        "example": 22
+                                    },
+                                    "incurred_date": {
+                                        "type": "string",
+                                        "description": "Must be a valid date.",
+                                        "example": "2026-11-20T21:09:34"
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    },
+                                    "receipt_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "title",
+                                    "amount",
+                                    "incurred_date",
+                                    "payment_method"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/expenses/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1ExpensesId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the expense.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/expenses/{expense}/approve": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1ExpensesExpenseApprove",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "expense",
+                    "description": "The expense.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/guests": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Guests",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Guests",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "event_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "guest_group_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": null,
+                                        "nullable": true
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "plus_ones": {
+                                        "type": "integer",
+                                        "description": "Must be at least 0.",
+                                        "example": 39,
+                                        "nullable": true
+                                    },
+                                    "table_number": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto",
+                                        "nullable": true
+                                    },
+                                    "dietary_preference": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                },
+                                "required": [
+                                    "event_id",
+                                    "name",
+                                    "dietary_preference"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/guests/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1GuestsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the guest.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/guests/{guest}/checkin": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1GuestsGuestCheckin",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "guest",
+                    "description": "The guest.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/tickets": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1Tickets",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1Tickets",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "event_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "ticket_type_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "holder_name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "holder_email": {
+                                        "type": "string",
+                                        "description": "Must be a valid email address. Must not be greater than 255 characters.",
+                                        "example": "ashly64@example.com",
+                                        "nullable": true
+                                    },
+                                    "holder_phone": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 25 characters.",
+                                        "example": "v",
+                                        "nullable": true
+                                    },
+                                    "quantity": {
+                                        "type": "integer",
+                                        "description": "Must be at least 1. Must not be greater than 20.",
+                                        "example": 16,
+                                        "nullable": true
+                                    },
+                                    "price_paid": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 37,
+                                        "nullable": true
+                                    },
+                                    "payment_status": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "refunded",
+                                        "enum": [
+                                            "paid",
+                                            "complimentary",
+                                            "refunded",
+                                            "pending"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "event_id",
+                                    "ticket_type_id",
+                                    "holder_name",
+                                    "payment_status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/tickets/{id}": {
+            "get": {
+                "summary": "",
+                "operationId": "getApiV1TicketsId",
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "description": "The ID of the ticket.",
+                    "example": "architecto",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/api/v1/tickets/types": {
+            "post": {
+                "summary": "",
+                "operationId": "postApiV1TicketsTypes",
+                "description": "",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "event_id": {
+                                        "type": "string",
+                                        "description": "Must match an existing stored value.",
+                                        "example": "architecto"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 255 characters.",
+                                        "example": "n"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "description": "Must be at least 0.",
+                                        "example": 84
+                                    },
+                                    "total_capacity": {
+                                        "type": "integer",
+                                        "description": "Must be at least 1.",
+                                        "example": 66
+                                    },
+                                    "benefits": {
+                                        "type": "string",
+                                        "description": "Must not be greater than 1000 characters.",
+                                        "example": "m",
+                                        "nullable": true
+                                    }
+                                },
+                                "required": [
+                                    "event_id",
+                                    "name",
+                                    "price",
+                                    "total_capacity"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/tickets/verify": {
+            "post": {
+                "summary": "Gate scan: same behavior as the web scanner.",
+                "operationId": "gateScanSameBehaviorAsTheWebScanner",
+                "description": "POST /api/v1/tickets/verify",
+                "parameters": [],
+                "responses": [],
+                "tags": [
+                    "Endpoints"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "description": "",
+                                        "example": "architecto"
+                                    }
+                                },
+                                "required": [
+                                    "token"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/api/v1/portal/client": {
+            "get": {
+                "summary": "Client portal: the client record linked to the token's user\n(clients.user_id), with their events, run of show, invoices and quotations.",
+                "operationId": "clientPortalTheClientRecordLinkedToTheTokensUserclientsuserIdWithTheirEventsRunOfShowInvoicesAndQuotations",
+                "description": "GET /api/v1/portal/client",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            }
+        },
+        "/api/v1/portal/vendor": {
+            "get": {
+                "summary": "Vendor portal: vendor profile with event assignments and expenses.",
+                "operationId": "vendorPortalVendorProfileWithEventAssignmentsAndExpenses",
+                "description": "Note: the schema has no vendors.user_id link (the web portal has the\nsame limitation and shows the first vendor), so a vendor-role token\nsees the first vendor of the company. A real login link is backend work.\nGET /api/v1/portal/vendor",
+                "parameters": [],
+                "responses": {
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": {
+                                        "message": "Unauthenticated."
+                                    },
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Endpoints"
+                ],
+                "security": []
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "token": "<redacted-local-demo-token>",
+  "token_type": "Bearer",
+  "user": {
+    "id": 5,
+    "company_id": 1,
+    "branch_id": 1,
+    "name": "Rahul Oberoi",
+    "email": "client@eventflow.test",
+    "phone": "+91 98205 55555",
+    "role": "client",
+    "status": "active"
+  }
+}

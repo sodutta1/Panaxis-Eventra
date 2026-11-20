@@ -24,3 +24,10 @@ Thumbs.db
 .idea/
 .vscode/
 coverage/
+
+# Generated API docs artifacts
+backend/.scribe/
+backend/public/docs/
+backend/public/vendor/scribe/
+backend/storage/app/private/scribe/
+backend/.phpunit.result.cache

@@ -1,0 +1,14 @@
+{
+  "token": "<redacted-local-demo-token>",
+  "token_type": "Bearer",
+  "user": {
+    "id": 6,
+    "company_id": 1,
+    "branch_id": 1,
+    "name": "Farhan Qureshi",
+    "email": "vendor@eventflow.test",
+    "phone": "+91 98206 44444",
+    "role": "vendor",
+    "status": "active"
+  }
+}
