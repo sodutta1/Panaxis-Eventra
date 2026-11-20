@@ -1,0 +1,12 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.connectOverCDP('http://127.0.0.1:9222');
+const ctx = b.contexts()[0];
+const pg = await ctx.newPage();
+await pg.goto('http://127.0.0.1:4173/login');
+await pg.fill('input[type="email"]', 'admin@eventflow.test');
+await pg.fill('input[type="password"]', 'password');
+await pg.getByRole('button', { name: /sign in/i }).click();
+await pg.waitForURL('**/dashboard', { timeout: 20000 });
+console.log('logged in, token:', await pg.evaluate(() => !!localStorage.getItem('ef_token')));
+await pg.close();
+await b.close();

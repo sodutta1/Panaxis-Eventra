@@ -139,3 +139,10 @@ Changes made:
 - Frontend: PDF download buttons on Invoices and Quotations rows (authenticated blob download).
 - Test: pdf download returns %PDF content-type and bytes. Suite: 28 tests passing.
 - Owner direction applied: no deploy phase; demo videos must run on the live MySQL backend; e2e tests to confirm frontend-backend integration.
+
+## 2026-11-21 03:18 IST — Phase 5 complete: testing + performance
+- Vitest unit tests (11/11): inr/inrCompact Indian formatting incl. edge cases, STATUS_COLORS coverage, api client (bearer attach, 422 ApiError details, 401 session clear, 204 handling).
+- Playwright e2e (4/4) against the LIVE backend + MySQL: login->dashboard with API data, kanban HTML5 drag between stages (verifies counts via API reload), invoice PDF download (%PDF bytes asserted), gate verify with a real qr_token from /tickets.
+- Lighthouse on the PRODUCTION build (vite preview, authed session): Login 100/100/100, Dashboard 97/100/100 (performance/accessibility/best-practices). JSON reports in docs/lighthouse/.
+- Fixed login accessibility (associated labels, main landmark) after Lighthouse flagged it at 85 -> now 100.
+- vite preview now proxies /api to the backend (parity with dev server).

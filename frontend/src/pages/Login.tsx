@@ -38,7 +38,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-paper flex items-center justify-center p-6">
+    <main className="min-h-screen bg-paper flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <img src="/logo.jpg" alt="Panaxis" className="w-16 h-16 rounded-2xl object-cover mx-auto mb-4 shadow-sm" />
@@ -48,12 +48,12 @@ export default function Login() {
         <form onSubmit={submit} className="bg-white rounded-2xl border border-paline shadow-sm p-8 space-y-4">
           <ErrorBox error={error} />
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wide text-pamuted mb-1.5">Email</label>
-            <input className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+            <label htmlFor="login-email" className="block text-xs font-bold uppercase tracking-wide text-pamuted mb-1.5">Email</label>
+            <input id="login-email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wide text-pamuted mb-1.5">Password</label>
-            <input className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+            <label htmlFor="login-password" className="block text-xs font-bold uppercase tracking-wide text-pamuted mb-1.5">Password</label>
+            <input id="login-password" className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
           </div>
           <button className={`${btnCls} w-full`} disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
@@ -77,6 +77,6 @@ export default function Login() {
         </form>
         <div className="text-center text-[11.5px] text-pamuted mt-6">Panaxis Eventra Pvt. Ltd.</div>
       </div>
-    </div>
+    </main>
   )
 }

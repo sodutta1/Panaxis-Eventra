@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
-import { Card, ErrorBox, PageHeader, Table } from '../components/ui'
+import { Card, ErrorBox, PageHeader } from '../components/ui'
 import { inr } from '../types'
 
 type Dash = {
