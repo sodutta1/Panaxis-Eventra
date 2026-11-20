@@ -80,39 +80,39 @@ export default function Layout() {
 
   const sidebar = (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 w-[248px] bg-pa-900 text-[#cfe0d5] flex flex-col transform transition-transform duration-200 md:static md:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-40 w-[84px] bg-white border-r border-slate-200 flex flex-col transform transition-transform duration-200 md:static md:translate-x-0 ${
         menuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
       }`}
     >
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-white/10">
+      <div className="flex items-center justify-center py-3 border-b border-slate-100">
         <img src="/logo.jpg" alt="Panaxis" className="w-9 h-9 rounded-lg object-cover" />
-        <span className="font-bold text-white text-[16px] tracking-tight">Panaxis Eventra</span>
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 py-3">
+      <nav className="flex-1 overflow-y-auto py-2">
         {NAV.map((n) => (
           <NavLink
             key={n.to}
             to={n.to}
             onClick={() => setMenuOpen(false)}
+            title={n.label}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13.5px] font-semibold mb-0.5 transition-colors ${
+              `flex flex-col items-center gap-1 mx-1.5 my-0.5 px-1 py-2.5 rounded-xl text-[9.5px] font-semibold tracking-tight text-center leading-tight transition-colors border-l-2 ${
                 isActive
-                  ? 'bg-gradient-to-br from-pa-700 to-pa-500 text-white'
-                  : 'text-[#b9cec2] hover:bg-white/5 hover:text-white'
+                  ? 'text-pa-700 bg-pa-50 border-pa-700'
+                  : 'text-slate-500 border-transparent hover:text-pa-700 hover:bg-pa-50'
               }`
             }
           >
             <Icon {...n.icon} />
-            {n.label}
+            {n.label.replace(' & ', ' &\n').split('\n').map((part, k) => (
+              <span key={k} className="block">{part}</span>
+            ))}
           </NavLink>
         ))}
       </nav>
-      <div className="px-4 py-3.5 border-t border-white/10 text-[11.5px] leading-relaxed text-[#7fa08d]">
-        <div>
-          Signed in as <span className="text-[#b9cec2] font-semibold">{user?.name}</span> ·{' '}
-          <span className="capitalize">{(user?.role ?? '').replace('_', ' ')}</span>
-        </div>
-        <div>Panaxis Eventra Pvt. Ltd.</div>
+      <div className="flex justify-center py-3 border-t border-slate-100">
+        <span className="w-8 h-8 rounded-full bg-pa-700 text-white text-[11px] font-bold flex items-center justify-center" title={`${user?.name} · ${(user?.role ?? '').replace('_', ' ')}`}>
+          {initials(user?.name)}
+        </span>
       </div>
     </aside>
   )
