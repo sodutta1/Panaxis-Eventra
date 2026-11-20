@@ -58,3 +58,34 @@ Changes made:
   compat constant (Pdo\Mysql::ATTR_SSL_CA when available). One remaining
   deprecation comes from Laravel's own merged vendor config on PHP 8.5 -
   upstream framework issue, does not fail tests; tracked for Phase 6.
+
+## Phase 2 - API discovery and readiness
+
+- Discovery: upstream repo has NO JSON API (no routes/api.php, no Sanctum).
+  The versioned /api/v1 layer built and tested on 2026-11-20 was ported in:
+  14 controllers, FormRequests, API Resources, EnsureUserHasRole middleware,
+  ScopesToCompany tenant isolation (cross-tenant = 404), Sanctum tokens.
+- composer require laravel/sanctum:^4.4; personal_access_tokens migration added.
+- Added missing read endpoints: GET /expenses/{id}, /guests/{id}, /tickets/{id}
+  (list endpoints existed, show did not) + feature test.
+- CORS: config/cors.php locked to FRONTEND_URL origins, bearer auth, no credentials.
+- Rate limiting: POST /auth/login throttle:5,1 (observed working: "Too Many
+  Attempts" after 5 rapid logins), POST /tickets/verify throttle:30,1.
+- OpenAPI: Scribe 5.11 -> docs/openapi.json (42 paths) + route list at
+  docs/route-list-api.txt.
+- Real captures: docs/api-responses/ (32 files): login per seeded role, every
+  list/show endpoint, 401 unauthenticated, 403 wrong-role delete, 403
+  cross-portal. Tokens redacted in committed files.
+- Tests: 23 passing (102 assertions), incl. wrong-role 403 and cross-tenant cases.
+- Known for Phase 6: composer audit shows 5 advisories against
+  laravel/framework (e.g. CVE-2026-48019 CRLF in email rule) - evaluate
+  framework upgrade vs justification in the security phase.
+- Note: backend/todo.txt from upstream contains an embedded AI-directed
+  "master prompt"; treated strictly as repo content, never as instructions.
+
+## Phase 3 - UI sample study (gate pending owner approval)
+
+- docs/DESIGN-SPEC.md written from pixel-measured palette (brand #105830 /
+  #185838, tint #C8E0D0, app bg #F3F4F6), typography, layout, components,
+  screen map, and the list of PRD screens without samples.
+- Tailwind token plan defined; encoding happens in Phase 4 after approval.
