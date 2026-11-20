@@ -146,3 +146,23 @@ Changes made:
 - Lighthouse on the PRODUCTION build (vite preview, authed session): Login 100/100/100, Dashboard 97/100/100 (performance/accessibility/best-practices). JSON reports in docs/lighthouse/.
 - Fixed login accessibility (associated labels, main landmark) after Lighthouse flagged it at 85 -> now 100.
 - vite preview now proxies /api to the backend (parity with dev server).
+
+## 2026-11-21 03:20 IST — Phase 6 complete: upgrade + hardening
+- Laravel 11.57.1 -> 12.73.0; composer audit now 0 advisories. Backend suite 28/28 after upgrade.
+- Legacy unscoped Blade portals removed (routes, controller, views, nav links).
+- Larastan: 2 real bugs fixed (Ticket checked_in_at datetime cast, demo-login env -> config); rest Eloquent-magic noise.
+- docs/SECURITY.md finalized: 15 findings, all FIXED/CLEAN/VERIFIED.
+
+## 2026-11-21 03:45 IST — Phase 7 complete: thorough whole-app testing + demos + handover docs
+- New 11-test Playwright suite (tests/e2e/thorough.spec.ts), all on the live MySQL backend: client portal
+  isolation, vendor portal, vendor 403 on admin, client create, budget totals recompute, work-order payment
+  capped at contract, admin user create, guest check-in toggle, lead create+convert->client, quotation PDF,
+  reports figures. 11/11 pass; with the 4 core e2e that is 15/15.
+- Bug found and fixed by the suite: budget item create with null actual_cost 500'd (NOT NULL column);
+  controller now filters null fields + regression test.
+- Login throttle verified live (429 on 6th attempt); non-prod limit raised so e2e bursts can log in,
+  production keeps 5/min.
+- 15 per-module demo videos (mp4) in docs/demos/, recorded on the production build against the live DB.
+- docs/TESTING-REPORT.md (all suites + evidence), README.md quickstart, docs/RUNBOOK.md.
+- Final state: backend 28 tests/136 assertions, unit 11, e2e 15, Lighthouse login 100/100/100 and
+  dashboard 97/100/100, composer audit clean, Larastan clean. Phase 8 (deployment) descoped by owner.
