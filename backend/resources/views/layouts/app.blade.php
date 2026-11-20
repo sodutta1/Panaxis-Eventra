@@ -128,14 +128,6 @@
 
             <!-- Portals -->
             <div x-show="sidebarOpen" class="px-3 pt-4 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">Portals</div>
-            <a href="{{ route('portal.client') }}" class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                <i class="fa-solid fa-user-tie w-6 text-center text-base"></i>
-                <span x-show="sidebarOpen" class="ml-3">Client Portal View</span>
-            </a>
-            <a href="{{ route('portal.vendor') }}" class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                <i class="fa-solid fa-truck-ramp-box w-6 text-center text-base"></i>
-                <span x-show="sidebarOpen" class="ml-3">Vendor Portal View</span>
-            </a>
         </nav>
 
         <!-- Current User Profile Footer -->

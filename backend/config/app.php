@@ -15,6 +15,9 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    /* Development-only demo role switch (web). Never enable in production. */
+    'demo_login' => env('DEMO_LOGIN', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

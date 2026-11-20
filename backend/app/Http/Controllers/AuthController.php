@@ -37,7 +37,7 @@ class AuthController extends Controller
     public function demoLogin($id)
     {
         // Demo role-switch is a development convenience only.
-        abort_unless(app()->environment('local') && env('DEMO_LOGIN', false), 404);
+        abort_unless(app()->environment('local') && config('app.demo_login'), 404);
 
         $user = User::findOrFail($id);
         Auth::login($user);

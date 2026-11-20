@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model {
     protected $guarded = [];
+    protected $casts = ['checked_in_at' => 'datetime'];
     public function event() { return $this->belongsTo(Event::class); }
     public function ticketType() { return $this->belongsTo(TicketType::class); }
 }

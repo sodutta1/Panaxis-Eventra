@@ -15,7 +15,6 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\PortalController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -82,6 +81,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 
     // Portals
-    Route::get('/portal/client', [PortalController::class, 'clientPortal'])->name('portal.client');
-    Route::get('/portal/vendor', [PortalController::class, 'vendorPortal'])->name('portal.vendor');
 });
