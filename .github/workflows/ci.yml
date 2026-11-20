@@ -1,4 +1,4 @@
-name: CI / EventFlow ERP Tests
+name: CI / Backend Tests
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
 
     services:
       mysql:
