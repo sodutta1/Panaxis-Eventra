@@ -13,6 +13,6 @@ class UpdateLeadStatusRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['status' => 'required|string'];
+        return ['status' => 'required|string|in:new,contacted,qualified,proposal_sent,negotiating,converted,lost'];
     }
 }
