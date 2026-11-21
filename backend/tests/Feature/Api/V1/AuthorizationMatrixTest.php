@@ -123,11 +123,9 @@ class AuthorizationMatrixTest extends TestCase
         }
     }
 
-    public function test_legacy_erp_is_disabled_and_vendor_login_does_not_receive_arbitrary_vendor(): void
+    public function test_vendor_login_does_not_receive_arbitrary_vendor(): void
     {
-        $this->get('/login')->assertNotFound();
         $user = User::where('email', 'admin@eventflow.test')->firstOrFail();
-        $this->actingAs($user)->get('/events')->assertNotFound();
         $vendor = User::where('role', 'vendor')->firstOrFail();
         Sanctum::actingAs($vendor);
         $this->getJson('/api/v1/portal/vendor')->assertForbidden()->assertJsonMissingPath('data');
@@ -135,10 +133,12 @@ class AuthorizationMatrixTest extends TestCase
         $this->getJson('/api/v1/portal/vendor')->assertOk();
     }
 
-    public function test_production_cannot_enable_unsafe_legacy_erp(): void
+    public function test_legacy_erp_routes_are_gone(): void
     {
-        $this->app['env'] = 'production';
-        config(['app.legacy_erp' => true]);
+        // The legacy Blade bundle was removed entirely; its routes must stay dead.
         $this->get('/login')->assertNotFound();
+        $user = User::where('email', 'admin@eventflow.test')->firstOrFail();
+        $this->actingAs($user)->get('/events')->assertNotFound();
+        $this->actingAs($user)->get('/dashboard')->assertNotFound();
     }
 }
