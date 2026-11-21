@@ -28,6 +28,32 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp notifications (stub)
+    |--------------------------------------------------------------------------
+    | Drop a provider key (Twilio / Meta Cloud API) here to go live. Without a
+    | key every WhatsApp notification is recorded in notification_logs with
+    | status "stubbed_no_provider" and nothing is sent.
+    */
+    'whatsapp' => [
+        'provider_key' => env('WHATSAPP_PROVIDER_KEY'),
+        'sender' => env('WHATSAPP_SENDER'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Razorpay (TEST MODE ONLY)
+    |--------------------------------------------------------------------------
+    | Placeholder test keys. No live charges: order creation and signature
+    | verification are simulated while test_mode is true or keys are missing.
+    */
+    'razorpay' => [
+        'key' => env('RAZORPAY_KEY', 'rzp_test_placeholder'),
+        'secret' => env('RAZORPAY_SECRET', 'placeholder_secret'),
+        'test_mode' => env('RAZORPAY_TEST_MODE', true),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

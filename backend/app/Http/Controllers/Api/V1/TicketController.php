@@ -12,6 +12,7 @@ use App\Http\Resources\V1\TicketResource;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Notifications\TicketPurchaseConfirmation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -68,6 +69,10 @@ class TicketController extends Controller
             return $tickets;
         }, 3);
 
+        foreach ($tickets as $ticket) {
+            $this->sendPurchaseConfirmation($ticket);
+        }
+
         return TicketResource::collection($tickets)->response()->setStatusCode(201);
     }
 
@@ -112,6 +117,29 @@ class TicketController extends Controller
     public function show(Request $request, int $ticket)
     {
         return new TicketResource($this->findForCompany(Ticket::query(), $request, $ticket));
+    }
+
+    /**
+     * Notify the buyer after a sale. Notification failures must never break
+     * a completed sale, so they are rescued and logged instead.
+     */
+    protected function sendPurchaseConfirmation(Ticket $ticket): void
+    {
+        if (! $ticket->holder_email && ! $ticket->holder_phone) {
+            return;
+        }
+
+        rescue(function () use ($ticket) {
+            $routes = [];
+            if ($ticket->holder_email) {
+                $routes['mail'] = $ticket->holder_email;
+            }
+            if ($ticket->holder_phone) {
+                $routes['whatsapp'] = $ticket->holder_phone;
+            }
+            \Illuminate\Support\Facades\Notification::routes($routes)
+                ->notify(new TicketPurchaseConfirmation($ticket->loadMissing(['event.venue', 'ticketType'])));
+        }, report: true);
     }
 
     public function types(Request $request)
