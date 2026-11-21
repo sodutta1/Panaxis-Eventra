@@ -242,8 +242,9 @@ class ApiV1Test extends TestCase
         $this->assertEquals(28000, (float) $budget['total_actual_cost']);
     }
 
-    public function test_work_order_payment_caps_at_contract_amount(): void
+    public function test_work_order_payment_rejects_overpayment(): void
     {
+        // Updated by fix(EV-QA-007): overpayment is a 422, not a silent cap.
         $token = $this->tokenFor('admin@eventflow.test');
         $eventId = $this->getJson('/api/v1/events', $this->auth($token))->json('data.0.id');
         $vendorId = $this->getJson('/api/v1/vendors', $this->auth($token))->json('data.0.id');
@@ -252,7 +253,10 @@ class ApiV1Test extends TestCase
             'vendor_id' => $vendorId, 'service_title' => 'Catering', 'contract_amount' => 100000,
         ], $this->auth($token))->assertCreated()->json('data');
 
-        $res = $this->postJson("/api/v1/work-orders/{$wo['id']}/payment", ['amount' => 150000], $this->auth($token))
+        $this->postJson("/api/v1/work-orders/{$wo['id']}/payment", ['amount' => 150000], $this->auth($token))
+            ->assertStatus(422);
+
+        $res = $this->postJson("/api/v1/work-orders/{$wo['id']}/payment", ['amount' => 100000], $this->auth($token))
             ->assertOk()->json('data');
         $this->assertEquals(100000, (float) $res['paid_amount']);
         $this->assertSame('paid', $res['status']);

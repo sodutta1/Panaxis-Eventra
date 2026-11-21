@@ -9,6 +9,7 @@ use App\Models\Vendor;
 use App\Models\VendorAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class WorkOrderController extends Controller
 {
@@ -62,8 +63,15 @@ class WorkOrderController extends Controller
 
         return DB::transaction(function () use ($request, $workOrder, $data) {
             $wo = $this->findForCompany(VendorAssignment::with(['vendor', 'event'])->lockForUpdate(), $request, $workOrder);
-            // Preserve the existing cap, but serialize concurrent ledger updates.
-            $newPaid = min(round((float) $wo->paid_amount + $data['amount'], 2), (float) $wo->contract_amount);
+            // Reject overpayment outright; the caller must not believe more was
+            // paid than the contract holds. Same contract as invoice payments.
+            $remaining = round((float) $wo->contract_amount - (float) $wo->paid_amount, 2);
+            if (round($data['amount'], 2) > $remaining) {
+                throw ValidationException::withMessages([
+                    'amount' => "Payment exceeds the remaining balance of {$remaining}.",
+                ]);
+            }
+            $newPaid = round((float) $wo->paid_amount + $data['amount'], 2);
             $wo->update([
                 'paid_amount' => $newPaid,
                 'status' => $newPaid >= (float) $wo->contract_amount ? 'paid' : ($wo->status === 'assigned' ? 'in_progress' : $wo->status),
@@ -77,6 +85,9 @@ class WorkOrderController extends Controller
     {
         $data = $request->validate(['status' => 'required|string|in:assigned,in_progress,completed,paid,cancelled']);
         $wo = $this->findWo($request, $workOrder);
+        if (! $wo->canTransitionTo($data['status'])) {
+            abort(422, "Cannot move a work order from {$wo->status} to {$data['status']}.");
+        }
         $wo->update(['status' => $data['status']]);
 
         return response()->json(['data' => $wo->fresh(['vendor'])]);

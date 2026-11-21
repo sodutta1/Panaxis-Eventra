@@ -66,7 +66,8 @@ test('budget item add recomputes totals server-side', async ({ page }) => {
   await expect(page.locator('text=₹12,345').first()).toBeVisible()
 })
 
-test('work order create then payment capped at contract', async ({ page }) => {
+test('work order overpayment rejected, exact balance marks paid', async ({ page }) => {
+  // codifies EV-QA-007: overpayment is a 422, not a silent cap
   await login(page)
   await page.goto('/work-orders')
   await expect(page.getByRole('heading', { name: 'Vendor Work Orders' })).toBeVisible()
@@ -77,10 +78,15 @@ test('work order create then payment capped at contract', async ({ page }) => {
   await page.getByRole('button', { name: 'Create work order' }).click()
   const row = page.locator('tr', { hasText: svc })
   await expect(row).toBeVisible({ timeout: 8000 })
+  // overpaying surfaces an error and changes nothing
   await row.getByRole('button', { name: 'Add payment' }).click()
   await row.locator('input[type="number"]').fill('99999')
   await row.getByRole('button', { name: 'Save' }).click()
-  // server caps at 10000 and marks paid
+  await expect(page.locator('text=/exceeds the remaining balance/i').first()).toBeVisible({ timeout: 8000 })
+  await expect(row.locator('td', { hasText: /^paid$/i })).toHaveCount(0)
+  // paying the exact balance still works and marks the order paid
+  await row.locator('input[type="number"]').fill('10000')
+  await row.getByRole('button', { name: 'Save' }).click()
   await expect(row.locator('text=₹10,000').first()).toBeVisible({ timeout: 8000 })
   await expect(row.locator('td', { hasText: /^paid$/i })).toBeVisible()
 })
