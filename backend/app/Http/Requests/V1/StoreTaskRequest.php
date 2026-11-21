@@ -14,7 +14,7 @@ class StoreTaskRequest extends TenantRequest
         return [
             'title' => 'required|string|max:255',
             'assigned_to' => 'nullable|integer|min:1|exists:users,id',
-            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'due_date' => 'required|date|after_or_equal:today',
             'priority' => 'required|string|max:255',
             'description' => 'nullable|string|max:16000',
         ];
