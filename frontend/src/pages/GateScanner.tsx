@@ -9,7 +9,12 @@ const READER_ID = 'qr-reader'
 
 export default function GateScanner() {
   const scannerRef = useRef<Html5Qrcode | null>(null)
-  const [running, setRunning] = useState(false)
+  const [cameraState, setCameraState] = useState<'idle' | 'starting' | 'running' | 'stopping'>('idle')
+  const running = cameraState === 'running'
+  const cameraBusyRef = useRef(false)
+  const generationRef = useRef(0)
+  const mountedRef = useRef(true)
+  const [verifying, setVerifying] = useState(false)
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [last, setLast] = useState<ScanResult | null>(null)
   const [history, setHistory] = useState<ScanResult[]>([])
@@ -20,10 +25,11 @@ export default function GateScanner() {
   const verifyToken = async (token: string) => {
     // Debounce the same code for 3s so a held QR does not spam the API.
     const now = Date.now()
-    if (lastTokenRef.current && lastTokenRef.current.token === token && now - lastTokenRef.current.at < 3000) return
+    if (busyRef.current) return false
+    if (lastTokenRef.current && lastTokenRef.current.token === token && now - lastTokenRef.current.at < 3000) return false
     lastTokenRef.current = { token, at: now }
-    if (busyRef.current) return
     busyRef.current = true
+    setVerifying(true)
     let res: ScanResult
     try {
       const r = await api<{ status: string; message: string }>('/tickets/verify', { method: 'POST', body: { token } })
@@ -33,51 +39,82 @@ export default function GateScanner() {
       const cls = status === 404 ? 'error' : status === 409 ? 'warning' : 'error'
       res = { status: cls, message: (e as Error).message, at: new Date().toLocaleTimeString() }
     }
-    setLast(res)
-    setHistory((h) => [res, ...h].slice(0, 8))
+    if (mountedRef.current) {
+      setLast(res)
+      setHistory((h) => [res, ...h].slice(0, 8))
+      setVerifying(false)
+    }
     busyRef.current = false
+    return true
+  }
+
+  const dispose = async (scanner: Html5Qrcode) => {
+    try { await scanner.stop() } catch { /* not running or still starting */ }
+    try { scanner.clear() } catch { /* detached element or still starting */ }
   }
 
   const start = async () => {
+    if (cameraBusyRef.current || scannerRef.current) return
+    cameraBusyRef.current = true
+    const generation = ++generationRef.current
+    setCameraState('starting')
     setCameraError(null)
+    let scanner: Html5Qrcode | null = null
     try {
-      const scanner = new Html5Qrcode(READER_ID)
+      scanner = new Html5Qrcode(READER_ID)
       scannerRef.current = scanner
       await scanner.start(
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 220, height: 220 } },
-        (decoded) => { void verifyToken(decoded.trim()) },
+        (decoded) => { if (mountedRef.current) void verifyToken(decoded.trim()) },
         () => {},
       )
-      setRunning(true)
+      if (!mountedRef.current || generation !== generationRef.current) {
+        await dispose(scanner)
+        return
+      }
+      setCameraState('running')
     } catch (e) {
-      scannerRef.current = null
-      setCameraError((e as Error).message)
-      setRunning(false)
+      if (scanner) await dispose(scanner)
+      if (mountedRef.current && generation === generationRef.current) {
+        scannerRef.current = null
+        setCameraError(e instanceof Error ? e.message : String(e))
+        setCameraState('idle')
+      }
+    } finally {
+      if (generation === generationRef.current) cameraBusyRef.current = false
     }
   }
 
   const stop = async () => {
+    if (cameraBusyRef.current) return
+    cameraBusyRef.current = true
+    ++generationRef.current
+    setCameraState('stopping')
     const scanner = scannerRef.current
     scannerRef.current = null
-    setRunning(false)
-    if (scanner) {
-      try { await scanner.stop() } catch { /* already stopped */ }
-      try { scanner.clear() } catch { /* element already cleared */ }
-    }
+    if (scanner) await dispose(scanner)
+    if (mountedRef.current) setCameraState('idle')
+    cameraBusyRef.current = false
   }
 
   useEffect(() => {
-    return () => { void stop() }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    mountedRef.current = true
+    const invalidatePendingStart = () => { ++generationRef.current }
+    return () => {
+      mountedRef.current = false
+      invalidatePendingStart()
+      const scanner = scannerRef.current
+      scannerRef.current = null
+      if (scanner) void dispose(scanner)
+    }
   }, [])
 
   const submitManual = async (ev: React.FormEvent) => {
     ev.preventDefault()
     const t = manual.trim()
     if (!t) return
-    setManual('')
-    await verifyToken(t)
+    if (await verifyToken(t)) setManual('')
   }
 
   const tone = last?.status === 'success'
@@ -89,8 +126,8 @@ export default function GateScanner() {
   return (
     <div>
       <PageHeader title="Gate Scanner" sub="Camera QR scan → POST /api/v1/tickets/verify">
-        <button className={btnGhostCls} onClick={() => (running ? void stop() : void start())}>
-          {running ? 'Stop camera' : 'Start camera'}
+        <button className={btnGhostCls} disabled={cameraState === 'starting' || cameraState === 'stopping'} onClick={() => (running ? void stop() : void start())}>
+          {cameraState === 'starting' ? 'Starting camera...' : cameraState === 'stopping' ? 'Stopping camera...' : running ? 'Stop camera' : 'Start camera'}
         </button>
       </PageHeader>
 
@@ -111,7 +148,7 @@ export default function GateScanner() {
           <p className="text-xs text-pamuted mt-2">Point the camera at a ticket QR code. The same code is ignored for 3 seconds after a scan.</p>
           <form onSubmit={submitManual} className="flex gap-2 mt-3">
             <input className={inputCls} placeholder="Or paste QR token / ticket number" value={manual} onChange={(e) => setManual(e.target.value)} />
-            <button className={btnCls}>Verify</button>
+            <button className={btnCls} disabled={verifying}>{verifying ? 'Verifying...' : 'Verify'}</button>
           </form>
         </Card>
 

@@ -22,11 +22,13 @@ test('client role lands in the client portal with only their data', async ({ pag
   await expect(page.locator('text=Rahul & Sanjana Oberoi').first()).toBeVisible()
 })
 
-test('vendor role sees the vendor portal with assignments', async ({ page }) => {
+test('unlinked vendor login is denied instead of receiving another vendor profile', async ({ page }) => {
   await login(page, 'vendor@eventflow.test')
   await page.goto('/portal/vendor')
   await expect(page.getByRole('heading', { name: 'Vendor Portal' })).toBeVisible()
-  await expect(page.locator('text=SoundCraft').first()).toBeVisible()
+  await expect(page.getByText('Vendor account linking is not configured. Contact your company administrator.')).toBeVisible()
+  await expect(page.getByText('SoundCraft', { exact: false })).toHaveCount(0)
+  await expect(page.locator('table tbody tr')).toHaveCount(0)
 })
 
 test('vendor role is blocked from the admin page by the API', async ({ page }) => {

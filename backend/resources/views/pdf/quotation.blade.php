@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <style>
-  body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111; }
+  body { overflow-wrap: break-word; word-wrap: break-word; font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111; }
   .head { width: 100%; margin-bottom: 18px; }
   .brand { color: #105830; font-size: 20px; font-weight: bold; }
   .muted { color: #666; }
-  table.items { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  table.items { table-layout: fixed; width: 100%; border-collapse: collapse; margin-top: 14px; }
   table.items th { background: #105830; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
   table.items td { border-bottom: 1px solid #ddd; padding: 6px 8px; }
   .right { text-align: right; }
@@ -52,7 +52,7 @@
   </tr></table>
 
   <table class="items">
-    <thead><tr><th>#</th><th>Item</th><th>Description</th><th class="right">Qty</th><th class="right">Unit price</th><th class="right">Amount</th></tr></thead>
+    <thead><tr><th style="width:5%">#</th><th style="width:30%">Item</th><th style="width:25%">Description</th><th style="width:10%" class="right">Qty</th><th style="width:15%" class="right">Unit price</th><th style="width:15%" class="right">Amount</th></tr></thead>
     <tbody>
       @foreach($quotation->items as $i => $item)
       <tr>

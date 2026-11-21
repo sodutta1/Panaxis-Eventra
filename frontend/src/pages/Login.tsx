@@ -13,8 +13,9 @@ const DEMO = [
 ]
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@eventflow.test')
-  const [password, setPassword] = useState('password')
+  const demoMode = import.meta.env.VITE_DEMO_MODE === 'true'
+  const [email, setEmail] = useState(demoMode ? 'admin@eventflow.test' : '')
+  const [password, setPassword] = useState(demoMode ? 'password' : '')
   const [error, setError] = useState<unknown>(null)
   const [busy, setBusy] = useState(false)
   const navigate = useNavigate()
@@ -58,14 +59,14 @@ export default function Login() {
           <button className={`${btnCls} w-full`} disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
-          <div className="pt-3 border-t border-slate-100">
+          {demoMode && <div className="pt-3 border-t border-slate-100">
             <div className="text-xs text-pamuted mb-2">Seeded demo accounts (password: password)</div>
             <div className="flex flex-wrap gap-1.5">
               {DEMO.map(([mail, label]) => (
                 <button
                   key={mail}
                   type="button"
-                  onClick={() => setEmail(mail)}
+                  onClick={() => { setEmail(mail); setPassword('password') }}
                   className="text-xs rounded-full border border-paline text-pa-700 px-2.5 py-1 hover:bg-pa-50"
                   title={mail}
                 >
@@ -73,7 +74,7 @@ export default function Login() {
                 </button>
               ))}
             </div>
-          </div>
+          </div>}
         </form>
         <div className="text-center text-[11.5px] text-pamuted mt-6">Panaxis Eventra Pvt. Ltd.</div>
       </div>
