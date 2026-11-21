@@ -21,6 +21,7 @@
 <body>
   <table class="head"><tr>
     <td>
+      @if(!empty($logo))<img src="{{ $logo }}" style="max-height:42px; max-width:150px; margin-bottom:4px;"><br>@endif
       <div class="brand">{{ $company->name }}</div>
       <div class="muted">{{ $company->address }}, {{ $company->city }}, {{ $company->state }}</div>
       <div class="muted">{{ $company->email }} · {{ $company->phone }}</div>
