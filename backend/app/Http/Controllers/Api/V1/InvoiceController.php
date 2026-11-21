@@ -85,7 +85,17 @@ class InvoiceController extends Controller
 
     public function destroy(Request $request, int $invoice)
     {
-        $this->findForCompany(Invoice::query(), $request, $invoice)->delete();
+        $model = $this->findForCompany(Invoice::query(), $request, $invoice);
+
+        // Deleting an invoice cascade-deletes its payment records, which would
+        // silently erase financial history. Refuse instead.
+        if ($model->payments()->exists()) {
+            return response()->json([
+                'message' => 'This invoice has recorded payments and cannot be deleted. Delete is blocked to protect financial records.',
+            ], 409);
+        }
+
+        $model->delete();
 
         return response()->json(['message' => 'Invoice deleted.']);
     }

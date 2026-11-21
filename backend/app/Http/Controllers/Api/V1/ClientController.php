@@ -59,7 +59,17 @@ class ClientController extends Controller
 
     public function destroy(Request $request, int $client)
     {
-        $this->findForCompany(Client::query(), $request, $client)->delete();
+        $model = $this->findForCompany(Client::query(), $request, $client);
+
+        // Deleting a client cascade-deletes its invoices and quotations, which
+        // would silently erase financial history. Refuse instead.
+        if ($model->invoices()->exists() || $model->quotations()->exists()) {
+            return response()->json([
+                'message' => 'This client has invoices or quotations and cannot be deleted. Delete is blocked to protect financial records.',
+            ], 409);
+        }
+
+        $model->delete();
 
         return response()->json(['message' => 'Client deleted.']);
     }
