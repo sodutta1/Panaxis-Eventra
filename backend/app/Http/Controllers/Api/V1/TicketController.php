@@ -91,6 +91,9 @@ class TicketController extends Controller
             if (! $ticket) {
                 return response()->json(['status' => 'error', 'message' => 'INVALID TICKET: Token is not recognized.'], 404);
             }
+            if ($ticket->event->status === 'completed') {
+                return response()->json(['status' => 'error', 'message' => 'INVALID TICKET: This event has already completed.'], 422);
+            }
             if ($ticket->ticket_status === 'checked_in') {
                 return response()->json(['status' => 'warning', 'message' => 'ALREADY ADMITTED! Ticket #'.$ticket->ticket_number,
                     'ticket' => new TicketResource($ticket)], 409);
