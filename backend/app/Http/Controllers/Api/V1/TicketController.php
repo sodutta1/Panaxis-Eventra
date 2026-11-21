@@ -46,10 +46,14 @@ class TicketController extends Controller
             }
             $tickets = collect();
             for ($i = 0; $i < $qty; $i++) {
+                $suffix = $qty > 1 ? ' (#'.($i + 1).')' : '';
+                if (mb_strlen($data['holder_name'].$suffix) > 255) {
+                    $suffix = '';
+                }
                 $tickets->push(Ticket::create([
                     'company_id' => $event->company_id, 'event_id' => $event->id, 'ticket_type_id' => $type->id,
                     'ticket_number' => 'TCK-'.date('Y').'-'.Str::upper((string) Str::ulid()),
-                    'qr_token' => 'QR-'.Str::random(40), 'holder_name' => $data['holder_name'],
+                    'qr_token' => 'QR-'.Str::random(40), 'holder_name' => $data['holder_name'].$suffix,
                     'holder_email' => $data['holder_email'] ?? null, 'holder_phone' => $data['holder_phone'] ?? null,
                     'price_paid' => $data['price_paid'] ?? $type->price, 'payment_status' => $data['payment_status'],
                     'ticket_status' => 'valid',
