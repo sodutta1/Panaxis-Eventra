@@ -80,6 +80,14 @@ class EventController extends Controller
     public function update(UpdateEventRequest $request, int $event)
     {
         $model = $this->findForCompany(Event::query(), $request, $event);
+
+        if ($request->has('status') && ! $model->canTransitionTo($request->status)) {
+            return response()->json([
+                'message' => "Cannot move an event from '{$model->status}' to '{$request->status}'.",
+                'errors' => ['status' => ["Transition from '{$model->status}' to '{$request->status}' is not allowed."]],
+            ], 422);
+        }
+
         $model->update($request->validated());
 
         return new EventResource($model->fresh(['client', 'category', 'venue', 'manager']));
@@ -95,6 +103,14 @@ class EventController extends Controller
     public function updateStatus(UpdateEventStatusRequest $request, int $event)
     {
         $model = $this->findForCompany(Event::query(), $request, $event);
+
+        if (! $model->canTransitionTo($request->status)) {
+            return response()->json([
+                'message' => "Cannot move an event from '{$model->status}' to '{$request->status}'.",
+                'errors' => ['status' => ["Transition from '{$model->status}' to '{$request->status}' is not allowed."]],
+            ], 422);
+        }
+
         $model->update(['status' => $request->status]);
 
         return new EventResource($model->fresh());

@@ -23,7 +23,7 @@ class StoreEventRequest extends TenantRequest
             'expected_guests' => 'sometimes|required|integer|min:0|max:2147483647',
             'estimated_budget' => 'sometimes|required|numeric|decimal:0,2|min:0|max:9999999999.99',
             'contract_value' => 'sometimes|required|numeric|decimal:0,2|min:0|max:9999999999.99',
-            'status' => 'required|string|max:255',
+            'status' => 'required|string|in:proposed,in_planning,confirmed,in_progress,completed,cancelled|max:255',
             'theme_concept' => 'nullable|string|max:16000',
             'description' => 'nullable|string|max:16000',
         ];

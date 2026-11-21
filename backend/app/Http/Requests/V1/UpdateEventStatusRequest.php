@@ -11,6 +11,6 @@ class UpdateEventStatusRequest extends TenantRequest
 
     public function rules(): array
     {
-        return ['status' => 'required|string|max:255'];
+        return ['status' => 'required|string|in:proposed,in_planning,confirmed,in_progress,completed,cancelled|max:255'];
     }
 }
