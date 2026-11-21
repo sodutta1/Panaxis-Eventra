@@ -22,6 +22,8 @@ import ClientPortal from './pages/ClientPortal'
 import VendorPortal from './pages/VendorPortal'
 import Reports from './pages/Reports'
 import Admin from './pages/Admin'
+import Analytics from './pages/Analytics'
+import PublicBooking from './pages/PublicBooking'
 
 function RequireAuth({ children }: { children: React.ReactElement }) {
   return getToken() ? children : <Navigate to="/login" replace />
@@ -31,6 +33,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/book/:eventId" element={<PublicBooking />} />
       <Route
         path="/"
         element={
@@ -41,6 +44,7 @@ export default function App() {
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="analytics" element={<Analytics />} />
         <Route path="events" element={<Events />} />
         <Route path="events/:id" element={<EventDetail />} />
         <Route path="leads" element={<Leads />} />

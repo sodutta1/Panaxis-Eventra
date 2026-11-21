@@ -61,6 +61,7 @@ const NAV = [
   { to: '/gate', label: 'Gate Scanner', icon: ICONS.scanner },
   { to: '/portal/client', label: 'Client Portal', icon: ICONS.portal },
   { to: '/portal/vendor', label: 'Vendor Portal', icon: ICONS.portal },
+  { to: '/analytics', label: 'Analytics', icon: ICONS.reports },
   { to: '/reports', label: 'Reports', icon: ICONS.reports },
   { to: '/admin', label: 'Admin', icon: ICONS.admin },
 ]

@@ -69,6 +69,9 @@ export type Task = {
   due_date?: string
   priority: string
   status: string
+  phase?: string
+  depends_on?: number | null
+  blocked?: boolean
   assigned_user?: User
 }
 

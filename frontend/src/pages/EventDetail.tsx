@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, btnCls, btnGhostCls, inputCls } from '../components/ui'
-import { inr, type EventItem } from '../types'
+import { inr, type EventItem, type Task } from '../types'
 
 const NEXT: Record<string, string> = {
   proposed: 'in_planning',
@@ -15,10 +15,13 @@ export default function EventDetail() {
   const [event, setEvent] = useState<EventItem | null>(null)
   const [error, setError] = useState<unknown>(null)
   const [sched, setSched] = useState({ start_time: '', title: '', location_within_venue: '' })
-  const [task, setTask] = useState({ title: '', priority: 'medium', due_date: '' })
+  const [task, setTask] = useState({ title: '', priority: 'medium', due_date: '', phase: 'pre_event' })
+  const [phases, setPhases] = useState<Record<string, Task[]>>({})
+  const [taskError, setTaskError] = useState('')
 
   const load = () => {
     api<{ data: EventItem }>(`/events/${id}`).then((r) => setEvent(r.data)).catch(setError)
+    api<{ data: Record<string, Task[]> }>(`/events/${id}/tasks`).then((r) => setPhases(r.data)).catch(() => {})
   }
   useEffect(load, [id])
 
@@ -42,12 +45,17 @@ export default function EventDetail() {
   const addTask = async (ev: React.FormEvent) => {
     ev.preventDefault()
     await api(`/events/${event.id}/tasks`, { method: 'POST', body: task })
-    setTask({ title: '', priority: 'medium', due_date: '' })
+    setTask({ title: '', priority: 'medium', due_date: '', phase: 'pre_event' })
     load()
   }
 
   const toggle = async (taskId: number) => {
-    await api(`/tasks/${taskId}/toggle`, { method: 'POST' })
+    setTaskError('')
+    try {
+      await api(`/tasks/${taskId}/toggle`, { method: 'POST' })
+    } catch (e) {
+      setTaskError((e as Error).message)
+    }
     load()
   }
 
@@ -87,24 +95,35 @@ export default function EventDetail() {
           </form>
         </Card>
         <Card className="p-5">
-          <h2 className="font-semibold mb-3">Tasks</h2>
-          <ul className="space-y-2 mb-4">
-            {(event.tasks ?? []).map((t) => (
-              <li key={t.id} className="text-sm flex items-center gap-3">
-                <input type="checkbox" checked={t.status === 'completed'} onChange={() => toggle(t.id)} className="rounded" />
-                <span className={t.status === 'completed' ? 'line-through text-slate-400' : ''}>{t.title}</span>
-                <span className="text-xs text-slate-400 ml-auto">{t.due_date ?? ''} · {t.priority}</span>
-              </li>
-            ))}
-            {(event.tasks ?? []).length === 0 && <li className="text-sm text-slate-400">No tasks yet.</li>}
-          </ul>
-          <form onSubmit={addTask} className="flex gap-2">
+          <h2 className="font-semibold mb-3">Tasks management</h2>
+          {taskError && <p className="text-xs text-rose-600 mb-2">{taskError}</p>}
+          {([['pre_event', 'Pre-event tasks'], ['on_event', 'On-event tasks'], ['post_event', 'Post-event tasks']] as const).map(([phase, label]) => (
+            <div key={phase} className="mb-4">
+              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">{label} <span className="text-slate-400">({(phases[phase] ?? []).length})</span></div>
+              <ul className="space-y-1.5">
+                {(phases[phase] ?? []).map((t) => (
+                  <li key={t.id} className="text-sm flex items-center gap-3">
+                    <input type="checkbox" checked={t.status === 'completed'} onChange={() => toggle(t.id)} className="rounded" disabled={t.blocked} />
+                    <span className={t.status === 'completed' ? 'line-through text-slate-400' : ''}>{t.title}</span>
+                    {t.blocked && <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">blocked</span>}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${t.priority === 'urgent' ? 'bg-rose-100 text-rose-700' : t.priority === 'high' ? 'bg-amber-100 text-amber-800' : t.priority === 'medium' ? 'bg-sky-100 text-sky-800' : 'bg-slate-200 text-slate-600'}`}>{t.priority}</span>
+                    <span className="text-xs text-slate-400 ml-auto">{t.due_date ? String(t.due_date).slice(0, 10) : ''}{t.assigned_user ? ` · ${t.assigned_user.name}` : ''}</span>
+                  </li>
+                ))}
+                {(phases[phase] ?? []).length === 0 && <li className="text-xs text-slate-400">No tasks.</li>}
+              </ul>
+            </div>
+          ))}
+          <form onSubmit={addTask} className="flex gap-2 flex-wrap">
             <input className={inputCls} placeholder="Task title" value={task.title} onChange={(e) => setTask({ ...task, title: e.target.value })} required />
+            <select className={`${inputCls} w-32`} value={task.phase} onChange={(e) => setTask({ ...task, phase: e.target.value })}>
+              <option value="pre_event">pre-event</option><option value="on_event">on-event</option><option value="post_event">post-event</option>
+            </select>
             <select className={`${inputCls} w-28`} value={task.priority} onChange={(e) => setTask({ ...task, priority: e.target.value })}>
-              <option value="low">low</option><option value="medium">medium</option><option value="high">high</option>
+              <option value="low">low</option><option value="medium">medium</option><option value="high">high</option><option value="urgent">urgent</option>
             </select>
             <input className={`${inputCls} w-36`} type="date" value={task.due_date} onChange={(e) => setTask({ ...task, due_date: e.target.value })} />
-            <button className={btnGhostCls}>Add</button>
+            <button className={btnGhostCls}>Add task</button>
           </form>
         </Card>
       </div>
