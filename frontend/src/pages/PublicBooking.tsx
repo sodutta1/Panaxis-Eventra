@@ -73,6 +73,7 @@ export default function PublicBooking() {
       })
       const payment = await pub<{ data: { razorpay_payment_id: string; razorpay_signature: string } }>(
         `/public/bookings/${order.data.booking_id}/simulate-payment`,
+        {},
       )
       const confirmed = await pub<{ data: { tickets: ConfirmedTicket[] } }>(
         `/public/bookings/${order.data.booking_id}/confirm`,
