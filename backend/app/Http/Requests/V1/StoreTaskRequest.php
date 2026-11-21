@@ -17,6 +17,8 @@ class StoreTaskRequest extends TenantRequest
             'due_date' => 'required|date|after_or_equal:today',
             'priority' => 'required|string|max:255',
             'description' => 'nullable|string|max:16000',
+            'phase' => 'nullable|string|in:pre_event,on_event,post_event',
+            'depends_on' => 'nullable|integer|min:1|exists:event_tasks,id',
         ];
     }
 }

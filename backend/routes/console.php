@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('eventra:send-reminders')->hourly();
+Schedule::command('eventra:send-task-reminders')->hourly();
