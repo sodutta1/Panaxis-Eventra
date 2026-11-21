@@ -96,7 +96,22 @@ class EventController extends Controller
 
     public function destroy(Request $request, int $event)
     {
-        $this->findForCompany(Event::query(), $request, $event)->delete();
+        /** @var Event $model */
+        $model = $this->findForCompany(Event::query(), $request, $event);
+
+        // Deleting an event cascade-deletes its guests, tickets, budget items
+        // and work orders, which would silently erase gate, sales and vendor
+        // payment records. Refuse instead, same contract as client/invoice deletes.
+        if ($model->guests()->exists()
+            || $model->tickets()->exists()
+            || $model->vendorAssignments()->exists()
+            || ($model->budget && $model->budget->items()->exists())) {
+            return response()->json([
+                'message' => 'This event has guests, tickets, budget items or work orders and cannot be deleted. Delete is blocked to protect event and financial records.',
+            ], 409);
+        }
+
+        $model->delete();
 
         return response()->json(['message' => 'Event deleted.']);
     }

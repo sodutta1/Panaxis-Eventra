@@ -188,12 +188,11 @@ class InputAndConsistencyTest extends TestCase
         $this->patchJson('/api/v1/guests/'.$guest->id, ['event_id' => $other->id, 'guest_group_id' => null])->assertOk();
     }
 
-    public function test_event_delete_has_no_orphan_tickets_or_types(): void
+    public function test_event_with_tickets_cannot_be_deleted_and_keeps_everything(): void
     {
         $event = Event::has('tickets')->firstOrFail();
-        $this->deleteJson('/api/v1/events/'.$event->id)->assertOk();
-        $this->assertDatabaseMissing('tickets', ['event_id' => $event->id]);
-        $this->assertDatabaseMissing('ticket_types', ['event_id' => $event->id]);
-        $this->assertDatabaseMissing('event_days', ['event_id' => $event->id]);
+        $this->deleteJson('/api/v1/events/'.$event->id)->assertStatus(409);
+        $this->assertDatabaseHas('tickets', ['event_id' => $event->id]);
+        $this->assertDatabaseHas('ticket_types', ['event_id' => $event->id]);
     }
 }
