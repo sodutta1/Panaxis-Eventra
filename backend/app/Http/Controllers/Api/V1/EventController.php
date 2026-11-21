@@ -18,6 +18,7 @@ use App\Models\EventTask;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
 {
@@ -119,7 +120,37 @@ class EventController extends Controller
     public function addSchedule(StoreScheduleRequest $request, int $event)
     {
         $model = $this->findForCompany(Event::query(), $request, $event);
-        $schedule = $model->schedules()->create($request->validated());
+        $data = $request->validated();
+
+        // A schedule's date is persisted through its event day. Resolve the
+        // day explicitly instead of silently dropping schedule_date.
+        $day = null;
+        if (!empty($data['event_day_id'])) {
+            $day = $model->days()->where('id', $data['event_day_id'])->first();
+            if (!$day) {
+                throw ValidationException::withMessages([
+                    'event_day_id' => 'This day does not belong to the event.',
+                ]);
+            }
+        }
+        if (!empty($data['schedule_date'])) {
+            $byDate = $model->days()->where('date', $data['schedule_date'])->first();
+            if (!$byDate) {
+                throw ValidationException::withMessages([
+                    'schedule_date' => 'The event has no day on this date.',
+                ]);
+            }
+            if ($day && $day->id !== $byDate->id) {
+                throw ValidationException::withMessages([
+                    'schedule_date' => 'The schedule_date does not match the given event_day_id.',
+                ]);
+            }
+            $day = $byDate;
+        }
+        unset($data['schedule_date']);
+        $data['event_day_id'] = $day?->id;
+
+        $schedule = $model->schedules()->create($data);
 
         return (new ScheduleResource($schedule))->response()->setStatusCode(201);
     }
