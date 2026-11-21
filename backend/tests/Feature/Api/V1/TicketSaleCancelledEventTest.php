@@ -67,6 +67,22 @@ class TicketSaleCancelledEventTest extends TestCase
         $this->assertSame(0, (int) $event->fresh()->confirmed_guests);
     }
 
+    public function test_ticket_sale_rejected_for_completed_event(): void
+    {
+        $auth = $this->admin();
+        [$event, $typeId] = $this->makeEventWithType($auth, 'completed');
+
+        $this->postJson('/api/v1/tickets', [
+            'event_id' => $event->id,
+            'ticket_type_id' => $typeId,
+            'holder_name' => 'Late Buyer',
+            'payment_status' => 'paid',
+        ], $auth)->assertStatus(422);
+
+        $this->assertSame(0, $event->tickets()->count());
+        $this->assertSame(0, (int) $event->fresh()->confirmed_guests);
+    }
+
     public function test_ticket_sale_still_works_for_active_event(): void
     {
         $auth = $this->admin();

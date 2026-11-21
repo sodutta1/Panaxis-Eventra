@@ -77,4 +77,15 @@ class GuestCheckInTest extends TestCase
 
         $this->assertFalse((bool) $guest->fresh()->checked_in);
     }
+
+    public function test_checkin_rejected_for_completed_event(): void
+    {
+        $auth = $this->admin();
+        [, $guest] = $this->makeEventWithGuest($auth, 'completed');
+
+        $this->postJson("/api/v1/guests/{$guest->id}/checkin", [], $auth)
+            ->assertStatus(422);
+
+        $this->assertFalse((bool) $guest->fresh()->checked_in);
+    }
 }

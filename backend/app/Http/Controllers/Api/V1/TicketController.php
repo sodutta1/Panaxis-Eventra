@@ -39,8 +39,8 @@ class TicketController extends Controller
         $tickets = DB::transaction(function () use ($request, $data) {
             // Lock the event before the type in every ticket mutation to avoid lock inversion.
             $event = $this->findForCompany(Event::query()->lockForUpdate(), $request, (int) $data['event_id']);
-            if ($event->status === 'cancelled') {
-                throw ValidationException::withMessages(['event_id' => 'Cannot sell tickets for a cancelled event.']);
+            if (in_array($event->status, ['cancelled', 'completed'], true)) {
+                throw ValidationException::withMessages(['event_id' => 'Cannot sell tickets for a cancelled or completed event.']);
             }
             $type = $this->findForCompany(TicketType::query()->lockForUpdate(), $request, (int) $data['ticket_type_id']);
             $qty = $data['quantity'] ?? 1;

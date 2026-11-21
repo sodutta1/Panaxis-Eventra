@@ -55,9 +55,9 @@ class GuestController extends Controller
             ], 409);
         }
 
-        if ($model->event?->status === 'cancelled') {
+        if (in_array($model->event?->status, ['cancelled', 'completed'], true)) {
             return response()->json([
-                'message' => 'Cannot check in a guest for a cancelled event.',
+                'message' => 'Cannot check in a guest for a cancelled or completed event.',
             ], 422);
         }
 
