@@ -63,7 +63,18 @@ class VendorController extends Controller
 
     public function destroy(Request $request, int $vendor)
     {
-        $this->findForCompany(Vendor::query(), $request, $vendor)->delete();
+        $model = $this->findForCompany(Vendor::query(), $request, $vendor);
+
+        // Deleting a vendor cascade-deletes its work orders, which would
+        // silently erase recorded vendor payments. Refuse instead, same
+        // contract as client/invoice deletes.
+        if ($model->assignments()->where('paid_amount', '>', 0)->exists()) {
+            return response()->json([
+                'message' => 'This vendor has recorded work-order payments and cannot be deleted. Delete is blocked to protect financial records.',
+            ], 409);
+        }
+
+        $model->delete();
 
         return response()->json(['message' => 'Vendor deleted.']);
     }
