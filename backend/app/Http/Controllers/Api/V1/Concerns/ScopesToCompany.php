@@ -17,7 +17,9 @@ trait ScopesToCompany
 {
     protected function companyId(Request $request): int
     {
-        return (int) ($request->user()->company_id ?? 1);
+        abort_unless($request->user()?->company_id && $request->user()->status === 'active', 403);
+
+        return (int) $request->user()->company_id;
     }
 
     protected function scopeCompany(Builder $query, Request $request): Builder
@@ -29,7 +31,7 @@ trait ScopesToCompany
     {
         $model = $this->scopeCompany($query, $request)->find($id);
 
-        if (!$model) {
+        if (! $model) {
             throw new NotFoundHttpException('Resource not found.');
         }
 

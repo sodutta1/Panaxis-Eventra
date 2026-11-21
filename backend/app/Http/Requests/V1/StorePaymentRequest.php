@@ -3,9 +3,8 @@
 namespace App\Http\Requests\V1;
 
 use App\Models\Invoice;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StorePaymentRequest extends FormRequest
+class StorePaymentRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -17,14 +16,14 @@ class StorePaymentRequest extends FormRequest
         // The {invoice} route parameter may be a bound model or a raw id
         // depending on where validation runs; support both.
         $routeInvoice = $this->route('invoice');
-        $invoice = $routeInvoice instanceof Invoice ? $routeInvoice : Invoice::find($routeInvoice);
+        $invoice = $routeInvoice instanceof Invoice ? $routeInvoice : Invoice::where('company_id', $this->user()->company_id)->find($routeInvoice);
 
         return [
-            'amount' => 'required|numeric|min:1|max:' . ($invoice ? $invoice->balance_due : 0),
+            'amount' => 'required|numeric|decimal:0,2|min:0.01|max:'.($invoice ? $invoice->balance_due : 0),
             'payment_date' => 'required|date',
-            'payment_method' => 'required|string',
-            'transaction_reference' => 'nullable|string',
-            'notes' => 'nullable|string',
+            'payment_method' => 'required|string|max:255',
+            'transaction_reference' => 'nullable|string|max:255',
+            'notes' => 'nullable|string|max:16000',
         ];
     }
 }

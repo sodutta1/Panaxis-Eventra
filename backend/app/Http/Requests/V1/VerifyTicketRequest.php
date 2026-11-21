@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class VerifyTicketRequest extends FormRequest
+class VerifyTicketRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -13,6 +11,6 @@ class VerifyTicketRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['token' => 'required|string'];
+        return ['token' => 'required|string|max:255'];
     }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreScheduleRequest extends FormRequest
+class StoreScheduleRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -14,13 +12,13 @@ class StoreScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_day_id' => 'nullable|exists:event_days,id',
-            'start_time' => 'required',
-            'end_time' => 'nullable',
+            'event_day_id' => 'nullable|integer|min:1|exists:event_days,id',
+            'start_time' => 'required|date_format:H:i,H:i:s',
+            'end_time' => 'nullable|date_format:H:i,H:i:s',
             'title' => 'required|string|max:255',
             'location_within_venue' => 'nullable|string|max:255',
             'speaker_performer' => 'nullable|string|max:255',
-            'activity_description' => 'nullable|string',
+            'activity_description' => 'nullable|string|max:16000',
             'in_charge_person' => 'nullable|string|max:255',
         ];
     }

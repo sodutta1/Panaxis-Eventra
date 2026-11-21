@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreClientRequest extends FormRequest
+class StoreClientRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -16,15 +14,15 @@ class StoreClientRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
-            'email' => 'nullable|email',
-            'phone' => 'nullable|string',
-            'alternate_phone' => 'nullable|string',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
-            'state' => 'nullable|string',
-            'tax_number' => 'nullable|string',
-            'client_type' => 'required|string',
-            'notes' => 'nullable|string',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'alternate_phone' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:16000',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'tax_number' => 'nullable|string|max:255',
+            'client_type' => 'required|string|max:255',
+            'notes' => 'nullable|string|max:16000',
         ];
     }
 }

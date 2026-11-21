@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreLeadRequest extends FormRequest
+class StoreLeadRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -16,16 +14,16 @@ class StoreLeadRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'contact_name' => 'required|string|max:255',
-            'email' => 'nullable|email',
-            'phone' => 'nullable|string',
-            'source' => 'required|string',
-            'event_type' => 'nullable|string',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'source' => 'required|string|max:255',
+            'event_type' => 'nullable|string|max:255',
             'event_date' => 'nullable|date',
-            'estimated_guests' => 'nullable|integer',
-            'estimated_budget' => 'nullable|numeric',
-            'assigned_to' => 'nullable|exists:users,id',
-            'requirements' => 'nullable|string',
-            'notes' => 'nullable|string',
+            'estimated_guests' => 'sometimes|required|integer|max:2147483647|min:0',
+            'estimated_budget' => 'sometimes|required|numeric|decimal:0,2|max:9999999999.99|min:0',
+            'assigned_to' => 'nullable|integer|min:1|exists:users,id',
+            'requirements' => 'nullable|string|max:16000',
+            'notes' => 'nullable|string|max:16000',
         ];
     }
 }

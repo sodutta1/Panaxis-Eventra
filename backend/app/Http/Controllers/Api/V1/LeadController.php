@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\V1\Concerns\ScopesToCompany;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreLeadRequest;
 use App\Http\Requests\V1\UpdateLeadRequest;
 use App\Http\Requests\V1\UpdateLeadStatusRequest;
@@ -11,6 +11,7 @@ use App\Http\Resources\V1\LeadResource;
 use App\Models\Client;
 use App\Models\Lead;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LeadController extends Controller
 {
@@ -27,7 +28,7 @@ class LeadController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('contact_name', 'like', "%{$search}%");
+                    ->orWhere('contact_name', 'like', "%{$search}%");
             });
         }
 
@@ -74,26 +75,32 @@ class LeadController extends Controller
 
     public function convert(Request $request, int $lead)
     {
-        $model = $this->findForCompany(Lead::query(), $request, $lead);
-        $companyId = $this->companyId($request);
+        return DB::transaction(function () use ($request, $lead) {
+            $model = $this->findForCompany(Lead::query()->lockForUpdate(), $request, $lead);
+            $companyId = $this->companyId($request);
 
-        $client = Client::create([
-            'company_id' => $companyId,
-            'client_code' => 'CL-' . rand(1000, 9999),
-            'name' => $model->contact_name,
-            'email' => $model->email,
-            'phone' => $model->phone,
-            'client_type' => 'individual',
-            'status' => 'active',
-            'notes' => 'Converted from lead: ' . $model->title,
-        ]);
+            if ($model->client_id) {
+                return response()->json(['message' => 'Lead already converted.', 'data' => new LeadResource($model), 'client_id' => $model->client_id]);
+            }
 
-        $model->update(['client_id' => $client->id, 'status' => 'converted']);
+            $client = Client::create([
+                'company_id' => $companyId,
+                'client_code' => 'CL-'.rand(1000, 9999),
+                'name' => $model->contact_name,
+                'email' => $model->email,
+                'phone' => $model->phone,
+                'client_type' => 'individual',
+                'status' => 'active',
+                'notes' => 'Converted from lead: '.$model->title,
+            ]);
 
-        return response()->json([
-            'message' => 'Lead converted to client ' . $client->name . '.',
-            'data' => new LeadResource($model->fresh()),
-            'client_id' => $client->id,
-        ]);
+            $model->update(['client_id' => $client->id, 'status' => 'converted']);
+
+            return response()->json([
+                'message' => 'Lead converted to client '.$client->name.'.',
+                'data' => new LeadResource($model->fresh()),
+                'client_id' => $client->id,
+            ]);
+        }, 3);
     }
 }

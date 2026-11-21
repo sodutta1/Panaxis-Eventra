@@ -2,6 +2,8 @@
 
 return [
 
+    'legacy_erp' => env('ENABLE_LEGACY_ERP', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

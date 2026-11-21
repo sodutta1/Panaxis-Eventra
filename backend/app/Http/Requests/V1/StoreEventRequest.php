@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreEventRequest extends FormRequest
+class StoreEventRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -15,19 +13,19 @@ class StoreEventRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'client_id' => 'required|exists:clients,id',
-            'event_category_id' => 'required|exists:event_categories,id',
-            'event_type' => 'required|string',
-            'venue_id' => 'nullable|exists:venues,id',
-            'manager_id' => 'nullable|exists:users,id',
+            'client_id' => 'required|integer|min:1|exists:clients,id',
+            'event_category_id' => 'required|integer|min:1|exists:event_categories,id',
+            'event_type' => 'required|string|max:255',
+            'venue_id' => 'nullable|integer|min:1|exists:venues,id',
+            'manager_id' => 'nullable|integer|min:1|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'expected_guests' => 'nullable|integer|min:0',
-            'estimated_budget' => 'nullable|numeric|min:0',
-            'contract_value' => 'nullable|numeric|min:0',
-            'status' => 'required|string',
-            'theme_concept' => 'nullable|string',
-            'description' => 'nullable|string',
+            'expected_guests' => 'sometimes|required|integer|min:0|max:2147483647',
+            'estimated_budget' => 'sometimes|required|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'contract_value' => 'sometimes|required|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'status' => 'required|string|max:255',
+            'theme_concept' => 'nullable|string|max:16000',
+            'description' => 'nullable|string|max:16000',
         ];
     }
 }

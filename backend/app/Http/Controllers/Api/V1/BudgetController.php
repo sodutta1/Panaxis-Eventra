@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\V1\Concerns\ScopesToCompany;
+use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\EventBudget;
 use App\Models\EventBudgetItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class BudgetController extends Controller
 {
@@ -15,9 +17,9 @@ class BudgetController extends Controller
 
     private function budgetFor(Request $request, int $eventId): EventBudget
     {
-        $event = $this->findForCompany(Event::query(), $request, $eventId);
+        $event = $this->findForCompany(Event::query()->lockForUpdate(), $request, $eventId);
 
-        return EventBudget::firstOrCreate(
+        return EventBudget::query()->lockForUpdate()->firstOrCreate(
             ['event_id' => $event->id, 'company_id' => $event->company_id],
             ['status' => 'draft', 'contingency_percent' => 0, 'contingency_amount' => 0, 'total_estimated_income' => 0, 'total_estimated_cost' => 0, 'total_actual_cost' => 0]
         );
@@ -25,51 +27,54 @@ class BudgetController extends Controller
 
     public function show(Request $request, int $event)
     {
-        $budget = $this->budgetFor($request, $event)->load('items');
-
-        return response()->json(['data' => $budget]);
+        return DB::transaction(fn () => response()->json(['data' => $this->budgetFor($request, $event)->load('items')]), 3);
     }
 
     public function addItem(Request $request, int $event)
     {
         $data = $request->validate([
-            'category' => 'required|string|max:255',
-            'item_name' => 'required|string|max:255',
-            'estimated_cost' => 'required|numeric|min:0',
-            'actual_cost' => 'nullable|numeric|min:0',
-            'notes' => 'nullable|string',
+            'category' => 'required|string|max:255', 'item_name' => 'required|string|max:255',
+            'estimated_cost' => 'required|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'actual_cost' => 'nullable|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'notes' => 'nullable|string|max:16000',
         ]);
 
-        $budget = $this->budgetFor($request, $event);
-        // actual_cost is NOT NULL in the schema - omit it when not provided
-        $item = $budget->items()->create(array_filter($data, fn ($v) => $v !== null));
-        $this->recalc($budget);
+        return DB::transaction(function () use ($request, $event, $data) {
+            $budget = $this->budgetFor($request, $event);
+            $item = $budget->items()->create(array_filter($data, fn ($v) => $v !== null));
+            $this->recalc($budget);
 
-        return response()->json(['data' => $item], 201);
+            return response()->json(['data' => $item], 201);
+        }, 3);
     }
 
     public function updateItem(Request $request, int $item)
     {
         $data = $request->validate([
-            'category' => 'sometimes|string|max:255',
-            'item_name' => 'sometimes|string|max:255',
-            'estimated_cost' => 'sometimes|numeric|min:0',
-            'actual_cost' => 'nullable|numeric|min:0',
-            'notes' => 'nullable|string',
+            'category' => 'sometimes|required|string|max:255', 'item_name' => 'sometimes|required|string|max:255',
+            'estimated_cost' => 'sometimes|required|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'actual_cost' => 'nullable|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'notes' => 'nullable|string|max:16000',
         ]);
+        $candidate = EventBudgetItem::whereHas('budget', fn ($q) => $q->where('company_id', $this->companyId($request)))->findOrFail($item);
 
-        $model = EventBudgetItem::whereHas('budget', fn ($q) => $q->where('company_id', $this->companyId($request)))->findOrFail($item);
-        $model->update(array_filter($data, fn ($v) => $v !== null));
-        $this->recalc($model->budget);
+        return DB::transaction(function () use ($request, $candidate, $data) {
+            $budget = $this->findForCompany(EventBudget::query()->lockForUpdate(), $request, $candidate->event_budget_id);
+            $model = $budget->items()->lockForUpdate()->findOrFail($candidate->id);
+            $model->update(array_filter($data, fn ($v) => $v !== null));
+            $this->recalc($budget);
 
-        return response()->json(['data' => $model->fresh()]);
+            return response()->json(['data' => $model->fresh()]);
+        }, 3);
     }
 
     private function recalc(EventBudget $budget): void
     {
-        $budget->update([
-            'total_estimated_cost' => $budget->items()->sum('estimated_cost'),
-            'total_actual_cost' => $budget->items()->sum('actual_cost'),
-        ]);
+        $estimated = $budget->items()->sum('estimated_cost');
+        $actual = $budget->items()->sum('actual_cost');
+        if ((float) $estimated > 9999999999.99 || (float) $actual > 9999999999.99) {
+            throw ValidationException::withMessages(['estimated_cost' => 'Budget total exceeds the supported amount.']);
+        }
+        $budget->update(['total_estimated_cost' => $estimated, 'total_actual_cost' => $actual]);
     }
 }

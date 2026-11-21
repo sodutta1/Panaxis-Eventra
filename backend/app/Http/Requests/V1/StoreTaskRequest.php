@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreTaskRequest extends FormRequest
+class StoreTaskRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -15,10 +13,10 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'assigned_to' => 'nullable|exists:users,id',
-            'due_date' => 'nullable|date',
-            'priority' => 'required|string',
-            'description' => 'nullable|string',
+            'assigned_to' => 'nullable|integer|min:1|exists:users,id',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'priority' => 'required|string|max:255',
+            'description' => 'nullable|string|max:16000',
         ];
     }
 }

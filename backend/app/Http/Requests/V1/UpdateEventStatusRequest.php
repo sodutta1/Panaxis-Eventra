@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateEventStatusRequest extends FormRequest
+class UpdateEventStatusRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -13,6 +11,6 @@ class UpdateEventStatusRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['status' => 'required|string'];
+        return ['status' => 'required|string|max:255'];
     }
 }

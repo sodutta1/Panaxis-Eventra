@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateVenueRequest extends FormRequest
+class UpdateVenueRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -15,17 +13,17 @@ class UpdateVenueRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|required|string|max:255',
-            'type' => 'sometimes|required|string',
-            'capacity' => 'sometimes|required|integer|min:1',
-            'rental_cost_per_day' => 'sometimes|required|numeric|min:0',
-            'contact_person' => 'nullable|string',
-            'contact_phone' => 'nullable|string',
-            'contact_email' => 'nullable|email',
-            'city' => 'sometimes|required|string',
-            'state' => 'nullable|string',
-            'address' => 'nullable|string',
-            'amenities' => 'nullable|string',
-            'status' => 'sometimes|required|string',
+            'type' => 'sometimes|required|string|max:255',
+            'capacity' => 'sometimes|required|integer|min:1|max:2147483647',
+            'rental_cost_per_day' => 'sometimes|required|numeric|decimal:0,2|min:0|max:9999999999.99',
+            'contact_person' => 'nullable|string|max:255',
+            'contact_phone' => 'nullable|string|max:255',
+            'contact_email' => 'nullable|email|max:255',
+            'city' => 'sometimes|required|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:16000',
+            'amenities' => 'nullable|string|max:255',
+            'status' => 'sometimes|required|string|max:255',
         ];
     }
 }

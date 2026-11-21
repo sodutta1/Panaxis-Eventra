@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateExpenseRequest extends FormRequest
+class UpdateExpenseRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -14,16 +12,16 @@ class UpdateExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_id' => 'nullable|exists:events,id',
-            'expense_category_id' => 'nullable|exists:expense_categories,id',
-            'vendor_id' => 'nullable|exists:vendors,id',
+            'event_id' => 'nullable|integer|min:1|exists:events,id',
+            'expense_category_id' => 'nullable|integer|min:1|exists:expense_categories,id',
+            'vendor_id' => 'nullable|integer|min:1|exists:vendors,id',
             'title' => 'sometimes|required|string|max:255',
-            'amount' => 'sometimes|required|numeric|min:1',
+            'amount' => 'sometimes|required|numeric|decimal:0,2|min:1|max:9999999999.99',
             'incurred_date' => 'sometimes|required|date',
-            'payment_method' => 'sometimes|required|string',
-            'receipt_number' => 'nullable|string',
-            'notes' => 'nullable|string',
-            'status' => 'sometimes|required|string',
+            'payment_method' => 'sometimes|required|string|max:255',
+            'receipt_number' => 'nullable|string|max:255',
+            'notes' => 'nullable|string|max:16000',
+            'status' => 'sometimes|required|string|max:255',
         ];
     }
 }

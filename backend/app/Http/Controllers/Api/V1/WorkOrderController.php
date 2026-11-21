@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\V1\Concerns\ScopesToCompany;
+use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Vendor;
 use App\Models\VendorAssignment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WorkOrderController extends Controller
 {
@@ -31,8 +32,8 @@ class WorkOrderController extends Controller
         $data = $request->validate([
             'vendor_id' => 'required|integer',
             'service_title' => 'required|string|max:255',
-            'scope_of_work' => 'nullable|string',
-            'contract_amount' => 'required|numeric|min:0',
+            'scope_of_work' => 'nullable|string|max:16000',
+            'contract_amount' => 'required|numeric|decimal:0,2|min:0|max:9999999999.99',
         ]);
 
         $ev = $this->findForCompany(Event::query(), $request, $event);
@@ -57,17 +58,19 @@ class WorkOrderController extends Controller
 
     public function addPayment(Request $request, int $workOrder)
     {
-        $data = $request->validate(['amount' => 'required|numeric|min:0.01']);
-        $wo = $this->findWo($request, $workOrder);
+        $data = $request->validate(['amount' => 'required|numeric|decimal:0,2|min:0.01|max:9999999999.99']);
 
-        // Never allow overpayment beyond the contract amount.
-        $newPaid = min((float) $wo->paid_amount + $data['amount'], (float) $wo->contract_amount);
-        $wo->update([
-            'paid_amount' => $newPaid,
-            'status' => $newPaid >= (float) $wo->contract_amount ? 'paid' : ($wo->status === 'assigned' ? 'in_progress' : $wo->status),
-        ]);
+        return DB::transaction(function () use ($request, $workOrder, $data) {
+            $wo = $this->findForCompany(VendorAssignment::with(['vendor', 'event'])->lockForUpdate(), $request, $workOrder);
+            // Preserve the existing cap, but serialize concurrent ledger updates.
+            $newPaid = min(round((float) $wo->paid_amount + $data['amount'], 2), (float) $wo->contract_amount);
+            $wo->update([
+                'paid_amount' => $newPaid,
+                'status' => $newPaid >= (float) $wo->contract_amount ? 'paid' : ($wo->status === 'assigned' ? 'in_progress' : $wo->status),
+            ]);
 
-        return response()->json(['data' => $wo->fresh(['vendor'])]);
+            return response()->json(['data' => $wo->fresh(['vendor'])]);
+        }, 3);
     }
 
     public function updateStatus(Request $request, int $workOrder)

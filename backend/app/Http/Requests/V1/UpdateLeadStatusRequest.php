@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateLeadStatusRequest extends FormRequest
+class UpdateLeadStatusRequest extends TenantRequest
 {
     public function authorize(): bool
     {
@@ -13,6 +11,6 @@ class UpdateLeadStatusRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['status' => 'required|string|in:new,contacted,qualified,proposal_sent,negotiating,converted,lost'];
+        return ['status' => 'required|string|in:new,contacted,qualified,proposal_sent,negotiating,converted,lost|max:255'];
     }
 }

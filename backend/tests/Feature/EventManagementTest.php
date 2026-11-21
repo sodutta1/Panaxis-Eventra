@@ -2,18 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\User;
 use App\Models\Event;
-use App\Models\Client;
-use App\Models\EventCategory;
-use App\Models\Venue;
 use App\Models\Lead;
-use App\Models\Invoice;
 use App\Models\Ticket;
 use App\Models\TicketType;
-use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class EventManagementTest extends TestCase
 {
@@ -23,6 +19,11 @@ class EventManagementTest extends TestCase
     {
         parent::setUp();
         $this->seed();
+        $this->app['env'] = 'local';
+        config(['app.legacy_erp' => true]);
+        // These historical demo tests opt into local-only routes. Keep CSRF's
+        // testing bypass explicit because the app environment is now local.
+        $this->withoutMiddleware(ValidateCsrfToken::class);
     }
 
     protected function getAdmin()
@@ -63,7 +64,7 @@ class EventManagementTest extends TestCase
     {
         $admin = $this->getAdmin();
         $event = Event::first();
-        $response = $this->actingAs($admin)->get('/events/' . $event->id);
+        $response = $this->actingAs($admin)->get('/events/'.$event->id);
         $response->assertStatus(200);
         $response->assertSee($event->event_code);
     }
@@ -72,8 +73,8 @@ class EventManagementTest extends TestCase
     {
         $admin = $this->getAdmin();
         $event = Event::first();
-        $response = $this->actingAs($admin)->post('/events/' . $event->id . '/status', [
-            'status' => 'active'
+        $response = $this->actingAs($admin)->post('/events/'.$event->id.'/status', [
+            'status' => 'active',
         ]);
         $response->assertSessionHas('success');
         $this->assertEquals('active', $event->fresh()->status);
@@ -93,7 +94,7 @@ class EventManagementTest extends TestCase
             'estimated_budget' => 500000,
         ]);
 
-        $response = $this->actingAs($admin)->post('/leads/' . $lead->id . '/convert');
+        $response = $this->actingAs($admin)->post('/leads/'.$lead->id.'/convert');
         $response->assertRedirect(route('events.create'));
         $this->assertEquals('converted', $lead->fresh()->status);
     }
@@ -118,7 +119,7 @@ class EventManagementTest extends TestCase
         $ticket = Ticket::where('holder_name', 'Sophia Martinez')->first();
         $this->assertNotNull($ticket);
 
-        $printResponse = $this->actingAs($admin)->get('/tickets/' . $ticket->id . '/print');
+        $printResponse = $this->actingAs($admin)->get('/tickets/'.$ticket->id.'/print');
         $printResponse->assertStatus(200);
         $printResponse->assertSee('Sophia Martinez');
 

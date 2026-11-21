@@ -16,9 +16,9 @@ class EnsureUserHasRole
     {
         $user = $request->user();
 
-        if (!$user || !in_array($user->role, $roles, true)) {
+        if (! $user || $user->status !== 'active' || ! $user->company_id || ! in_array($user->role, $roles, true)) {
             return response()->json([
-                'message' => 'Forbidden. This endpoint requires one of the roles: ' . implode(', ', $roles) . '.',
+                'message' => 'Forbidden. This endpoint requires one of the roles: '.implode(', ', $roles).'.',
             ], 403);
         }
 

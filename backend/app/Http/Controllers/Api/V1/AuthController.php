@@ -19,13 +19,13 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || $user->status !== 'active' || ! $user->company_id || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'The provided credentials do not match our records.',
             ], 422);
         }
 
-        $token = $user->createToken($request->input('device_name', 'api'))->plainTextToken;
+        $token = $user->createToken(($request->input('device_name') ?? 'api'))->plainTextToken;
 
         return response()->json([
             'token' => $token,
