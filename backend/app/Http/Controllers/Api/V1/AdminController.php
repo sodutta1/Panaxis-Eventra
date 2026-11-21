@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\V1\Concerns\ScopesToCompany;
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,6 +15,24 @@ class AdminController extends Controller
     use ScopesToCompany;
 
     private const ROLES = ['super_admin', 'company_admin', 'admin', 'event_manager', 'sales_executive', 'accountant', 'staff', 'client', 'vendor'];
+
+    /**
+     * POST /api/v1/admin/branding/logo
+     * Upload the company logo used on quotations, invoices, e-tickets,
+     * work orders and the public booking page.
+     */
+    public function uploadLogo(Request $request)
+    {
+        $request->validate([
+            'logo' => 'required|image|mimes:png,jpg,jpeg,svg,webp|max:2048',
+        ]);
+
+        $company = Company::findOrFail($this->companyId($request));
+        $path = $request->file('logo')->store('branding', 'public');
+        $company->forceFill(['logo_path' => $path])->save();
+
+        return response()->json(['data' => ['logo_path' => $path, 'logo_url' => $company->fresh()->logo_url]]);
+    }
 
     public function users(Request $request)
     {
