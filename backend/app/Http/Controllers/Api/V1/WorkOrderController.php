@@ -63,6 +63,11 @@ class WorkOrderController extends Controller
 
         return DB::transaction(function () use ($request, $workOrder, $data) {
             $wo = $this->findForCompany(VendorAssignment::with(['vendor', 'event'])->lockForUpdate(), $request, $workOrder);
+            if ($wo->status === 'cancelled') {
+                throw ValidationException::withMessages([
+                    'amount' => 'Cannot record a payment on a cancelled work order.',
+                ]);
+            }
             // Reject overpayment outright; the caller must not believe more was
             // paid than the contract holds. Same contract as invoice payments.
             $remaining = round((float) $wo->contract_amount - (float) $wo->paid_amount, 2);

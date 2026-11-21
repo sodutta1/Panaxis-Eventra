@@ -93,6 +93,24 @@ class WorkOrderPaymentTest extends TestCase
             ->assertStatus(422);
     }
 
+    public function test_payment_on_cancelled_work_order_is_rejected(): void
+    {
+        $auth = $this->admin();
+        $wo = $this->makeWorkOrder($auth, 100);
+
+        $this->postJson("/api/v1/work-orders/{$wo['id']}/status", ['status' => 'cancelled'], $auth)
+            ->assertOk();
+
+        $this->postJson("/api/v1/work-orders/{$wo['id']}/payment", ['amount' => 50], $auth)
+            ->assertStatus(422);
+
+        $orders = collect($this->getJson("/api/v1/events/{$wo['event_id']}/work-orders", $auth)
+            ->assertOk()->json('data'));
+        $fresh = $orders->firstWhere('id', $wo['id']);
+        $this->assertSame(0.0, (float) $fresh['paid_amount']);
+        $this->assertSame('cancelled', $fresh['status']);
+    }
+
     public function test_forward_and_cancel_transitions_still_work(): void
     {
         $auth = $this->admin();
