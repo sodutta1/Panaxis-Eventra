@@ -26,8 +26,9 @@ export default function Guests() {
     api<Paginated<EventItem>>('/events').then((r) => setEvents(r.data)).catch(() => {})
   }, [])
 
-  const toggle = async (id: number) => {
-    await api(`/guests/${id}/checkin`, { method: 'POST' })
+  const checkIn = async (id: number) => {
+    // check-in is one-way: the API returns 409 for an already-checked-in guest
+    await api(`/guests/${id}/checkin`, { method: 'POST' }).catch(setError)
     load()
   }
 
@@ -81,7 +82,7 @@ export default function Guests() {
 
   return (
     <div>
-      <PageHeader title="Guests & RSVP" sub="GET/POST /api/v1/guests · click a row to toggle check-in">
+      <PageHeader title="Guests & RSVP" sub="GET/POST /api/v1/guests · click a row to check in a guest (cannot be undone)">
         <input className={`${inputCls} w-40`} placeholder="Filter event id" value={eventId} onChange={(e) => setEventId(e.target.value)} />
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New guest'}
@@ -119,7 +120,7 @@ export default function Guests() {
       <Card>
         <Table head={['Guest', 'Event', 'Plus ones', 'Table', 'Dietary', 'RSVP', 'Checked in', '']}>
           {items.map((g) => (
-            <tr key={g.id} className="hover:bg-slate-50 cursor-pointer" onClick={() => toggle(g.id)}>
+            <tr key={g.id} className={g.checked_in ? '' : 'hover:bg-slate-50 cursor-pointer'} onClick={() => { if (!g.checked_in) checkIn(g.id) }}>
               <td className="px-4 py-3 font-medium">{g.name}<div className="text-xs text-slate-400">{g.email}</div></td>
               <td className="px-4 py-3 text-slate-600">#{g.event_id}</td>
               <td className="px-4 py-3">{g.plus_ones}</td>

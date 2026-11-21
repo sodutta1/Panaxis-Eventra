@@ -96,16 +96,25 @@ test('admin creates a user and it appears in the list', async ({ page }) => {
   await expect(page.locator(`text=E2E User ${stamp}`)).toBeVisible({ timeout: 8000 })
 })
 
-test('guest check-in toggles via the API', async ({ page }) => {
+test('guest check-in is one-way via the API', async ({ page }) => {
+  // codifies EV-QA-005: gate check-in cannot be undone by a second click
   await login(page)
   await page.goto('/guests')
   await expect(page.getByRole('heading', { name: /Guests/ })).toBeVisible()
-  const row = page.locator('table tbody tr').first()
-  const wasCheckedIn = (await row.locator('text=not yet').count()) === 0
+  // create a fresh guest so the test does not depend on seeded check-in state
+  const name = `E2E Checkin ${Date.now() % 100000}`
+  await page.getByRole('button', { name: '+ New guest' }).click()
+  await page.selectOption('form select', { index: 1 })
+  await page.fill('input[placeholder="Guest name"]', name)
+  await page.getByRole('button', { name: 'Add guest' }).click()
+  const row = page.locator('table tbody tr', { hasText: name }).first()
+  await expect(row.locator('text=not yet')).toBeVisible({ timeout: 8000 })
   await row.click()
-  // toggling flips the state either way (not yet -> Checked in, or back)
-  const flipped = page.locator('table tbody tr').first().locator(wasCheckedIn ? 'text=not yet' : 'text=Checked in')
-  await expect(flipped).toBeVisible({ timeout: 8000 })
+  await expect(row.locator('text=Checked in')).toBeVisible({ timeout: 8000 })
+  // clicking again must NOT flip it back to "not yet"
+  await row.click()
+  await page.waitForTimeout(1000)
+  await expect(row.locator('text=Checked in')).toBeVisible()
 })
 
 test('lead create then convert asks for confirmation and creates a client', async ({ page }) => {

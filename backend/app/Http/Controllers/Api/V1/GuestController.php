@@ -45,9 +45,25 @@ class GuestController extends Controller
     public function toggleCheckIn(Request $request, int $guest)
     {
         $model = $this->findForCompany(EventGuest::query(), $request, $guest);
+
+        // Gate check-in is one-way: a double-tap or retry must never
+        // un-admit a guest. Cancelling attendance is a separate action.
+        if ($model->checked_in) {
+            return response()->json([
+                'message' => 'Guest is already checked in.',
+                'data' => new GuestResource($model),
+            ], 409);
+        }
+
+        if ($model->event?->status === 'cancelled') {
+            return response()->json([
+                'message' => 'Cannot check in a guest for a cancelled event.',
+            ], 422);
+        }
+
         $model->update([
-            'checked_in' => !$model->checked_in,
-            'checked_in_at' => $model->checked_in ? null : Carbon::now(),
+            'checked_in' => true,
+            'checked_in_at' => Carbon::now(),
         ]);
 
         return new GuestResource($model->fresh());
