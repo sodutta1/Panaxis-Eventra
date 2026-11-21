@@ -1,23 +1,26 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\DashboardController;
-use App\Http\Controllers\Api\V1\LeadController;
-use App\Http\Controllers\Api\V1\ClientController;
-use App\Http\Controllers\Api\V1\EventController;
-use App\Http\Controllers\Api\V1\VenueController;
-use App\Http\Controllers\Api\V1\VendorController;
-use App\Http\Controllers\Api\V1\QuotationController;
-use App\Http\Controllers\Api\V1\InvoiceController;
-use App\Http\Controllers\Api\V1\ExpenseController;
-use App\Http\Controllers\Api\V1\GuestController;
-use App\Http\Controllers\Api\V1\TicketController;
-use App\Http\Controllers\Api\V1\PortalController;
-use App\Http\Controllers\Api\V1\BudgetController;
-use App\Http\Controllers\Api\V1\WorkOrderController;
 use App\Http\Controllers\Api\V1\AdminController;
+use App\Http\Controllers\Api\V1\AnalyticsController;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\BudgetController;
+use App\Http\Controllers\Api\V1\ClientController;
+use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\EventController;
+use App\Http\Controllers\Api\V1\ExpenseController;
+use App\Http\Controllers\Api\V1\ExportController;
+use App\Http\Controllers\Api\V1\GuestController;
+use App\Http\Controllers\Api\V1\InvoiceController;
+use App\Http\Controllers\Api\V1\LeadController;
 use App\Http\Controllers\Api\V1\PdfController;
+use App\Http\Controllers\Api\V1\PortalController;
+use App\Http\Controllers\Api\V1\PublicBookingController;
+use App\Http\Controllers\Api\V1\QuotationController;
+use App\Http\Controllers\Api\V1\TicketController;
+use App\Http\Controllers\Api\V1\VendorController;
+use App\Http\Controllers\Api\V1\VenueController;
+use App\Http\Controllers\Api\V1\WorkOrderController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +36,13 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
     // Public: issue a Sanctum token
     Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login')->middleware('throttle:'.(app()->environment('production') ? '5,1' : '120,1'));
+
+    // Public booking page (no auth; Razorpay TEST MODE)
+    Route::get('/public/events/{event}', [PublicBookingController::class, 'show'])->name('public.events.show');
+    Route::post('/public/events/{event}/book', [PublicBookingController::class, 'book'])->name('public.events.book')->middleware('throttle:20,1');
+    Route::post('/public/bookings/{booking}/simulate-payment', [PublicBookingController::class, 'simulatePayment'])->name('public.bookings.simulate')->middleware('throttle:20,1');
+    Route::post('/public/bookings/{booking}/confirm', [PublicBookingController::class, 'confirm'])->name('public.bookings.confirm')->middleware('throttle:20,1');
+    Route::get('/public/tickets/{qrToken}/eticket', [PdfController::class, 'eticket'])->name('public.tickets.eticket')->middleware('throttle:30,1');
 
     Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me'])->name('auth.me');
@@ -70,15 +80,21 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
             // Events + Run of Show + Tasks
             Route::get('/events', [EventController::class, 'index'])->name('events.index');
-            Route::post('/events', [EventController::class, 'store'])->name('events.store')->middleware($ops . ',event_manager');
+            Route::post('/events', [EventController::class, 'store'])->name('events.store')->middleware($ops.',event_manager');
             Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
             Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update')->middleware($ops);
             Route::patch('/events/{event}', [EventController::class, 'update'])->middleware($ops);
             Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy')->middleware($admins);
             Route::post('/events/{event}/status', [EventController::class, 'updateStatus'])->name('events.status')->middleware($ops);
             Route::post('/events/{event}/schedules', [EventController::class, 'addSchedule'])->name('events.schedules.store')->middleware($ops);
+            Route::get('/events/{event}/tasks', [EventController::class, 'tasksIndex'])->name('events.tasks.index');
             Route::post('/events/{event}/tasks', [EventController::class, 'addTask'])->name('events.tasks.store')->middleware($ops);
+            Route::put('/tasks/{task}', [EventController::class, 'updateTask'])->name('tasks.update')->middleware($ops);
+            Route::patch('/tasks/{task}', [EventController::class, 'updateTask'])->middleware($ops);
             Route::post('/tasks/{task}/toggle', [EventController::class, 'toggleTask'])->name('tasks.toggle')->middleware($ops);
+
+            // Analytics dashboard
+            Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
             // Venues
             Route::get('/venues', [VenueController::class, 'index'])->name('venues.index');
@@ -133,11 +149,19 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             // PDF documents
             Route::get('/invoices/{invoice}/pdf', [PdfController::class, 'invoice'])->name('invoices.pdf');
             Route::get('/quotations/{quotation}/pdf', [PdfController::class, 'quotation'])->name('quotations.pdf');
+            Route::get('/tickets/{ticket}/pdf', [PdfController::class, 'ticketPdf'])->name('tickets.pdf');
+            Route::get('/work-orders/{workOrder}/pdf', [PdfController::class, 'workOrder'])->name('work-orders.pdf');
+            Route::get('/events/{event}/closeout-pdf', [PdfController::class, 'closeout'])->name('events.closeout-pdf')->middleware($finance);
+
+            // CSV exports
+            Route::get('/events/{event}/guests/export', [ExportController::class, 'guestList'])->name('events.guests.export');
+            Route::get('/payments/export', [ExportController::class, 'payments'])->name('payments.export')->middleware($finance);
 
             // Admin: tenant user management
             Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users')->middleware($admins);
             Route::post('/admin/users', [AdminController::class, 'createUser'])->name('admin.users.store')->middleware($admins);
             Route::patch('/admin/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update')->middleware($admins);
+            Route::post('/admin/branding/logo', [AdminController::class, 'uploadLogo'])->name('admin.branding.logo')->middleware($admins);
 
             // Guests & RSVP
             Route::get('/guests', [GuestController::class, 'index'])->name('guests.index');
