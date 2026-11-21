@@ -89,6 +89,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::delete('/venues/{venue}', [VenueController::class, 'destroy'])->name('venues.destroy')->middleware($admins);
 
             // Vendors
+            Route::get('/vendor-categories', [VendorController::class, 'categories'])->name('vendor-categories.index');
             Route::get('/vendors', [VendorController::class, 'index'])->name('vendors.index');
             Route::post('/vendors', [VendorController::class, 'store'])->name('vendors.store')->middleware($ops);
             Route::get('/vendors/{vendor}', [VendorController::class, 'show'])->name('vendors.show');
@@ -114,6 +115,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::get('/expenses/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
             Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store')->middleware($finance);
             Route::post('/expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve')->middleware($finance);
+            Route::put('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update')->middleware($finance);
+            Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->middleware($finance);
+            Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy')->middleware($admins);
 
             // Budgets
             Route::get('/events/{event}/budget', [BudgetController::class, 'show'])->name('budgets.show');
@@ -140,13 +144,20 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::get('/guests/{guest}', [GuestController::class, 'show'])->name('guests.show');
             Route::post('/guests', [GuestController::class, 'store'])->name('guests.store')->middleware($ops);
             Route::post('/guests/{guest}/checkin', [GuestController::class, 'toggleCheckIn'])->name('guests.checkin')->middleware($ops);
+            Route::put('/guests/{guest}', [GuestController::class, 'update'])->name('guests.update')->middleware($ops);
+            Route::patch('/guests/{guest}', [GuestController::class, 'update'])->middleware($ops);
+            Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy')->middleware($admins);
 
             // Tickets & Gate Scan
             Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+            Route::get('/tickets/types', [TicketController::class, 'types'])->name('tickets.types.index');
             Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
             Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store')->middleware($ops);
             Route::post('/tickets/types', [TicketController::class, 'storeType'])->name('tickets.types.store')->middleware($ops);
             Route::post('/tickets/verify', [TicketController::class, 'verifyTicket'])->name('tickets.verify')->middleware('throttle:30,1');
+            Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update')->middleware($ops);
+            Route::patch('/tickets/{ticket}', [TicketController::class, 'update'])->middleware($ops);
+            Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy')->middleware($admins);
         });
 
         // Portals (token holders with client/vendor roles + admins)

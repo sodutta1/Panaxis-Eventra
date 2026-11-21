@@ -1,24 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
+import { Html5Qrcode } from 'html5-qrcode'
 import { api } from '../api'
-import { Card, PageHeader, btnGhostCls } from '../components/ui'
+import { Card, PageHeader, btnCls, btnGhostCls, inputCls } from '../components/ui'
 
 type ScanResult = { status: 'success' | 'warning' | 'error'; message: string; at: string }
 
-declare global {
-  interface Window {
-    BarcodeDetector?: new (opts?: { formats?: string[] }) => {
-      detect: (source: CanvasImageSource) => Promise<{ rawValue: string }[]>
-    }
-  }
-}
+const READER_ID = 'qr-reader'
 
 export default function GateScanner() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [supported] = useState(() => typeof window !== 'undefined' && 'BarcodeDetector' in window)
+  const scannerRef = useRef<Html5Qrcode | null>(null)
   const [running, setRunning] = useState(false)
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [last, setLast] = useState<ScanResult | null>(null)
   const [history, setHistory] = useState<ScanResult[]>([])
+  const [manual, setManual] = useState('')
   const busyRef = useRef(false)
   const lastTokenRef = useRef<{ token: string; at: number } | null>(null)
 
@@ -43,49 +38,47 @@ export default function GateScanner() {
     busyRef.current = false
   }
 
+  const start = async () => {
+    setCameraError(null)
+    try {
+      const scanner = new Html5Qrcode(READER_ID)
+      scannerRef.current = scanner
+      await scanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (decoded) => { void verifyToken(decoded.trim()) },
+        () => {},
+      )
+      setRunning(true)
+    } catch (e) {
+      scannerRef.current = null
+      setCameraError((e as Error).message)
+      setRunning(false)
+    }
+  }
+
+  const stop = async () => {
+    const scanner = scannerRef.current
+    scannerRef.current = null
+    setRunning(false)
+    if (scanner) {
+      try { await scanner.stop() } catch { /* already stopped */ }
+      try { scanner.clear() } catch { /* element already cleared */ }
+    }
+  }
+
   useEffect(() => {
-    if (!running || !supported) return
-    let stream: MediaStream | null = null
-    let raf = 0
-    let stopped = false
+    return () => { void stop() }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    const start = async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-        if (stopped) { stream.getTracks().forEach((t) => t.stop()); return }
-        const video = videoRef.current
-        if (!video) return
-        video.srcObject = stream
-        await video.play()
-        const detector = new window.BarcodeDetector!({ formats: ['qr_code'] })
-        const tick = async () => {
-          if (stopped) return
-          if (video.readyState >= 2) {
-            try {
-              const codes = await detector.detect(video)
-              if (codes.length > 0 && codes[0].rawValue) {
-                void verifyToken(codes[0].rawValue.trim())
-              }
-            } catch {
-              // detection failure on a frame is normal - keep scanning
-            }
-          }
-          raf = requestAnimationFrame(tick)
-        }
-        raf = requestAnimationFrame(tick)
-      } catch (e) {
-        setCameraError((e as Error).message)
-        setRunning(false)
-      }
-    }
-
-    void start()
-    return () => {
-      stopped = true
-      cancelAnimationFrame(raf)
-      stream?.getTracks().forEach((t) => t.stop())
-    }
-  }, [running, supported])
+  const submitManual = async (ev: React.FormEvent) => {
+    ev.preventDefault()
+    const t = manual.trim()
+    if (!t) return
+    setManual('')
+    await verifyToken(t)
+  }
 
   const tone = last?.status === 'success'
     ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
@@ -96,34 +89,30 @@ export default function GateScanner() {
   return (
     <div>
       <PageHeader title="Gate Scanner" sub="Camera QR scan → POST /api/v1/tickets/verify">
-        {supported && (
-          <button className={btnGhostCls} onClick={() => setRunning((r) => !r)}>
-            {running ? 'Stop camera' : 'Start camera'}
-          </button>
-        )}
+        <button className={btnGhostCls} onClick={() => (running ? void stop() : void start())}>
+          {running ? 'Stop camera' : 'Start camera'}
+        </button>
       </PageHeader>
 
-      {!supported && (
-        <Card className="p-5 mb-4 text-sm text-slate-700">
-          This browser does not expose the native BarcodeDetector API. Use Chrome/Edge (or Safari 17.4+), or scan via the manual entry on the Tickets page.
-        </Card>
-      )}
       {cameraError && (
         <div className="bg-rose-50 border border-rose-200 text-rose-800 text-sm rounded-xl px-4 py-3 mb-4">
-          Camera unavailable: {cameraError}. Check camera permission for this site.
+          Camera unavailable: {cameraError}. Check camera permission for this site, or use manual entry below.
         </div>
       )}
 
       <div className="grid md:grid-cols-2 gap-4">
         <Card className="p-4">
           <div className="rounded-xl overflow-hidden bg-slate-900 aspect-[4/3] flex items-center justify-center">
-            {running ? (
-              <video ref={videoRef} className="w-full h-full object-cover" muted playsInline />
-            ) : (
-              <div className="text-slate-400 text-sm">Camera off</div>
+            <div id={READER_ID} className="w-full h-full" />
+            {!running && (
+              <div className="absolute text-slate-400 text-sm pointer-events-none">Camera off</div>
             )}
           </div>
           <p className="text-xs text-pamuted mt-2">Point the camera at a ticket QR code. The same code is ignored for 3 seconds after a scan.</p>
+          <form onSubmit={submitManual} className="flex gap-2 mt-3">
+            <input className={inputCls} placeholder="Or paste QR token / ticket number" value={manual} onChange={(e) => setManual(e.target.value)} />
+            <button className={btnCls}>Verify</button>
+          </form>
         </Card>
 
         <div>

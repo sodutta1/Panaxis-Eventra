@@ -288,4 +288,71 @@ class ApiV1Test extends TestCase
         $qtn->assertOk();
         $this->assertStringStartsWith('%PDF', $qtn->getContent());
     }
+
+    public function test_vendor_categories_endpoint_lists_seeded_categories(): void
+    {
+        $token = $this->tokenFor('admin@eventflow.test');
+
+        $response = $this->getJson('/api/v1/vendor-categories', $this->auth($token));
+
+        $response->assertOk()->assertJsonStructure(['data']);
+        $this->assertGreaterThanOrEqual(5, count($response->json('data')));
+    }
+
+    public function test_expense_update_and_destroy(): void
+    {
+        $token = $this->tokenFor('admin@eventflow.test');
+        $id = $this->getJson('/api/v1/expenses', $this->auth($token))->json('data.0.id');
+        $this->assertNotNull($id, 'no seeded expenses');
+
+        $this->patchJson("/api/v1/expenses/{$id}", ['title' => 'Updated expense title'], $this->auth($token))
+            ->assertOk()
+            ->assertJsonPath('data.title', 'Updated expense title');
+
+        $this->deleteJson("/api/v1/expenses/{$id}", [], $this->auth($token))->assertOk();
+        $this->getJson("/api/v1/expenses/{$id}", $this->auth($token))->assertNotFound();
+    }
+
+    public function test_guest_update_and_destroy(): void
+    {
+        $token = $this->tokenFor('admin@eventflow.test');
+        $id = $this->getJson('/api/v1/guests', $this->auth($token))->json('data.0.id');
+        $this->assertNotNull($id, 'no seeded guests');
+
+        $this->patchJson("/api/v1/guests/{$id}", ['rsvp_status' => 'confirmed', 'table_number' => 'T9'], $this->auth($token))
+            ->assertOk()
+            ->assertJsonPath('data.rsvp_status', 'confirmed')
+            ->assertJsonPath('data.table_number', 'T9');
+
+        $this->deleteJson("/api/v1/guests/{$id}", [], $this->auth($token))->assertOk();
+        $this->getJson("/api/v1/guests/{$id}", $this->auth($token))->assertNotFound();
+    }
+
+    public function test_ticket_types_listing_and_ticket_update_destroy(): void
+    {
+        $token = $this->tokenFor('admin@eventflow.test');
+
+        $types = $this->getJson('/api/v1/tickets/types', $this->auth($token));
+        $types->assertOk()->assertJsonStructure(['data']);
+        $this->assertGreaterThanOrEqual(1, count($types->json('data')));
+
+        $id = $this->getJson('/api/v1/tickets', $this->auth($token))->json('data.0.id');
+        $this->assertNotNull($id, 'no seeded tickets');
+
+        $this->patchJson("/api/v1/tickets/{$id}", ['holder_name' => 'Updated Holder'], $this->auth($token))
+            ->assertOk()
+            ->assertJsonPath('data.holder_name', 'Updated Holder');
+
+        $this->deleteJson("/api/v1/tickets/{$id}", [], $this->auth($token))->assertOk();
+        $this->getJson("/api/v1/tickets/{$id}", $this->auth($token))->assertNotFound();
+    }
+
+    public function test_guest_delete_requires_admin(): void
+    {
+        $token = $this->tokenFor('manager@eventflow.test');
+        $id = $this->getJson('/api/v1/guests', $this->auth($token))->json('data.0.id');
+
+        $this->deleteJson("/api/v1/guests/{$id}", [], $this->auth($token))->assertForbidden();
+    }
+
 }

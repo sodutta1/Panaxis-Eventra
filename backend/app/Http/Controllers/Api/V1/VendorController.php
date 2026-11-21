@@ -8,6 +8,7 @@ use App\Http\Requests\V1\StoreVendorRequest;
 use App\Http\Requests\V1\UpdateVendorRequest;
 use App\Http\Resources\V1\VendorResource;
 use App\Models\Vendor;
+use App\Models\VendorCategory;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
@@ -66,4 +67,12 @@ class VendorController extends Controller
 
         return response()->json(['message' => 'Vendor deleted.']);
     }
+
+    public function categories(Request $request)
+    {
+        $categories = $this->scopeCompany(VendorCategory::query(), $request)->orderBy('name')->get();
+
+        return response()->json(['data' => $categories]);
+    }
+
 }

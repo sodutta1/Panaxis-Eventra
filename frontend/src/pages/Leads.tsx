@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, type Paginated } from '../api'
+import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type Lead } from '../types'
 
@@ -21,22 +21,49 @@ export default function Leads() {
   const [showForm, setShowForm] = useState(false)
   const [view, setView] = useState<'board' | 'table'>('board')
   const [form, setForm] = useState(emptyForm)
+  const [editing, setEditing] = useState<Lead | null>(null)
+  const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
   const [dragId, setDragId] = useState<number | null>(null)
   const [busyId, setBusyId] = useState<number | null>(null)
 
   const load = () => api<Paginated<Lead>>('/leads').then((r) => setLeads(r.data)).catch(setError)
   useEffect(() => { load() }, [])
 
-  const create = async (ev: React.FormEvent) => {
+  const openCreate = () => { setEditing(null); setForm(emptyForm); setShowForm(true) }
+
+  const openEdit = (l: Lead) => {
+    setEditing(l)
+    setForm({
+      title: l.title,
+      contact_name: l.contact_name,
+      email: l.email ?? '',
+      phone: l.phone ?? '',
+      source: l.source,
+      event_date: l.event_date ?? '',
+      estimated_budget: l.estimated_budget ? String(l.estimated_budget) : '',
+    })
+    setShowForm(true)
+  }
+
+  const submit = async (ev: React.FormEvent) => {
     ev.preventDefault()
     setError(null)
+    const body = { ...form, estimated_budget: form.estimated_budget ? Number(form.estimated_budget) : undefined, event_date: form.event_date || undefined }
     try {
-      await api('/leads', {
-        method: 'POST',
-        body: { ...form, estimated_budget: form.estimated_budget ? Number(form.estimated_budget) : undefined, event_date: form.event_date || undefined },
-      })
+      if (editing) await api(`/leads/${editing.id}`, { method: 'PATCH', body })
+      else await api('/leads', { method: 'POST', body })
       setShowForm(false)
+      setEditing(null)
       setForm(emptyForm)
+      load()
+    } catch (e) { setError(e) }
+  }
+
+  const remove = async (l: Lead) => {
+    if (!confirm(`Delete lead "${l.title}"?`)) return
+    setError(null)
+    try {
+      await api(`/leads/${l.id}`, { method: 'DELETE' })
       load()
     } catch (e) { setError(e) }
   }
@@ -72,19 +99,23 @@ export default function Leads() {
         <button className={btnGhostCls} onClick={() => setView(view === 'board' ? 'table' : 'board')}>
           {view === 'board' ? 'Table view' : 'Board view'}
         </button>
-        <button className={btnCls} onClick={() => setShowForm(!showForm)}>{showForm ? 'Close' : '+ New lead'}</button>
+        <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>{showForm && !editing ? 'Close' : '+ New lead'}</button>
       </PageHeader>
       <ErrorBox error={error} />
       {showForm && (
         <Card className="p-5 mb-6">
-          <form onSubmit={create} className="grid md:grid-cols-3 gap-4">
+          <div className="text-sm font-bold text-pa-900 mb-3">{editing ? `Edit lead: ${editing.title}` : 'Add a lead'}</div>
+          <form onSubmit={submit} className="grid md:grid-cols-3 gap-4">
             <input className={inputCls} placeholder="Lead title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
             <input className={inputCls} placeholder="Contact name" value={form.contact_name} onChange={(e) => setForm({ ...form, contact_name: e.target.value })} required />
             <input className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <input className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <input className={inputCls} type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} />
             <input className={inputCls} type="number" placeholder="Estimated budget (₹)" value={form.estimated_budget} onChange={(e) => setForm({ ...form, estimated_budget: e.target.value })} />
-            <div><button className={btnCls}>Create lead</button></div>
+            <div className="flex gap-2 items-end">
+              <button className={btnCls}>{editing ? 'Save changes' : 'Create lead'}</button>
+              {editing && <button type="button" className={btnGhostCls} onClick={() => { setShowForm(false); setEditing(null) }}>Cancel</button>}
+            </div>
           </form>
         </Card>
       )}
@@ -123,6 +154,10 @@ export default function Leads() {
                           Convert → client
                         </button>
                       )}
+                      <div className="flex justify-end gap-2 mt-2">
+                        <button className="text-[11px] font-bold text-pa-700 hover:underline" onClick={() => openEdit(l)}>Edit</button>
+                        {isAdmin && <button className="text-[11px] font-bold text-rose-600 hover:underline" onClick={() => remove(l)}>Delete</button>}
+                      </div>
                     </div>
                   ))}
                   {cards.length === 0 && <div className="text-[11px] text-pamuted text-center py-6">Drop leads here</div>}
@@ -142,10 +177,12 @@ export default function Leads() {
                 <td className="px-4 py-3 text-slate-600">{l.event_date ?? '-'}</td>
                 <td className="px-4 py-3">{inr(l.estimated_budget)}</td>
                 <td className="px-4 py-3"><Badge value={l.status} /></td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-right whitespace-nowrap">
                   {l.status !== 'converted' && (
-                    <button className={btnGhostCls} onClick={() => convert(l.id)}>Convert → client</button>
+                    <button className={`${btnGhostCls} mr-3`} onClick={() => convert(l.id)}>Convert → client</button>
                   )}
+                  <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(l)}>Edit</button>
+                  {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(l)}>Delete</button>}
                 </td>
               </tr>
             ))}

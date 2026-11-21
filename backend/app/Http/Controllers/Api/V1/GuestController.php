@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\V1\Concerns\ScopesToCompany;
 use App\Http\Requests\V1\StoreGuestRequest;
+use App\Http\Requests\V1\UpdateGuestRequest;
 use App\Http\Resources\V1\GuestResource;
 use App\Models\EventGuest;
 use Carbon\Carbon;
@@ -56,4 +57,20 @@ class GuestController extends Controller
     {
         return new GuestResource($this->findForCompany(EventGuest::query(), $request, $guest));
     }
+
+    public function update(UpdateGuestRequest $request, int $guest)
+    {
+        $model = $this->findForCompany(EventGuest::query(), $request, $guest);
+        $model->update($request->validated());
+
+        return new GuestResource($model->fresh());
+    }
+
+    public function destroy(Request $request, int $guest)
+    {
+        $this->findForCompany(EventGuest::query(), $request, $guest)->delete();
+
+        return response()->json(['message' => 'Guest deleted.']);
+    }
+
 }

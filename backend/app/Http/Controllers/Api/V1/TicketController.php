@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\V1\Concerns\ScopesToCompany;
 use App\Http\Requests\V1\StoreTicketRequest;
+use App\Http\Requests\V1\UpdateTicketRequest;
 use App\Http\Requests\V1\StoreTicketTypeRequest;
 use App\Http\Requests\V1\VerifyTicketRequest;
 use App\Http\Resources\V1\TicketResource;
@@ -126,4 +127,27 @@ class TicketController extends Controller
     {
         return new TicketResource($this->findForCompany(Ticket::query(), $request, $ticket));
     }
+
+    public function types(Request $request)
+    {
+        $types = $this->scopeCompany(TicketType::query(), $request)->orderBy('name')->get();
+
+        return response()->json(['data' => $types]);
+    }
+
+    public function update(UpdateTicketRequest $request, int $ticket)
+    {
+        $model = $this->findForCompany(Ticket::query(), $request, $ticket);
+        $model->update($request->validated());
+
+        return new TicketResource($model->fresh(['event', 'ticketType']));
+    }
+
+    public function destroy(Request $request, int $ticket)
+    {
+        $this->findForCompany(Ticket::query(), $request, $ticket)->delete();
+
+        return response()->json(['message' => 'Ticket deleted.']);
+    }
+
 }

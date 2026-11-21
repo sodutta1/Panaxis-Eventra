@@ -80,6 +80,26 @@ export type Venue = {
   capacity: number
   rental_cost_per_day: string
   status: string
+  contact_person?: string
+  contact_phone?: string
+  contact_email?: string
+  state?: string
+  address?: string
+  amenities?: string
+}
+
+export type VendorCategory = {
+  id: number
+  name: string
+}
+
+export type TicketType = {
+  id: number
+  event_id: number
+  name: string
+  price: string | number
+  total_capacity?: number
+  sold_count?: number
 }
 
 export type Vendor = {
