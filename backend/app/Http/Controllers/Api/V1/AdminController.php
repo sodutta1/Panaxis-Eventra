@@ -64,6 +64,12 @@ class AdminController extends Controller
         $model = $this->findForCompany(User::query(), $request, $user);
         $model->update($data);
 
+        // Deactivating an account must end its existing API sessions too,
+        // not only block new logins.
+        if (($data['status'] ?? null) === 'inactive') {
+            $model->tokens()->delete();
+        }
+
         return response()->json(['data' => ['id' => $model->id, 'name' => $model->name, 'email' => $model->email, 'role' => $model->role, 'status' => $model->status]]);
     }
 }

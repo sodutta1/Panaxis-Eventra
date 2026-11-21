@@ -34,7 +34,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Public: issue a Sanctum token
     Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login')->middleware('throttle:'.(app()->environment('production') ? '5,1' : '120,1'));
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me'])->name('auth.me');
         Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
