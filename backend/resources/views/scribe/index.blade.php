@@ -383,7 +383,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-auth-login');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-auth-login"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -547,7 +547,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-auth-me');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-auth-me"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -555,7 +555,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/auth/me</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -658,7 +658,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-auth-logout');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-auth-logout"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -785,7 +785,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-dashboard');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-dashboard"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -793,7 +793,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/dashboard</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -912,7 +912,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-leads');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-leads"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -920,7 +920,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/leads</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -1051,7 +1051,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-leads');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-leads"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -1323,7 +1323,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-leads--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-leads--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -1331,7 +1331,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/leads/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -1477,7 +1477,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PUTapi-v1-leads--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PUTapi-v1-leads--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -1788,7 +1788,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PATCHapi-v1-leads--lead-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PATCHapi-v1-leads--lead-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2069,7 +2069,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-leads--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-leads--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2201,7 +2201,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-leads--lead--status');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-leads--lead--status"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2338,7 +2338,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-leads--lead--convert');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-leads--lead--convert"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2478,7 +2478,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-clients');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-clients"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2486,7 +2486,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/clients</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -2617,7 +2617,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-clients');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-clients"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2877,7 +2877,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-clients--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-clients--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -2885,7 +2885,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/clients/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -3031,7 +3031,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PUTapi-v1-clients--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PUTapi-v1-clients--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -3330,7 +3330,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PATCHapi-v1-clients--client-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PATCHapi-v1-clients--client-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -3599,7 +3599,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-clients--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-clients--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -3739,7 +3739,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-events');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-events"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -3747,7 +3747,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/events</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -3880,7 +3880,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-events');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-events"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -4176,7 +4176,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-events--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-events--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -4184,7 +4184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/events/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -4326,7 +4326,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PUTapi-v1-events--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PUTapi-v1-events--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -4645,7 +4645,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PATCHapi-v1-events--event-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PATCHapi-v1-events--event-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -4938,7 +4938,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-events--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-events--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -5070,7 +5070,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-events--event--status');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-events--event--status"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -5225,7 +5225,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-events--event_id--schedules');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-events--event_id--schedules"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -5460,7 +5460,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-events--event_id--tasks');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-events--event_id--tasks"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -5645,7 +5645,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-tasks--task--toggle');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-tasks--task--toggle"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -5785,7 +5785,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-venues');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-venues"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -5793,7 +5793,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/venues</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -5924,7 +5924,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-venues');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-venues"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -6184,7 +6184,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-venues--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-venues--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -6192,7 +6192,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/venues/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -6338,7 +6338,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PUTapi-v1-venues--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PUTapi-v1-venues--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -6637,7 +6637,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PATCHapi-v1-venues--venue-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PATCHapi-v1-venues--venue-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -6906,7 +6906,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-venues--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-venues--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -7046,7 +7046,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-vendors');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-vendors"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -7054,7 +7054,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/vendors</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -7183,7 +7183,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-vendors');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-vendors"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -7431,7 +7431,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-vendors--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-vendors--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -7439,7 +7439,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/vendors/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -7581,7 +7581,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PUTapi-v1-vendors--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PUTapi-v1-vendors--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -7864,7 +7864,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('PATCHapi-v1-vendors--vendor-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-PATCHapi-v1-vendors--vendor-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8121,7 +8121,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-vendors--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-vendors--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8261,7 +8261,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-quotations');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-quotations"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8269,7 +8269,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/quotations</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -8402,7 +8402,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-quotations');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-quotations"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8650,7 +8650,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-quotations--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-quotations--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8658,7 +8658,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/quotations/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -8774,7 +8774,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-quotations--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-quotations--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8914,7 +8914,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-invoices');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-invoices"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -8922,7 +8922,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/invoices</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -9055,7 +9055,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-invoices');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-invoices"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -9303,7 +9303,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-invoices--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-invoices--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -9311,7 +9311,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/invoices/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -9427,7 +9427,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('DELETEapi-v1-invoices--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-DELETEapi-v1-invoices--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -9567,7 +9567,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-invoices--invoice_id--payments');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-invoices--invoice_id--payments"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -9768,7 +9768,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-expenses');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-expenses"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -9776,7 +9776,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/expenses</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -9895,7 +9895,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-expenses--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-expenses--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -9903,7 +9903,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/expenses/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -10037,7 +10037,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-expenses');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-expenses"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -10257,7 +10257,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-expenses--expense--approve');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-expenses--expense--approve"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -10397,7 +10397,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-guests');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-guests"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -10405,7 +10405,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/guests</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -10524,7 +10524,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-guests--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-guests--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -10532,7 +10532,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/guests/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -10668,7 +10668,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-guests');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-guests"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -10876,7 +10876,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-guests--guest--checkin');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-guests--guest--checkin"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11016,7 +11016,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-tickets');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-tickets"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11024,7 +11024,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/tickets</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -11143,7 +11143,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-tickets--id-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-tickets--id-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11151,7 +11151,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/tickets/{id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -11289,7 +11289,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-tickets');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-tickets"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11515,7 +11515,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-tickets-types');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-tickets-types"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11695,7 +11695,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('POSTapi-v1-tickets-verify');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-POSTapi-v1-tickets-verify"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11836,7 +11836,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-portal-client');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-portal-client"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11844,7 +11844,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/portal/client</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -11966,7 +11966,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     onclick="cancelTryOut('GETapi-v1-portal-vendor');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
-                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    style="background-color: #22543d; padding: 5px 10px; border-radius: 5px; border-width: thin;"
                     id="btn-executetryout-GETapi-v1-portal-vendor"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
@@ -11974,7 +11974,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
+            <small class="badge" style="background-color: #22543d;">GET</small>
             <b><code>api/v1/portal/vendor</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>

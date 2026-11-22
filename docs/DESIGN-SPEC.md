@@ -1,23 +1,23 @@
 # Panaxis Eventra - Design Spec (from docs/ui-samples/)
 
-Measured from the two supplied screenshots (dashboard.jpg,
-dashboard-leads-events.jpg). Hex values below were extracted from the
-actual pixels, not guessed.
+The layout notes below retain the original screenshot study. The brand colors
+now follow the approved PanAxis logo-aligned deep forest palette.
 
 ## Color palette
 
 | Token | Hex | Use |
 |---|---|---|
-| brand-700 | #105830 | primary deep green: sidebar active icon, donut main arc, KPI accents |
-| brand-600 | #185838 | primary green (buttons, links, highlights) |
-| brand-100 | #C8E0D0 | light green tint: donut secondary arc, soft fills |
-| brand-050 | #EAF3EE | hover tint / badge bg for success states (derived from tint family) |
+| primary (pa-700) | #22543D | deep forest brand green: active navigation, chart accent, buttons and links |
+| dark (pa-900) | #163A2B | darker companion for text and high-contrast details |
+| logo light (pa-300) | #91B496 | light end of the PanAxis logo gradient |
+| tint (pa-100) | #DCE9DF | soft fills and selected surfaces |
+| pale (pa-050) | #F1F6F1 | pale booking background and hover surfaces |
 | gray-100 | #F3F4F6 | app background |
 | white | #FFFFFF | cards, sidebar, table surfaces |
 | gray-900 | #111827 | primary text (near-black) |
 | gray-500 | #6B7280 | secondary text ("<2 this month", "contract value") |
 | amber-100/#92400E | badge warning | "In planning" pill: pale yellow bg, amber text |
-| green badge | brand-050 bg + brand-700 text | "Confirmed" / "Active" pills |
+| success badge | pa-050 bg + pa-700 text | "Confirmed" / "Active" pills |
 
 ## Typography
 - Sans-serif system stack (Inter-like); headings ~18-20px semibold
@@ -28,22 +28,22 @@ actual pixels, not guessed.
 ## Layout
 - Fixed left icon sidebar ~64-72px wide, white bg, icons stacked with tiny
   labels (Dashboard, Leads, Clients, Events, Venues, Vendors, Quotes,
-  Budgets, RSVP...). Active item: brand-700 icon + left edge indicator.
+  Budgets, RSVP...). Active item: pa-700 icon + left edge indicator.
 - Content area on gray-100, max width fluid, 3-column card grid at desktop,
   cards: white, radius ~12-16px, border 1px #EEF0F2, no heavy shadow.
 - KPI cards: big numeral left, small gray caption under; some with a thin
-  brand-700 left border (Leads in Pipeline card).
+  pa-700 left border (Leads in Pipeline card).
 - Tables: header row uppercase small gray; row dividers #F1F2F4; status as
   rounded-full pills; no vertical gridlines.
-- Charts: donut (brand-700 arc on brand-100 track, % centered), line chart
-  with brand stroke and soft brand-050 area fill.
+- Charts: donut (pa-700 arc on pa-100 track, % centered), line chart
+  with brand stroke and soft pa-050 area fill.
 
 ## Components
-- Buttons: primary = brand-600 bg, white text, radius 8; ghost = brand-700
+- Buttons: primary = pa-600 bg, white text, radius 8; ghost = pa-700
   text with icon (Quick Actions grid uses ghost icon+label pairs).
 - Badges/pills: rounded-full, 12px, medium weight (Confirmed green,
   In planning amber, Active green).
-- Forms: white inputs on gray-100 bg, 1px #E5E7EB border, focus ring brand-600.
+- Forms: white inputs on gray-100 bg, 1px #E5E7EB border, focus ring pa-600.
 - Modals: centered white card, radius 16, overlay rgba(17,24,39,.4).
 - Icons: thin stroke (lucide-style), 20px in sidebar, 16px inline.
 
@@ -66,7 +66,8 @@ Scanner (mobile-first camera view), Quotation/Invoice builders + PDF print,
 Client Portal, Vendor Portal, Admin/tenant settings. All will reuse these
 tokens, card/table/pill patterns, and the same sidebar.
 
-## Tailwind tokens (Phase 4 will encode)
-colors.brand {50..900} anchored on #105830/#185838 with #C8E0D0 tint;
-font-sans system stack; borderRadius lg=12px xl=16px; status pill variants
-confirmed/planning/active as component classes.
+## Current theme tokens
+The shared theme tokens in `frontend/src/index.css` and the PDF templates use the
+logo-aligned deep forest palette above. Semantic status colors remain distinct
+from brand colors. Font-sans uses the system stack; borderRadius lg=12px
+and xl=16px; status pill variants are component classes.
