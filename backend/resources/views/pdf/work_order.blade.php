@@ -5,15 +5,15 @@
 <style>
   body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111; }
   .head { width: 100%; margin-bottom: 16px; border-collapse: collapse; }
-  .brand { color: #2F855A; font-size: 20px; font-weight: bold; }
+  .brand { color: #4C8B63; font-size: 20px; font-weight: bold; }
   .muted { color: #666; }
   .doc { font-size: 16px; font-weight: bold; }
   table.box { width: 100%; border-collapse: collapse; margin-top: 12px; }
-  table.box th { background: #2F855A; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
+  table.box th { background: #4C8B63; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
   table.box td { border-bottom: 1px solid #ddd; padding: 6px 8px; vertical-align: top; }
   .totals { width: 45%; margin-left: 55%; margin-top: 12px; border-collapse: collapse; }
   .totals td { padding: 4px 8px; }
-  .totals .bal td { border-top: 2px solid #2F855A; font-weight: bold; font-size: 13px; color: #2F855A; }
+  .totals .bal td { border-top: 2px solid #4C8B63; font-weight: bold; font-size: 13px; color: #4C8B63; }
   .right { text-align: right; }
   .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; background: #eee; }
   .foot { margin-top: 26px; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 8px; }
