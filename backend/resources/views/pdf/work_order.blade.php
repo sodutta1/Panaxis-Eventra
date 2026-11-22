@@ -46,7 +46,7 @@
         <span class="muted">{{ $workOrder->vendor->email }}{{ $workOrder->vendor->phone ? ' · '.$workOrder->vendor->phone : '' }}</span>
       </td>
       <td>
-        <strong>{{ $workOrder->event->title }}</strong><br>
+        <strong style="color:#22543d;">{{ $workOrder->event->title }}</strong><br>
         <span class="muted">{{ $workOrder->event->event_code }} · {{ optional($workOrder->event->start_date)->format('d M Y') }}</span><br>
         @if($workOrder->event->venue)<span class="muted">{{ $workOrder->event->venue->name }}</span>@endif
       </td>

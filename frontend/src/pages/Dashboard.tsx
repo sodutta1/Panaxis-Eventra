@@ -111,7 +111,7 @@ export default function Dashboard() {
               {data.upcoming_events.map((e) => (
                 <tr key={e.id} className="border-b border-slate-100 last:border-0">
                   <td className="py-3 pr-4">
-                    <Link to={`/events/${e.id}`} className="font-semibold text-ink hover:text-pa-700 hover:underline">
+                    <Link to={`/events/${e.id}`} className="font-semibold text-pa-700 hover:text-pa-700 hover:underline">
                       {e.title}
                     </Link>
                   </td>

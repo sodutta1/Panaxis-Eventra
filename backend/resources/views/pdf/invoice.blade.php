@@ -47,7 +47,7 @@
     @if($invoice->event)
     <td class="right">
       <div class="muted" style="font-size:10px;text-transform:uppercase;">Event</div>
-      <div style="font-weight:bold;">{{ $invoice->event->title }}</div>
+      <div style="font-weight:bold;color:#22543d;">{{ $invoice->event->title }}</div>
       <div class="muted">{{ $invoice->event->event_code }}</div>
     </td>
     @endif

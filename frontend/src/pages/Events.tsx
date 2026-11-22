@@ -149,7 +149,7 @@ export default function Events() {
             <tr key={e.id} className="hover:bg-slate-50">
               <td className="px-4 py-3 font-mono text-xs text-slate-500">{e.event_code}</td>
               <td className="px-4 py-3">
-                <Link to={`/events/${e.id}`} className="text-indigo-700 font-medium hover:underline">{e.title}</Link>
+                <Link to={`/events/${e.id}`} className="text-pa-700 font-semibold hover:underline">{e.title}</Link>
               </td>
               <td className="px-4 py-3 text-slate-600">{e.client?.name ?? '-'}</td>
               <td className="px-4 py-3 text-slate-600 text-xs">{String(e.start_date).slice(0, 10)} → {String(e.end_date).slice(0, 10)}</td>

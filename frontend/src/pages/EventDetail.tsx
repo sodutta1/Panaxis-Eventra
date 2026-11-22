@@ -61,7 +61,7 @@ export default function EventDetail() {
 
   return (
     <div>
-      <PageHeader title={event.title} sub={`${event.event_code} · ${event.client?.name ?? ''} · ${event.venue?.name ?? 'venue TBD'}`}>
+      <PageHeader title={event.title} titleClassName="text-pa-700" sub={`${event.event_code} · ${event.client?.name ?? ''} · ${event.venue?.name ?? 'venue TBD'}`}>
         {NEXT[event.status] && (
           <button className={btnCls} onClick={advance}>
             Move to {NEXT[event.status].replace('_', ' ')} →

@@ -24,7 +24,7 @@
     </td>
     <td class="right">
       <div style="font-size:16px;font-weight:bold;">EVENT CLOSEOUT REPORT</div>
-      <div style="font-size:13px;">{{ $event->title }}</div>
+      <div style="font-size:13px;color:#22543d;font-weight:bold;">{{ $event->title }}</div>
       <div class="muted">{{ $event->event_code }} · {{ optional($event->start_date)->format('d M Y') }} – {{ optional($event->end_date)->format('d M Y') }}</div>
       <div class="muted">Status: {{ strtoupper($event->status) }}@if($event->venue) · {{ $event->venue->name }}@endif</div>
     </td>

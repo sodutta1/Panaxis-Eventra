@@ -46,7 +46,7 @@
     @if($quotation->event)
     <td class="right">
       <div class="muted" style="font-size:10px;text-transform:uppercase;">Event</div>
-      <div style="font-weight:bold;">{{ $quotation->event->title }}</div>
+      <div style="font-weight:bold;color:#22543d;">{{ $quotation->event->title }}</div>
       <div class="muted">{{ $quotation->event->event_code }}</div>
     </td>
     @endif

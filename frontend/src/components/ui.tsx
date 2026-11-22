@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
 import { STATUS_COLORS } from '../types'
 
-export function PageHeader({ title, sub, children }: { title: string; sub?: string; children?: ReactNode }) {
+export function PageHeader({ title, sub, children, titleClassName = '' }: { title: string; sub?: string; children?: ReactNode; titleClassName?: string }) {
   return (
     <div className="flex items-start justify-between mb-6">
       <div>
-        <h1 className="text-[22px] font-extrabold text-pa-900 tracking-tight">{title}</h1>
+        <h1 className={`text-[22px] font-extrabold ${titleClassName || 'text-pa-900'} tracking-tight`}>{title}</h1>
         {sub && <p className="text-[13px] text-pamuted mt-0.5">{sub}</p>}
       </div>
       <div className="flex gap-2">{children}</div>

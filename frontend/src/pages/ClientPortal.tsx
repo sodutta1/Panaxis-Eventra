@@ -39,7 +39,7 @@ export default function ClientPortal() {
               {(data.events ?? []).map((e) => (
                 <tr key={e.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3 font-mono text-xs text-slate-500">{e.event_code}</td>
-                  <td className="px-4 py-3 font-semibold">{e.title}</td>
+                  <td className="px-4 py-3 font-semibold text-pa-700">{e.title}</td>
                   <td className="px-4 py-3 text-slate-600">{String(e.start_date).slice(0, 10)} → {String(e.end_date).slice(0, 10)}</td>
                   <td className="px-4 py-3 text-slate-600">{e.venue?.name ?? '—'}</td>
                   <td className="px-4 py-3"><Badge value={e.status} /></td>
