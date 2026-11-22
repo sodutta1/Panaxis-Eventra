@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { API_URL } from '../api'
+import { formatEventDateTime } from '../dateTime'
 
 type TicketType = { id: number; name: string; price: string; benefits: string | null; remaining: number }
 type PublicEvent = {
@@ -96,7 +97,7 @@ export default function PublicBooking() {
             <div className="pb-company">{ev.company.name}</div>
             <h1>{ev.title}</h1>
             <div className="pb-meta">
-              {new Date(ev.start_date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+              {formatEventDateTime(ev.start_date)}
               {ev.venue ? ` · ${ev.venue.name}${ev.venue.city ? `, ${ev.venue.city}` : ''}` : ''}
             </div>
           </div>

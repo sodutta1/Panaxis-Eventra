@@ -16,6 +16,7 @@ use chillerlan\QRCode\Output\QRGdImagePNG;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class PdfController extends Controller
@@ -71,6 +72,7 @@ class PdfController extends Controller
             'company' => $company,
             'qr' => $qr,
             'logo' => $this->logoDataUri($company),
+            'eventStart' => Carbon::parse($ticket->event->getRawOriginal('start_date'), 'Asia/Kolkata')->format('d M Y, h:i A'),
         ]);
 
         return $pdf->download('eticket-'.$ticket->ticket_number.'.pdf');

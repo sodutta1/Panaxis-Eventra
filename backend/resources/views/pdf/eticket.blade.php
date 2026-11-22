@@ -38,7 +38,7 @@
           <tr><td class="k">Ticket</td><td class="num">{{ $ticket->ticket_number }}</td></tr>
           <tr><td class="k">Pass type</td><td>{{ $ticket->ticketType->name }}</td></tr>
           <tr><td class="k">Holder</td><td>{{ $ticket->holder_name }}</td></tr>
-          <tr><td class="k">Date</td><td>{{ optional($ticket->event->start_date)->format('d M Y, h:i A') }}</td></tr>
+          <tr><td class="k">Date</td><td>{{ $eventStart }}</td></tr>
           @if($ticket->event->venue)
           <tr><td class="k">Venue</td><td>{{ $ticket->event->venue->name }}{{ $ticket->event->venue->city ? ', '.$ticket->event->venue->city : '' }}</td></tr>
           @endif

@@ -64,6 +64,20 @@ class PublicBookingTest extends TestCase
         $this->assertSame(3, $res['ticket_types'][0]['remaining']);
     }
 
+    public function test_public_event_date_preserves_ist_wall_time_with_timezone_offset(): void
+    {
+        [$event] = $this->bookableEvent();
+        $event->forceFill([
+            'start_date' => '2026-11-22 23:42:00',
+            'end_date' => '2026-11-23 01:10:00',
+        ])->save();
+
+        $this->getJson('/api/v1/public/events/'.$event->id)
+            ->assertOk()
+            ->assertJsonPath('data.start_date', '2026-11-22T23:42:00+05:30')
+            ->assertJsonPath('data.end_date', '2026-11-23T01:10:00+05:30');
+    }
+
     public function test_full_booking_flow_in_test_mode(): void
     {
         Notification::fake();

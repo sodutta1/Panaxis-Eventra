@@ -10,6 +10,7 @@ use App\Models\TicketType;
 use App\Notifications\TicketPurchaseConfirmation;
 use App\Services\RazorpayService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -37,8 +38,8 @@ class PublicBookingController extends Controller
             'event_code' => $event->event_code,
             'event_type' => $event->event_type,
             'description' => $event->description,
-            'start_date' => $event->start_date,
-            'end_date' => $event->end_date,
+            'start_date' => Carbon::parse($event->getRawOriginal('start_date'), 'Asia/Kolkata')->toIso8601String(),
+            'end_date' => Carbon::parse($event->getRawOriginal('end_date'), 'Asia/Kolkata')->toIso8601String(),
             'venue' => $event->venue ? ['name' => $event->venue->name, 'city' => $event->venue->city ?? null] : null,
             'bookable' => $bookable,
             'status' => $event->status,
