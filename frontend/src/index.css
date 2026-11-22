@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  /* Panaxis Eventra palette - measured from docs/ui-samples (DESIGN-SPEC.md) */
-  --color-pa-950: #0c241a;
-  --color-pa-900: #0e3a24;
-  --color-pa-800: #124a2c;
-  --color-pa-700: #4C8B63;
-  --color-pa-600: #3E7351;
-  --color-pa-500: #3E7351;
-  --color-pa-300: #7aa88f;
-  --color-pa-100: #c8e0d0;
-  --color-pa-50: #eaf3ee;
+  /* Panaxis Eventra palette, aligned to the PanAxis logo gradient */
+  --color-pa-950: #10281e;
+  --color-pa-900: #163a2b;
+  --color-pa-800: #1b4332;
+  --color-pa-700: #22543d;
+  --color-pa-600: #2a6346;
+  --color-pa-500: #347752;
+  --color-pa-300: #91b496;
+  --color-pa-100: #dce9df;
+  --color-pa-50: #f1f6f1;
   --color-paper: #f3f4f6;
   --color-ink: #1d2b23;
   --color-pamuted: #5c6f64;
@@ -18,12 +18,12 @@
   --color-paamber: #b7791f;
 
   /* Remap the palettes the app was built with onto the Panaxis scheme */
-  --color-indigo-50: #eef5f0;
-  --color-indigo-100: #c8e0d0;
-  --color-indigo-300: #7aa88f;
-  --color-indigo-500: #3E7351;
-  --color-indigo-600: #3E7351;
-  --color-indigo-700: #4C8B63;
+  --color-indigo-50: #f1f6f1;
+  --color-indigo-100: #dce9df;
+  --color-indigo-300: #91b496;
+  --color-indigo-500: #347752;
+  --color-indigo-600: #2a6346;
+  --color-indigo-700: #22543d;
 
   --color-slate-50: #f8faf8;
   --color-slate-100: #f4f6f3;
@@ -44,29 +44,29 @@ body {
 }
 
 /* Public booking page */
-.public-booking { min-height: 100vh; background: #eaf3ee; display: flex; justify-content: center; padding: 32px 16px; }
+.public-booking { min-height: 100vh; background: #f1f6f1; display: flex; justify-content: center; padding: 32px 16px; }
 .pb-card { background: #fff; border-radius: 14px; box-shadow: 0 6px 24px rgba(12,36,26,.08); max-width: 640px; width: 100%; padding: 28px; height: fit-content; }
 .pb-head { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
 .pb-logo { max-height: 52px; max-width: 150px; }
 .pb-company { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #5c6f64; }
-.pb-head h1 { font-size: 22px; color: #4C8B63; margin: 2px 0; }
+.pb-head h1 { font-size: 22px; color: var(--color-pa-700); margin: 2px 0; }
 .pb-meta { font-size: 13px; color: #5c6f64; }
 .pb-desc { font-size: 14px; color: #35473c; margin-bottom: 14px; }
 .pb-types { display: grid; gap: 10px; margin-bottom: 16px; }
 .pb-type { text-align: left; border: 2px solid #e2e9e3; border-radius: 10px; padding: 12px 14px; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; background: #fff; cursor: pointer; }
-.pb-type.selected { border-color: #4C8B63; background: #eaf3ee; }
+.pb-type.selected { border-color: var(--color-pa-700); background: #dce9df; }
 .pb-type:disabled { opacity: .5; cursor: not-allowed; }
 .pb-type-name { font-weight: 600; color: #14392a; }
-.pb-type-price { font-weight: 700; color: #4C8B63; }
+.pb-type-price { font-weight: 700; color: var(--color-pa-700); }
 .pb-type-left { font-size: 12px; color: #b7791f; }
 .pb-type-benefits { font-size: 12px; color: #5c6f64; grid-column: 1 / -1; }
 .pb-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 .pb-form label { display: grid; gap: 4px; font-size: 12px; color: #5c6f64; }
 .pb-form input, .pb-form select { border: 1px solid #cbd9cf; border-radius: 8px; padding: 8px 10px; font-size: 14px; }
-.pb-pay { width: 100%; background: #4C8B63; color: #fff; font-weight: 700; font-size: 16px; padding: 12px; border-radius: 10px; border: none; cursor: pointer; }
+.pb-pay { width: 100%; background: var(--color-pa-700); color: #fff; font-weight: 700; font-size: 16px; padding: 12px; border-radius: 10px; border: none; cursor: pointer; }
 .pb-pay:disabled { opacity: .55; cursor: not-allowed; }
 .pb-testmode { margin-top: 8px; font-size: 12px; color: #b7791f; text-align: center; }
 .pb-error { color: #b91c1c; font-size: 14px; margin: 10px 0; }
-.pb-success h2 { color: #4C8B63; font-size: 18px; margin-bottom: 8px; }
+.pb-success h2 { color: var(--color-pa-700); font-size: 18px; margin-bottom: 8px; }
 .pb-success ul { margin-top: 10px; display: grid; gap: 8px; }
-.pb-success a { color: #4C8B63; font-weight: 600; }
+.pb-success a { color: var(--color-pa-700); font-weight: 600; }

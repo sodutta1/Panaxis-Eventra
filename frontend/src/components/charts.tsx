@@ -1,6 +1,6 @@
 // Small dependency-free chart components: colorful donuts and horizontal bars.
 
-export const PALETTE = ['#4C8B63', '#3e82f7', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6', '#f472b6', '#84cc16']
+export const PALETTE = ['#22543d', '#3e82f7', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6', '#f472b6', '#84cc16']
 
 export type Slice = { name: string; value: number }
 

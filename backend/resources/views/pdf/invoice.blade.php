@@ -5,16 +5,16 @@
 <style>
   body { overflow-wrap: break-word; word-wrap: break-word; font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111; }
   .head { width: 100%; margin-bottom: 18px; }
-  .brand { color: #4C8B63; font-size: 20px; font-weight: bold; }
+  .brand { color: #22543d; font-size: 20px; font-weight: bold; }
   .muted { color: #666; }
   table.items { table-layout: fixed; width: 100%; border-collapse: collapse; margin-top: 14px; }
-  table.items th { background: #4C8B63; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
+  table.items th { background: #22543d; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
   table.items td { border-bottom: 1px solid #ddd; padding: 6px 8px; }
   .right { text-align: right; }
   .totals { width: 45%; margin-left: 55%; margin-top: 12px; border-collapse: collapse; }
   .totals td { padding: 4px 8px; }
-  .totals .grand td { border-top: 2px solid #4C8B63; font-weight: bold; font-size: 13px; color: #4C8B63; }
-  .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; background: #eee; }
+  .totals .grand td { border-top: 2px solid #22543d; font-weight: bold; font-size: 13px; color: #22543d; background: #f1f6f1; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; background: #dce9df; color: #163a2b; }
   .foot { margin-top: 26px; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 8px; }
 </style>
 </head>
