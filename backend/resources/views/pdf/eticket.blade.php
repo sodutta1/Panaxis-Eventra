@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <style>
   body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #111; }
-  .card { border: 2px solid #105830; border-radius: 10px; padding: 0; width: 100%; }
-  .top { background: #105830; color: #fff; padding: 14px 18px; }
+  .card { border: 2px solid #2F855A; border-radius: 10px; padding: 0; width: 100%; }
+  .top { background: #2F855A; color: #fff; padding: 14px 18px; }
   .top .co { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: .85; }
   .top .ev { font-size: 20px; font-weight: bold; margin-top: 2px; }
   .main { width: 100%; padding: 18px; }
@@ -15,7 +15,7 @@
   table.det { border-collapse: collapse; width: 100%; }
   table.det td { padding: 5px 8px; vertical-align: top; }
   table.det .k { color: #666; font-size: 10px; text-transform: uppercase; width: 34%; }
-  .num { font-size: 15px; font-weight: bold; color: #105830; }
+  .num { font-size: 15px; font-weight: bold; color: #2F855A; }
   .foot { border-top: 1px dashed #999; padding: 10px 18px; font-size: 10px; color: #666; }
 </style>
 </head>

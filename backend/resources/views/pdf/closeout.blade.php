@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <style>
   body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111; }
-  .brand { color: #105830; font-size: 20px; font-weight: bold; }
+  .brand { color: #2F855A; font-size: 20px; font-weight: bold; }
   .muted { color: #666; }
-  h2 { color: #105830; font-size: 13px; margin: 18px 0 6px 0; text-transform: uppercase; letter-spacing: .5px; }
+  h2 { color: #2F855A; font-size: 13px; margin: 18px 0 6px 0; text-transform: uppercase; letter-spacing: .5px; }
   table.grid { width: 100%; border-collapse: collapse; }
-  table.grid th { background: #105830; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
+  table.grid th { background: #2F855A; color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; text-transform: uppercase; }
   table.grid td { border-bottom: 1px solid #ddd; padding: 6px 8px; }
   .right { text-align: right; }
-  .tot td { font-weight: bold; border-top: 2px solid #105830; color: #105830; }
+  .tot td { font-weight: bold; border-top: 2px solid #2F855A; color: #2F855A; }
   .head { width: 100%; margin-bottom: 8px; border-collapse: collapse; }
   .foot { margin-top: 26px; font-size: 10px; color: #666; border-top: 1px solid #ddd; padding-top: 8px; }
 </style>
