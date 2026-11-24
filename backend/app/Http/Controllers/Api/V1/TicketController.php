@@ -148,40 +148,35 @@ class TicketController extends Controller
         return response()->json(['data' => $this->scopeCompany(TicketType::query(), $request)->orderBy('name')->get()]);
     }
 
-    public function update(UpdateTicketRequest $request, int $ticket)
+    public function update(UpdateTicketRequest $request,int $ticket)
     {
-        $model = $this->findForCompany(Ticket::query(), $request, $ticket);
-        $data = $request->validated();
-        if (isset($data['ticket_status'])) {
-            if ($data['ticket_status'] === 'checked_in') {
-                $data['checked_in_at'] = $model->checked_in_at ?? now();
-                $data['checked_in_by'] = $model->checked_in_by ?? $request->user()->name;
-            } else {
-                $data['checked_in_at'] = null;
-                $data['checked_in_by'] = null;
+        $candidate=$this->findForCompany(Ticket::query(),$request,$ticket);
+        return DB::transaction(function() use($request,$candidate){
+            $event=$this->findForCompany(Event::query()->lockForUpdate(),$request,$candidate->event_id);
+            $type=$this->findForCompany(TicketType::query()->lockForUpdate(),$request,$candidate->ticket_type_id);
+            $model=$this->findForCompany(Ticket::query()->lockForUpdate(),$request,$candidate->id);
+            $data=$request->validated();
+            $inactive=fn($status)=>in_array($status,['cancelled','refunded']);
+            $wasInactive=$inactive($model->ticket_status);$willBeInactive=$inactive($data['ticket_status']??$model->ticket_status);
+            if($wasInactive&&!$willBeInactive){
+                abort_if(in_array($event->status,['completed','cancelled']),422,'Tickets cannot be restored for a closed event.');
+                abort_if(!$type->is_active||$type->sold_count >= $type->total_capacity,422,'This ticket type has no available capacity.');
+                $type->increment('sold_count');$event->increment('confirmed_guests');
+            } elseif(!$wasInactive&&$willBeInactive){
+                $type->update(['sold_count'=>max(0,$type->sold_count-1)]);$event->update(['confirmed_guests'=>max(0,$event->confirmed_guests-1)]);
             }
-        }
-        $model->update($data);
-
-        return new TicketResource($model->fresh(['event', 'ticketType']));
+            if(isset($data['ticket_status'])){
+                $data['checked_in_at']=$data['ticket_status']==='checked_in'?($model->checked_in_at??now()):null;
+                $data['checked_in_by']=$data['ticket_status']==='checked_in'?($model->checked_in_by??$request->user()->name):null;
+            }
+            $model->update($data);return new TicketResource($model->fresh(['event','ticketType']));
+        },3);
     }
 
-    public function destroy(Request $request, int $ticket)
-    {
-        $model = $this->findForCompany(Ticket::query(), $request, $ticket);
-        DB::transaction(function () use ($request, $model) {
-            $event = $this->findForCompany(Event::query()->lockForUpdate(), $request, $model->event_id);
-            $type = $this->findForCompany(TicketType::query()->lockForUpdate(), $request, $model->ticket_type_id);
-            $locked = $this->findForCompany(Ticket::query()->lockForUpdate(), $request, $model->id);
-            $locked->delete();
-            if ($type->sold_count > 0) {
-                $type->decrement('sold_count');
-            }
-            if ($event->confirmed_guests > 0) {
-                $event->decrement('confirmed_guests');
-            }
-        }, 3);
-
-        return response()->json(['message' => 'Ticket deleted.']);
+    public function destroy(Request $request,int $ticket){
+        $this->findForCompany(Ticket::query(),$request,$ticket);
+        return response()->json(['message'=>'Ticket sales records cannot be deleted. Cancel the ticket instead.'],409);
     }
+
+
 }

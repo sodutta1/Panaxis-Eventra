@@ -15,6 +15,7 @@ trait QueriesLists
         $has = fn ($c) => in_array($c, $columns, true);
         $names = array_values(array_filter(['name','title','contact_name','holder_name','business_name','company_name','service_title','item_name'], $has));
         $refs = array_values(array_filter(['id','client_code','vendor_code','event_code','quotation_number','invoice_number','expense_number','ticket_number','receipt_number'], $has));
+        if(in_array($table,['event_budget_items']))$names[]='category';
         $searches = array_values(array_unique(array_merge($names, $refs, array_values(array_filter(['email','phone','holder_email','holder_phone','city','source','category','campaign'], $has)))));
         foreach (['search' => $searches, 'name' => $names, 'reference' => $refs] as $param => $fields) {
             if ($request->filled($param) && $fields) {
@@ -24,6 +25,7 @@ trait QueriesLists
                     if (in_array($table,['quotations','invoices']) && in_array($param,['search','name'])) {
                         $q->orWhereHas('client', fn ($c) => $c->where('name','like',$term)->orWhere('email','like',$term)->orWhere('phone','like',$term));
                     }
+                    if($table==='vendor_assignments'&&in_array($param,['name','search']))$q->orWhereHas('vendor',fn($v)=>$v->where('name','like',$term));
                 });
             }
         }
@@ -42,6 +44,10 @@ trait QueriesLists
         $sort = (string)$request->input('sort','id');
         // Deny private fields and non-column expressions even if a caller bypasses the UI.
         $safe = array_diff($columns,['password','remember_token','qr_token','receipt_path']);
+        $direction=$request->input('direction')==='asc'?'asc':'desc';
+        $expressions=['vendor_assignments'=>['balance'=>'(contract_amount - paid_amount)'],'event_budget_items'=>['variance'=>'(estimated_cost - actual_cost)']];
+        if(isset($expressions[$table][$sort]))return $query->reorder()->orderByRaw($expressions[$table][$sort].' '.$direction)->orderBy($table.'.id');
+        if($sort==='events_count'&&$table==='clients')return $query->reorder()->orderBy('events_count',$direction)->orderBy('clients.id');
         if (!in_array($sort,$safe,true)) $sort = 'id';
         return $query->reorder()->orderBy($table.'.'.$sort,$request->input('direction') === 'asc' ? 'asc' : 'desc')->orderBy($table.'.id');
     }

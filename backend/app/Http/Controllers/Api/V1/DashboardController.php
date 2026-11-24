@@ -36,7 +36,7 @@ class DashboardController extends Controller
                 'active_events' => $company(Event::query())->whereIn('status', ['confirmed', 'in_planning', 'active'])->count(),
                 'total_revenue' => $company(Event::query())->whereIn('status', ['confirmed', 'in_planning', 'active', 'completed'])->sum('contract_value'),
                 'received_revenue' => $company(Payment::query())->where('status', 'completed')->sum('amount'),
-                'total_expenses' => $company(EventExpense::query())->sum('amount'),
+                'total_expenses' => $company(EventExpense::query())->whereNotIn('status',['rejected','reversed'])->sum('amount'),
                 'outstanding_invoices' => $company(Invoice::query())->whereIn('status', ['unpaid', 'partially_paid', 'overdue'])->sum('balance_due'),
                 'total_clients' => $company(Client::query())->count(),
                 'total_leads' => $company(Lead::query())->count(),

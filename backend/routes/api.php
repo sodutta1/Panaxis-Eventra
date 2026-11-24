@@ -132,6 +132,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
             // Expenses (finance)
             Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+            Route::get('/expenses/{expense}/bill', [ExpenseController::class,'bill']);
             Route::get('/expenses/{expense}', [ExpenseController::class, 'show'])->name('expenses.show');
             Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store')->middleware($finance);
             Route::post('/expenses/{expense}/approve', [ExpenseController::class, 'approve'])->name('expenses.approve')->middleware($finance);
@@ -155,10 +156,6 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('/events/{event}/work-orders', [WorkOrderController::class, 'store'])->name('work-orders.store')->middleware($ops);
             Route::post('/work-orders/{workOrder}/payment', [WorkOrderController::class, 'addPayment'])->name('work-orders.payment')->middleware($finance);
             Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus'])->name('work-orders.status')->middleware($ops);
-
-            Route::get('/documents/{type}/{id}/link', [\App\Http\Controllers\Api\V1\DocumentsController::class,'link']);
-            Route::get('/documents/{type}/{id}/download', [\App\Http\Controllers\Api\V1\DocumentsController::class,'download'])->name('documents.download');
-            Route::post('/documents/{type}/bulk', [\App\Http\Controllers\Api\V1\DocumentsController::class,'bulk']);
 
             // PDF documents
             Route::get('/invoices/{invoice}/pdf', [PdfController::class, 'invoice'])->name('invoices.pdf');
@@ -198,6 +195,13 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy')->middleware($admins);
         });
 
+            Route::get('/documents/{type}/{id}/record', [\App\Http\Controllers\Api\V1\DocumentsController::class,'show']);
+            Route::get('/documents/{type}/{id}/link', [\App\Http\Controllers\Api\V1\DocumentsController::class,'link']);
+            Route::get('/documents/{type}/{id}/download', [\App\Http\Controllers\Api\V1\DocumentsController::class,'download'])->name('documents.download');
+            Route::post('/documents/{type}/bulk', [\App\Http\Controllers\Api\V1\DocumentsController::class,'bulk']);
+
+
+        Route::get('/portal/{kind}/records', [PortalController::class,'records']);
         // Portals (token holders with client/vendor roles + admins)
         Route::get('/portal/client', [PortalController::class, 'clientPortal'])
             ->name('portal.client')

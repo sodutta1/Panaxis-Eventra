@@ -19,14 +19,27 @@ class DocumentsController extends Controller
   'events'=>[\App\Models\Event::class,'event_code','Event report'],
  ];
  private function record(Request $r,string $type,int $id) {
+  abort_unless(in_array($r->user()->role,['super_admin','company_admin','admin','event_manager','sales_executive','accountant','staff','client']),403);
   abort_unless(isset(self::TYPES[$type]),404);[$class]=$this::TYPES[$type];
-  return $this->findForCompany($class::query(),$r,$id);
+  $record=$this->findForCompany($class::query(),$r,$id);
+  if($r->user()->role==='client'){
+   abort_unless(in_array($type,['quotations','invoices','events']),403);
+   abort_unless(\App\Models\Client::where('id',$record->client_id)->where('user_id',$r->user()->id)->where('company_id',$this->companyId($r))->exists(),404);
+  }
+  return $record;
  }
- public function link(Request $r,string $type,int $id){$this->record($r,$type,$id);return response()->json(['url'=>URL::temporarySignedRoute('api.v1.documents.download',now()->addMinutes(2),['type'=>$type,'id'=>$id,'user'=>$r->user()->id]),'expires_in'=>120]);}
+ public function show(Request $r,string $type,int $id){
+  $m=$this->record($r,$type,$id);
+  $data=collect($m->getAttributes())->reject(fn($v,$k)=>in_array($k,['id','company_id','qr_token','bill_data','receipt_path','created_at','updated_at'])||str_ends_with($k,'_id'))->all();
+  foreach(['client'=>'Client','event'=>'Event','vendor'=>'Vendor'] as $relation=>$label)if(method_exists($m,$relation)){$related=$m->$relation;$data[$label]=$related?($related->name??$related->title):'Not set';}
+  if($type==='quotations'||$type==='invoices')$data['line_items']=$m->items->map(fn($i)=>['description'=>$i->item_name??$i->description??'Item','quantity'=>$i->quantity,'rate'=>$i->unit_price,'amount'=>$i->total??$i->line_total])->all();
+  return response()->json(['data'=>$data]);
+ }
+ public function link(Request $r,string $type,int $id){$this->record($r,$type,$id);return response()->json(['url'=>URL::temporarySignedRoute('api.v1.documents.download',now()->addMinutes(2),['type'=>$type,'id'=>$id,'user'=>$r->user()->id],absolute:false),'expires_in'=>120]);}
  public function download(Request $r,string $type,int $id){
-  abort_unless($r->hasValidSignature() && (int)$r->query('user')===$r->user()->id,403,'This link has expired. Request the document again.');
-  $m=$this->record($r,$type,$id);$this->audit($r,$type,$id);
-  return response($this->render($r,$type,$m),200,['Content-Type'=>'application/pdf','Content-Disposition'=>'attachment; filename="'.$this->filename($type,$m).'"']);
+  abort_unless($r->hasValidSignature(false) && (int)$r->query('user')===$r->user()->id,403,'This link has expired. Request the document again.');
+  $m=$this->record($r,$type,$id);$bytes=$this->render($r,$type,$m);$this->audit($r,$type,$id);
+  return response($bytes,200,['Content-Type'=>'application/pdf','Content-Disposition'=>'attachment; filename="'.$this->filename($type,$m).'"']);
  }
  public function bulk(Request $r,string $type){
   $r->validate(['ids'=>'required|array|min:1|max:100','ids.*'=>'required|integer|min:1']);

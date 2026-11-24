@@ -82,7 +82,7 @@ class AnalyticsController extends Controller
             'overdue_tasks_by_category' => $tasksByCategory($overdueTasks),
             'leads_funnel' => $co(Lead::query())
                 ->selectRaw('status, count(*) as count')->groupBy('status')->orderByDesc('count')->get(),
-            'top_cost_categories' => EventExpense::where('event_expenses.company_id', $companyId)
+            'top_cost_categories' => EventExpense::where('event_expenses.company_id', $companyId)->whereNotIn('event_expenses.status',['rejected','reversed'])
                 ->leftJoin('expense_categories', 'event_expenses.expense_category_id', '=', 'expense_categories.id')
                 ->selectRaw('COALESCE(expense_categories.name, \'Other\') as name, SUM(amount) as total')
                 ->groupBy('name')->orderByDesc('total')->limit(5)->get(),
