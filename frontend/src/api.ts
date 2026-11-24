@@ -26,6 +26,12 @@ export function clearSession() {
   localStorage.removeItem('ef_user')
 }
 
+export function homeFor(role?: string): string {
+  if (role === 'client') return '/portal/client'
+  if (role === 'vendor') return '/portal/vendor'
+  return '/dashboard'
+}
+
 export function getUser(): { id: number; name: string; email: string; role: string } | null {
   const raw = localStorage.getItem('ef_user')
   return raw ? JSON.parse(raw) : null

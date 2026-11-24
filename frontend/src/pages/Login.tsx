@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { api, setSession } from '../api'
+import { api, homeFor, setSession } from '../api'
 import { ErrorBox, btnCls, inputCls } from '../components/ui'
 
 const DEMO = [
@@ -25,12 +25,12 @@ export default function Login() {
     setBusy(true)
     setError(null)
     try {
-      const res = await api<{ token: string; user: unknown }>('/auth/login', {
+      const res = await api<{ token: string; user: { role?: string } }>('/auth/login', {
         method: 'POST',
         body: { email, password, device_name: 'eventflow-frontend' },
       })
       setSession(res.token, res.user)
-      navigate('/dashboard')
+      navigate(homeFor(res.user?.role))
     } catch (e) {
       setError(e)
     } finally {

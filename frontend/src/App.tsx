@@ -1,6 +1,6 @@
 import type React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { getToken } from './api'
+import { getToken, getUser, homeFor } from './api'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
@@ -29,6 +29,10 @@ function RequireAuth({ children }: { children: React.ReactElement }) {
   return getToken() ? children : <Navigate to="/login" replace />
 }
 
+function HomeRedirect() {
+  return <Navigate to={homeFor(getUser()?.role)} replace />
+}
+
 export default function App() {
   return (
     <Routes>
@@ -42,7 +46,7 @@ export default function App() {
           </RequireAuth>
         }
       >
-        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route index element={<HomeRedirect />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="events" element={<Events />} />
@@ -64,7 +68,7 @@ export default function App() {
         <Route path="reports" element={<Reports />} />
         <Route path="admin" element={<Admin />} />
       </Route>
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<HomeRedirect />} />
     </Routes>
   )
 }

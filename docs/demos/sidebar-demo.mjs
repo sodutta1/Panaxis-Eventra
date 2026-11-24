@@ -1,4 +1,8 @@
-import { chromium } from 'playwright'
+import { createRequire } from 'node:module'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+const require = createRequire(join(dirname(fileURLToPath(import.meta.url)), '../../frontend/package.json'))
+const { chromium } = require('playwright')
 
 const BASE = 'http://127.0.0.1:5173'
 const API = 'http://127.0.0.1:8000'

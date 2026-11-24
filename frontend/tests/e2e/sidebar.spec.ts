@@ -67,15 +67,30 @@ test('sidebar items are role-aware',async({page})=>{
  await openGroup(page,'Sales')
  await expect(page.getByRole('link',{name:'Quotations',exact:true})).toBeVisible()
 
- // client: only the client portal, no staff navigation or quick find
+ // client: lands on the client portal (never the staff-only dashboard), no staff navigation or quick find
  await login(page,'client@eventflow.test')
- await page.goto('/portal/client')
+ await page.goto('/')
+ await expect(page).toHaveURL(/\/portal\/client/)
+ await expect(page.getByText('Forbidden',{exact:false})).toHaveCount(0)
  await openGroup(page,'Post-sale')
  await expect(page.getByRole('link',{name:'Client portal',exact:true})).toBeVisible()
  await expect(page.getByRole('link',{name:'Overview',exact:true})).toHaveCount(0)
  await expect(page.getByRole('button',{name:'Quick find',exact:true})).toHaveCount(0)
  await expect(page.getByRole('link',{name:'Quotations',exact:true})).toHaveCount(0)
  await expect(page.getByRole('link',{name:'Team management',exact:true})).toHaveCount(0)
+})
+
+test('portal-only roles land on their portal, not the staff dashboard',async({page})=>{
+ await login(page,'client@eventflow.test')
+ await page.goto('/')
+ await expect(page).toHaveURL(/\/portal\/client/)
+ await login(page,'vendor@eventflow.test')
+ await page.goto('/')
+ await expect(page).toHaveURL(/\/portal\/vendor/)
+ await expect(page.getByText('Forbidden',{exact:false})).toHaveCount(0)
+ await login(page)
+ await page.goto('/')
+ await expect(page).toHaveURL(/\/dashboard/)
 })
 
 test('mobile drawer closes when a destination is chosen',async({page})=>{

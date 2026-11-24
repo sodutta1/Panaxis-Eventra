@@ -8,10 +8,10 @@ async function login(page: Page, user = 'admin@eventflow.test') {
   await page.fill('#login-password', 'password')
   await page.getByRole('button', { name: /sign in/i }).click()
   try {
-    await page.waitForURL('**/dashboard', { timeout: 12_000 })
+    await page.waitForURL(/\/(dashboard|portal\/client|portal\/vendor)$/, { timeout: 12_000 })
   } catch {
     await page.getByRole('button', { name: /sign in/i }).click()
-    await page.waitForURL('**/dashboard', { timeout: 20_000 })
+    await page.waitForURL(/\/(dashboard|portal\/client|portal\/vendor)$/, { timeout: 20_000 })
   }
 }
 
