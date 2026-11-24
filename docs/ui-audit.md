@@ -111,3 +111,9 @@ Source inspection covers all registered screens before implementation. Runtime s
 - uncontrolled list table, missing shared list tools.
 - loading/error/empty-state review needed.
 - event selector limited to 50, no detail PDF header.
+
+## Added action requirements (rules 8 and 9)
+- Baseline text Edit/Delete links lack a single icon system, tooltip/accessible label policy and phone action menus.
+- Download labels vary; a shared spinner/error pattern and exact Download PDF wording are required.
+- Financial record deletion conflicts with history retention. Expense reversal needs a reason; maker/checker approval must not allow self-approval.
+- Final treatment and unresolved strict-spec gaps are recorded in design-review.md.
