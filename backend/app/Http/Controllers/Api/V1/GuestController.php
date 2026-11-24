@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 class GuestController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -27,7 +28,7 @@ class GuestController extends Controller
             $query->where('rsvp_status', $request->rsvp_status);
         }
 
-        return GuestResource::collection($query->orderBy('name')->paginate(15));
+        return $this->listResponse($query, $request, GuestResource::class);
     }
 
     public function store(StoreGuestRequest $request)

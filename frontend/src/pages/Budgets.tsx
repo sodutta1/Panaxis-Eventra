@@ -63,7 +63,7 @@ export default function Budgets() {
 
   return (
     <div>
-      <PageHeader title="Event Budgets" sub="GET /api/v1/events/{id}/budget · totals computed on the server" />
+      <PageHeader title="Event Budgets" sub="Plan and track the costs of each event." />
       <ErrorBox error={error} />
       <div className="mb-4 max-w-md">
         <label className="block text-[11.5px] font-bold uppercase tracking-wide text-pamuted mb-1">Event</label>

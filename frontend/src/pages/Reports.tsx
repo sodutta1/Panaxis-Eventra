@@ -30,7 +30,7 @@ export default function Reports() {
 
   return (
     <div>
-      <PageHeader title="Reports" sub="GET /api/v1/dashboard · all figures computed on the server" />
+      <PageHeader title="Reports" sub="Review event revenue, costs and business performance." />
       <ErrorBox error={error} />
       {d && (
         <>

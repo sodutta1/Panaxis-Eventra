@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 class ClientController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -21,16 +22,9 @@ class ClientController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('company_name', 'like', "%{$search}%")
-                  ->orWhere('client_code', 'like', "%{$search}%");
-            });
-        }
 
-        return ClientResource::collection($query->orderBy('name')->paginate(15));
+
+        return $this->listResponse($query, $request, ClientResource::class);
     }
 
     public function store(StoreClientRequest $request)

@@ -22,7 +22,7 @@ export default function Admin() {
     }).catch(setError)
   }
 
-  useEffect(load, [])
+  useEffect(() => { load(); window.addEventListener('list-query',load); return ()=>window.removeEventListener('list-query',load) }, [])
 
   const create = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,7 +48,7 @@ export default function Admin() {
 
   return (
     <div>
-      <PageHeader title="Admin · Users" sub="GET /api/v1/admin/users · admin roles only" />
+      <PageHeader title="Admin · Users" sub="Manage the people who can use your company workspace." />
       <ErrorBox error={error} />
       <Card className="mb-5">
         <Table head={['Name', 'Email', 'Role', 'Status', 'Actions']}>

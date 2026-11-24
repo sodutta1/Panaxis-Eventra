@@ -85,7 +85,7 @@ export default function EventDetail() {
                 <span>{s.title}{s.location_within_venue ? <span className="text-slate-400"> · {s.location_within_venue}</span> : null}</span>
               </li>
             ))}
-            {(event.schedules ?? []).length === 0 && <li className="text-sm text-slate-400">No schedule items yet.</li>}
+            {(event.schedules ?? []).length === 0 && <li className="text-sm text-slate-400">No schedule items yet. Add the first segment below.</li>}
           </ul>
           <form onSubmit={addSchedule} className="flex gap-2">
             <input className={`${inputCls} w-28`} type="time" value={sched.start_time} onChange={(e) => setSched({ ...sched, start_time: e.target.value })} required />
@@ -110,7 +110,7 @@ export default function EventDetail() {
                     <span className="text-xs text-slate-400 ml-auto">{t.due_date ? String(t.due_date).slice(0, 10) : ''}{t.assigned_user ? ` · ${t.assigned_user.name}` : ''}</span>
                   </li>
                 ))}
-                {(phases[phase] ?? []).length === 0 && <li className="text-xs text-slate-400">No tasks.</li>}
+                {(phases[phase] ?? []).length === 0 && <li className="text-xs text-slate-400">No tasks yet. Add a task below.</li>}
               </ul>
             </div>
           ))}

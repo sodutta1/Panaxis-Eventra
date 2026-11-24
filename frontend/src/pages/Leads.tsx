@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -19,7 +20,7 @@ export default function Leads() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [error, setError] = useState<unknown>(null)
   const [showForm, setShowForm] = useState(false)
-  const [view, setView] = useState<'board' | 'table'>('board')
+  const [view, setView] = useState<'board' | 'table'>('table')
   const [form, setForm] = useState(emptyForm)
   const [editing, setEditing] = useState<Lead | null>(null)
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
@@ -27,7 +28,7 @@ export default function Leads() {
   const [busyId, setBusyId] = useState<number | null>(null)
 
   const load = () => api<Paginated<Lead>>('/leads').then((r) => setLeads(r.data)).catch(setError)
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
 
   const openCreate = () => { setEditing(null); setForm(emptyForm); setShowForm(true) }
 
@@ -95,7 +96,7 @@ export default function Leads() {
 
   return (
     <div>
-      <PageHeader title="Leads / CRM" sub="Drag cards between stages · Converted and Lost ask first">
+      <PageHeader title="Leads / CRM" sub="Follow enquiries from first contact to confirmed business.">
         <button className={btnGhostCls} onClick={() => setView(view === 'board' ? 'table' : 'board')}>
           {view === 'board' ? 'Table view' : 'Board view'}
         </button>
@@ -155,8 +156,8 @@ export default function Leads() {
                         </button>
                       )}
                       <div className="flex justify-end gap-2 mt-2">
-                        <button className="text-[11px] font-bold text-pa-700 hover:underline" onClick={() => openEdit(l)}>Edit</button>
-                        {isAdmin && <button className="text-[11px] font-bold text-rose-600 hover:underline" onClick={() => remove(l)}>Delete</button>}
+                        <IconAction label="Edit" onClick={() => openEdit(l)}/>
+                        {isAdmin && <IconAction label="Delete" onClick={() => remove(l)}/>}
                       </div>
                     </div>
                   ))}
@@ -181,8 +182,8 @@ export default function Leads() {
                   {l.status !== 'converted' && (
                     <button className={`${btnGhostCls} mr-3`} onClick={() => convert(l.id)}>Convert → client</button>
                   )}
-                  <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(l)}>Edit</button>
-                  {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(l)}>Delete</button>}
+                  <IconAction label="Edit" onClick={() => openEdit(l)}/>
+                  {isAdmin && <IconAction label="Delete" onClick={() => remove(l)}/>}
                 </td>
               </tr>
             ))}

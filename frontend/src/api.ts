@@ -42,6 +42,14 @@ export async function api<T = any>(
   const token = getToken()
   if (token) headers['Authorization'] = `Bearer ${token}`
 
+  const modulePath = window.location.pathname === '/admin' ? '/admin/users' : window.location.pathname
+  const isList = (!options.method || options.method === 'GET') && path.split('?')[0] === modulePath && ['leads','clients','events','venues','vendors','quotations','invoices','expenses','guests','tickets','admin'].includes(modulePath.split('/')[1])
+  if (isList) {
+    const [base,query] = path.split('?'); const p = new URLSearchParams(query)
+    new URLSearchParams(window.location.search).forEach((v,k)=>p.set(k,v))
+    path = base + '?' + p
+    window.dispatchEvent(new CustomEvent('list-state',{detail:{endpoint:modulePath,busy:true}}))
+  }
   const res = await fetch(`${API_URL}${path}`, {
     method: options.method ?? 'GET',
     headers,
@@ -50,6 +58,7 @@ export async function api<T = any>(
 
   const json = res.status === 204 ? {} : await res.json().catch(() => ({}))
 
+  if (isList) window.dispatchEvent(new CustomEvent('list-state',{detail:{endpoint:modulePath,busy:false,meta:json.meta}}))
   if (!res.ok) {
     if (res.status === 401) clearSession()
     throw new ApiError(res.status, (json as any).message ?? `Request failed (${res.status})`, (json as any).errors)
@@ -68,7 +77,7 @@ export async function downloadPdf(path: string, filename: string) {
   const res = await fetch(`${API_URL}${path}`, {
     headers: { Authorization: `Bearer ${getToken() ?? ''}`, Accept: 'application/pdf' },
   })
-  if (!res.ok) throw new ApiError(res.status, `PDF download failed (${res.status})`)
+  if (!res.ok) throw new ApiError(res.status, "Couldn't create the PDF. Try again.")
   const blob = await res.blob()
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')

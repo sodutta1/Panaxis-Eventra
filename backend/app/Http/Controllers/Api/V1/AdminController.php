@@ -13,6 +13,7 @@ use Illuminate\Validation\Rule;
 class AdminController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     private const ROLES = ['super_admin', 'company_admin', 'admin', 'event_manager', 'sales_executive', 'accountant', 'staff', 'client', 'vendor'];
 
@@ -36,16 +37,11 @@ class AdminController extends Controller
 
     public function users(Request $request)
     {
-        $users = $this->scopeCompany(User::query(), $request)->orderBy('name')->get()
-            ->map(fn ($u) => [
-                'id' => $u->id,
-                'name' => $u->name,
-                'email' => $u->email,
-                'role' => $u->role,
-                'status' => $u->status,
-            ]);
-
-        return response()->json(['data' => $users, 'roles' => self::ROLES]);
+        $response = $this->listResponse($this->scopeCompany(User::query(), $request), $request);
+        if ($request->filled('format')) return $response;
+        $data = $response->getData(true);
+        $data['data'] = array_map(fn($u) => array_intersect_key($u,array_flip(['id','name','email','role','status'])), $data['data']);
+        return response()->json($data + ['roles'=>self::ROLES]);
     }
 
     public function createUser(Request $request)

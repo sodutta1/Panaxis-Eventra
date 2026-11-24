@@ -79,7 +79,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <PageHeader title="Dashboard" sub="Business at a glance" />
+      <PageHeader title="Dashboard" sub="Track today's events, tasks and outstanding payments." />
       <ErrorBox error={error} />
 
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 mb-6">

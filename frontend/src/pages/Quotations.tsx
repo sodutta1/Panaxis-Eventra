@@ -1,5 +1,7 @@
+import { PdfAction } from '../components/Actions'
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
-import { api, downloadPdf, getUser, type Paginated } from '../api'
+import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type Client, type Quotation } from '../types'
 
@@ -16,7 +18,7 @@ export default function Quotations() {
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Quotation>>('/quotations').then((r) => setItems(r.data)).catch(setError)
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
   useEffect(() => {
     api<Paginated<Client>>('/clients').then((r) => setClients(r.data)).catch(() => {})
   }, [])
@@ -56,7 +58,7 @@ export default function Quotations() {
 
   return (
     <div>
-      <PageHeader title="Quotations" sub="GET/POST /api/v1/quotations">
+      <PageHeader title="Quotations" sub="Prepare and review itemised quotations for your clients.">
         <button className={btnCls} onClick={() => setShowForm(!showForm)}>{showForm ? 'Close' : '+ New quotation'}</button>
       </PageHeader>
       <ErrorBox error={error} />
@@ -108,18 +110,13 @@ export default function Quotations() {
               <td className="px-4 py-3 font-semibold">{inr(q.grand_total)}</td>
               <td className="px-4 py-3"><Badge value={q.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <button
-                  className="text-pa-700 font-bold text-xs hover:underline mr-3"
-                  onClick={() => downloadPdf(`/quotations/${q.id}/pdf`, `${q.quotation_number}.pdf`).catch(setError)}
-                >
-                  PDF
-                </button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(q)}>Delete</button>}
+                <PdfAction path={`/quotations/${q.id}/pdf`} name={`${q.quotation_number}.pdf`}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(q)}/>}
               </td>
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={9} className="px-4 py-6 text-center text-slate-400">No quotations yet.</td></tr>
+            <tr><td colSpan={9} className="px-4 py-6 text-center text-slate-400">No quotations yet. Create a quotation for a client.</td></tr>
           )}
         </Table>
       </Card>

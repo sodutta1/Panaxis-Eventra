@@ -76,7 +76,7 @@ export default function WorkOrders() {
 
   return (
     <div>
-      <PageHeader title="Vendor Work Orders" sub="GET /api/v1/events/{id}/work-orders · payments capped at contract amount" />
+      <PageHeader title="Vendor Work Orders" sub="Track supplier commitments and payment balances." />
       <ErrorBox error={error} />
       <div className="mb-4 max-w-md">
         <label className="block text-[11.5px] font-bold uppercase tracking-wide text-pamuted mb-1">Event</label>

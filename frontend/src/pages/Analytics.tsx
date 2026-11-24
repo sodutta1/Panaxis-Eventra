@@ -54,7 +54,7 @@ export default function Analytics() {
 
   return (
     <div>
-      <PageHeader title="Analytics" sub="Unified view across events, tasks, money and clients" />
+      <PageHeader title="Analytics" sub="Review performance across events, tasks, money and clients." />
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         {kpis.map((x) => (
           <Card key={x.label} className="p-4">

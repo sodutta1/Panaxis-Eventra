@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -135,7 +136,7 @@ export default function Tickets() {
 
   return (
     <div>
-      <PageHeader title="Tickets & Gate Scan" sub="POST /api/v1/tickets/verify · scan a QR token or ticket number">
+      <PageHeader title="Tickets & Gate Scan" sub="Manage ticket holders, payments and admission.">
         <button className={btnGhostCls} onClick={() => setShowTypeForm(!showTypeForm)}>{showTypeForm ? 'Close' : '+ Ticket type'}</button>
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New ticket'}
@@ -181,7 +182,7 @@ export default function Tickets() {
             )}
             <input className={inputCls} type="number" min={0} step="0.01" placeholder="Price paid (₹, blank = type price)" value={form.price_paid} onChange={(e) => setForm({ ...form, price_paid: e.target.value })} />
             <select className={inputCls} value={form.payment_status} onChange={(e) => setForm({ ...form, payment_status: e.target.value })}>
-              {PAYMENT_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+              {PAYMENT_STATUSES.map((s) => <option key={s} value={s}>{s.replaceAll('_', ' ')}</option>)}
             </select>
             <div className="flex gap-2 items-end">
               <button className={btnCls}>{editing ? 'Save changes' : 'Issue ticket'}</button>
@@ -209,8 +210,8 @@ export default function Tickets() {
               <td className="px-4 py-3"><Badge value={t.payment_status} /></td>
               <td className="px-4 py-3"><Badge value={t.ticket_status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(t)}>Edit</button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(t)}>Delete</button>}
+                <IconAction label="Edit" onClick={() => openEdit(t)}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(t)}/>}
               </td>
             </tr>
           ))}

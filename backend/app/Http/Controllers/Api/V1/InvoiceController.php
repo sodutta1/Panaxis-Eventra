@@ -19,6 +19,7 @@ use Illuminate\Validation\ValidationException;
 class InvoiceController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -28,7 +29,7 @@ class InvoiceController extends Controller
             $query->where('status', $request->status);
         }
 
-        return InvoiceResource::collection($query->latest()->paginate(15));
+        return $this->listResponse($query, $request, InvoiceResource::class);
     }
 
     public function store(StoreInvoiceRequest $request)

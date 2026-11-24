@@ -21,6 +21,7 @@ use Illuminate\Validation\ValidationException;
 class TicketController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -31,7 +32,7 @@ class TicketController extends Controller
             }
         }
 
-        return TicketResource::collection($query->latest()->paginate(15));
+        return $this->listResponse($query, $request, TicketResource::class);
     }
 
     public function store(StoreTicketRequest $request)

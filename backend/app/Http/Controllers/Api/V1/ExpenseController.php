@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 class ExpenseController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -25,7 +26,7 @@ class ExpenseController extends Controller
             $query->where('status', $request->status);
         }
 
-        return ExpenseResource::collection($query->latest()->paginate(15));
+        return $this->listResponse($query, $request, ExpenseResource::class);
     }
 
     public function store(StoreExpenseRequest $request)

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 class LeadController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -24,15 +25,9 @@ class LeadController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('contact_name', 'like', "%{$search}%");
-            });
-        }
 
-        return LeadResource::collection($query->latest()->paginate(15));
+
+        return $this->listResponse($query, $request, LeadResource::class);
     }
 
     public function store(StoreLeadRequest $request)

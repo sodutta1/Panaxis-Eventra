@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -16,7 +17,7 @@ export default function Expenses() {
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Expense>>('/expenses').then((r) => setItems(r.data)).catch(setError)
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
   useEffect(() => {
     api<Paginated<EventItem>>('/events').then((r) => setEvents(r.data)).catch(() => {})
   }, [])
@@ -69,7 +70,7 @@ export default function Expenses() {
 
   return (
     <div>
-      <PageHeader title="Expenses" sub="GET/POST /api/v1/expenses">
+      <PageHeader title="Expenses" sub="Record event costs and review expenses before approval.">
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New expense'}
         </button>
@@ -112,13 +113,13 @@ export default function Expenses() {
               <td className="px-4 py-3 font-semibold">{inr(x.amount)}</td>
               <td className="px-4 py-3"><Badge value={x.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(x)}>Edit</button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(x)}>Delete</button>}
+                <IconAction label="Edit" onClick={() => openEdit(x)}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(x)}/>}
               </td>
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-400">No expenses yet.</td></tr>
+            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-400">No expenses yet. Add an expense to start tracking event costs.</td></tr>
           )}
         </Table>
       </Card>

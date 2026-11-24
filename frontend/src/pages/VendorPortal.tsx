@@ -31,7 +31,7 @@ export default function VendorPortal() {
 
   return (
     <div>
-      <PageHeader title="Vendor Portal" sub="GET /api/v1/portal/vendor" />
+      <PageHeader title="Vendor Portal" sub="Review assigned work and payment progress." />
       <ErrorBox error={error} />
       {data && (
         <>

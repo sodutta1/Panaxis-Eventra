@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./design-tokens.css";
 
 @theme {
   /* Panaxis Eventra palette, aligned to the PanAxis logo gradient */

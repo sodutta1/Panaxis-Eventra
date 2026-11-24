@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -14,7 +15,7 @@ export default function Clients() {
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Client>>('/clients').then((r) => setClients(r.data)).catch(setError)
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
 
   const openCreate = () => { setEditing(null); setForm(emptyForm); setShowForm(true) }
   const openEdit = (c: Client) => {
@@ -48,7 +49,7 @@ export default function Clients() {
 
   return (
     <div>
-      <PageHeader title="Clients" sub="GET/POST /api/v1/clients">
+      <PageHeader title="Clients" sub="Keep client details and event history in one place.">
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>{showForm && !editing ? 'Close' : '+ New client'}</button>
       </PageHeader>
       <ErrorBox error={error} />
@@ -83,8 +84,8 @@ export default function Clients() {
               <td className="px-4 py-3">{c.events_count ?? '-'}</td>
               <td className="px-4 py-3"><Badge value={c.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(c)}>Edit</button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(c)}>Delete</button>}
+                <IconAction label="Edit" onClick={() => openEdit(c)}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(c)}/>}
               </td>
             </tr>
           ))}

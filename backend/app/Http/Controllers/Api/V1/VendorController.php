@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 class VendorController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -25,16 +26,9 @@ class VendorController extends Controller
         if ($request->filled('category_id')) {
             $query->where('vendor_category_id', $request->category_id);
         }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('business_name', 'like', "%{$search}%")
-                  ->orWhere('vendor_code', 'like', "%{$search}%");
-            });
-        }
 
-        return VendorResource::collection($query->orderBy('name')->paginate(15));
+
+        return $this->listResponse($query, $request, VendorResource::class);
     }
 
     public function store(StoreVendorRequest $request)

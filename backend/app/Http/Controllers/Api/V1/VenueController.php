@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 class VenueController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -21,11 +22,9 @@ class VenueController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
 
-        return VenueResource::collection($query->orderBy('name')->paginate(15));
+
+        return $this->listResponse($query, $request, VenueResource::class);
     }
 
     public function store(StoreVenueRequest $request)

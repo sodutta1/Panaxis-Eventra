@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api, getUser, type Paginated } from '../api'
@@ -24,7 +25,7 @@ export default function Events() {
       .catch(setError)
   }
 
-  useEffect(load, [status])
+  useEffect(() => { load(); window.addEventListener('list-query',load); return ()=>window.removeEventListener('list-query',load) }, [status])
   useEffect(() => {
     api<Paginated<Client>>('/clients').then((r) => setClients(r.data)).catch(() => {})
   }, [])
@@ -94,7 +95,7 @@ export default function Events() {
 
   return (
     <div>
-      <PageHeader title="Events" sub="GET/POST /api/v1/events">
+      <PageHeader title="Events" sub="Plan your events and follow their progress.">
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New event'}
         </button>
@@ -157,8 +158,8 @@ export default function Events() {
               <td className="px-4 py-3">{inr(e.amount_received)}</td>
               <td className="px-4 py-3"><Badge value={e.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(e)}>Edit</button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(e)}>Delete</button>}
+                <IconAction label="Edit" onClick={() => openEdit(e)}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(e)}/>}
               </td>
             </tr>
           ))}

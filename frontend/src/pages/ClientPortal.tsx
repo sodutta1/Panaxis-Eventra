@@ -24,7 +24,7 @@ export default function ClientPortal() {
 
   return (
     <div>
-      <PageHeader title="Client Portal" sub="GET /api/v1/portal/client" />
+      <PageHeader title="Client Portal" sub="Review your events, quotations and outstanding invoices." />
       <ErrorBox error={error} />
       {data && (
         <>

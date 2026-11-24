@@ -15,6 +15,7 @@ use Illuminate\Validation\ValidationException;
 class QuotationController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -24,7 +25,7 @@ class QuotationController extends Controller
             $query->where('status', $request->status);
         }
 
-        return QuotationResource::collection($query->latest()->paginate(15));
+        return $this->listResponse($query, $request, QuotationResource::class);
     }
 
     public function store(StoreQuotationRequest $request)

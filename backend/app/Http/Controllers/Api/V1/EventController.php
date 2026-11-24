@@ -23,6 +23,7 @@ use Illuminate\Validation\ValidationException;
 class EventController extends Controller
 {
     use ScopesToCompany;
+    use \App\Http\Controllers\Api\V1\Concerns\QueriesLists;
 
     public function index(Request $request)
     {
@@ -34,16 +35,9 @@ class EventController extends Controller
         if ($request->filled('category_id')) {
             $query->where('event_category_id', $request->category_id);
         }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('event_code', 'like', "%{$search}%")
-                    ->orWhereHas('client', fn ($cq) => $cq->where('name', 'like', "%{$search}%"));
-            });
-        }
 
-        return EventResource::collection($query->orderBy('start_date', 'desc')->paginate(12));
+
+        return $this->listResponse($query, $request, EventResource::class);
     }
 
     public function store(StoreEventRequest $request)

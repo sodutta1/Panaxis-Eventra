@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -15,7 +16,7 @@ export default function Vendors() {
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Vendor>>('/vendors').then((r) => setVendors(r.data)).catch(setError)
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
   useEffect(() => {
     api<{ data: VendorCategory[] }>('/vendor-categories').then((r) => setCategories(r.data)).catch(() => {})
   }, [])
@@ -70,7 +71,7 @@ export default function Vendors() {
 
   return (
     <div>
-      <PageHeader title="Vendors" sub="GET/POST /api/v1/vendors">
+      <PageHeader title="Vendors" sub="Find trusted suppliers and keep their details up to date.">
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New vendor'}
         </button>
@@ -109,8 +110,8 @@ export default function Vendors() {
               <td className="px-4 py-3">★ {v.rating}</td>
               <td className="px-4 py-3"><Badge value={v.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
-                <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(v)}>Edit</button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(v)}>Delete</button>}
+                <IconAction label="Edit" onClick={() => openEdit(v)}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(v)}/>}
               </td>
             </tr>
           ))}

@@ -57,6 +57,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         Route::middleware($staff)->group(function () use ($admins, $finance, $sales, $ops) {
 
+            Route::get('/quick-find', \App\Http\Controllers\Api\V1\QuickFindController::class);
+
             // Dashboard / Reports
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

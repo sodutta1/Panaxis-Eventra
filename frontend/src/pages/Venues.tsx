@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -15,7 +16,7 @@ export default function Venues() {
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Venue>>('/venues').then((r) => setVenues(r.data)).catch(setError)
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
 
   const openCreate = () => { setEditing(null); setForm(emptyForm); setShowForm(true) }
   const openEdit = (v: Venue) => {
@@ -69,7 +70,7 @@ export default function Venues() {
 
   return (
     <div>
-      <PageHeader title="Venues" sub="GET/POST /api/v1/venues">
+      <PageHeader title="Venues" sub="Compare venues, capacity and daily hire costs.">
         {isAdmin && (
           <button className={btnCls} onClick={() => (showForm ? setShowForm(false) : openCreate())}>
             {showForm && !editing ? 'Close' : '+ New venue'}
@@ -112,8 +113,8 @@ export default function Venues() {
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 {isAdmin && (
                   <>
-                    <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(v)}>Edit</button>
-                    <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(v)}>Delete</button>
+                    <IconAction label="Edit" onClick={() => openEdit(v)}/>
+                    <IconAction label="Delete" onClick={() => remove(v)}/>
                   </>
                 )}
               </td>

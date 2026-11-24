@@ -125,7 +125,7 @@ export default function GateScanner() {
 
   return (
     <div>
-      <PageHeader title="Gate Scanner" sub="Camera QR scan → POST /api/v1/tickets/verify">
+      <PageHeader title="Gate Scanner" sub="Scan a ticket or enter its number to check in a guest.">
         <button className={btnGhostCls} disabled={cameraState === 'starting' || cameraState === 'stopping'} onClick={() => (running ? void stop() : void start())}>
           {cameraState === 'starting' ? 'Starting camera...' : cameraState === 'stopping' ? 'Stopping camera...' : running ? 'Stop camera' : 'Start camera'}
         </button>

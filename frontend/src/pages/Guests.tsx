@@ -1,3 +1,4 @@
+import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -21,7 +22,7 @@ export default function Guests() {
     api<Paginated<Guest>>(`/guests${eventId ? `?event_id=${eventId}` : ''}`)
       .then((r) => setItems(r.data))
       .catch(setError)
-  useEffect(() => { load() }, [eventId])
+  useEffect(() => { load(); window.addEventListener('list-query',load); return ()=>window.removeEventListener('list-query',load) }, [eventId])
   useEffect(() => {
     api<Paginated<EventItem>>('/events').then((r) => setEvents(r.data)).catch(() => {})
   }, [])
@@ -82,7 +83,7 @@ export default function Guests() {
 
   return (
     <div>
-      <PageHeader title="Guests & RSVP" sub="GET/POST /api/v1/guests · click a row to check in a guest (cannot be undone)">
+      <PageHeader title="Guests & RSVP" sub="Manage invitations, responses and guest check-in.">
         <input className={`${inputCls} w-40`} placeholder="Filter event id" value={eventId} onChange={(e) => setEventId(e.target.value)} />
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New guest'}
@@ -107,7 +108,7 @@ export default function Guests() {
             </select>
             {editing && (
               <select className={inputCls} value={form.rsvp_status} onChange={(e) => setForm({ ...form, rsvp_status: e.target.value })}>
-                {RSVP.map((r) => <option key={r} value={r}>{r}</option>)}
+                {RSVP.map((r) => <option key={r} value={r}>{r.replaceAll('_', ' ')}</option>)}
               </select>
             )}
             <div className="flex gap-2 items-end">
@@ -129,8 +130,8 @@ export default function Guests() {
               <td className="px-4 py-3"><Badge value={g.rsvp_status} /></td>
               <td className="px-4 py-3">{g.checked_in ? <Badge value="checked_in" /> : <span className="text-xs text-slate-400">not yet</span>}</td>
               <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                <button className="text-pa-700 font-bold text-xs hover:underline mr-3" onClick={() => openEdit(g)}>Edit</button>
-                {isAdmin && <button className="text-rose-600 font-bold text-xs hover:underline" onClick={() => remove(g)}>Delete</button>}
+                <IconAction label="Edit" onClick={() => openEdit(g)}/>
+                {isAdmin && <IconAction label="Delete" onClick={() => remove(g)}/>}
               </td>
             </tr>
           ))}
