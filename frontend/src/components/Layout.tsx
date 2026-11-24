@@ -22,7 +22,7 @@ export default function Layout(){const user=getUser();const id=user?.id??0;const
  const logout=async()=>{try{await api('/auth/logout',{method:'POST'})}catch{}clearSession();navigate('/login')}
  const link=(item:Item,favourite=false)=>{const I=item.icon;return <div className="nav-item" key={item.to}><NavLink to={item.to} title={item.label} className={({isActive})=>isActive?'active':''}><I size={18} strokeWidth={1.5}/><span>{item.label}</span></NavLink>{!favourite&&<button className={pins.includes(item.to)?'pin pinned':'pin'} aria-label={`${pins.includes(item.to)?'Unpin':'Pin'} ${item.label}`} title={`${pins.includes(item.to)?'Unpin':'Pin'} ${item.label}`} onClick={()=>setPins(p=>p.includes(item.to)?p.filter(x=>x!==item.to):[...p,item.to])}><Pin size={13}/></button>}</div>}
  return <div className={`workspace-shell ${collapsed?'rail':''} ${drawer?'drawer-open':''}`}>
- {drawer&&<button className="drawer-backdrop" aria-label="Close menu" onClick={()=>setDrawer(false)}/>}
+ {drawer&&<button className="drawer-backdrop" aria-label="Dismiss menu backdrop" onClick={()=>setDrawer(false)}/>}
  <aside className="sidebar" aria-label="Main navigation"><div className="brand"><img src="/logo.jpg" alt="Panaxis"/><span>Eventra<small>EVENT WORKSPACE</small></span><button className="icon-action mobile-close" aria-label="Close menu" title="Close menu" onClick={()=>setDrawer(false)}><X size={18}/></button></div>
  <nav>{staff.includes(role)&&link({to:'/dashboard',label:'Overview',icon:LayoutDashboard},true)}
  {pins.length>0&&<div className="favourites"><div className="nav-caption">Pinned</div>{allowed.flatMap(g=>g.items).filter(i=>pins.includes(i.to)).map(i=>link(i,true))}</div>}

@@ -107,12 +107,12 @@ export default function Leads() {
         <Card className="p-5 mb-6">
           <div className="text-sm font-bold text-pa-900 mb-3">{editing ? `Edit lead: ${editing.title}` : 'Add a lead'}</div>
           <form onSubmit={submit} className="grid md:grid-cols-3 gap-4">
-            <input className={inputCls} placeholder="Lead title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-            <input className={inputCls} placeholder="Contact name" value={form.contact_name} onChange={(e) => setForm({ ...form, contact_name: e.target.value })} required />
-            <input className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <input aria-label="Lead title" className={inputCls} placeholder="Lead title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+            <input aria-label="Contact name" className={inputCls} placeholder="Contact name" value={form.contact_name} onChange={(e) => setForm({ ...form, contact_name: e.target.value })} required />
+            <input aria-label="Email" className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input aria-label="Phone" className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             <input className={inputCls} type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} />
-            <input className={inputCls} type="number" placeholder="Estimated budget (₹)" value={form.estimated_budget} onChange={(e) => setForm({ ...form, estimated_budget: e.target.value })} />
+            <input aria-label="Estimated budget (₹)" className={inputCls} type="number" placeholder="Estimated budget (₹)" value={form.estimated_budget} onChange={(e) => setForm({ ...form, estimated_budget: e.target.value })} />
             <div className="flex gap-2 items-end">
               <button className={btnCls}>{editing ? 'Save changes' : 'Create lead'}</button>
               {editing && <button type="button" className={btnGhostCls} onClick={() => { setShowForm(false); setEditing(null) }}>Cancel</button>}

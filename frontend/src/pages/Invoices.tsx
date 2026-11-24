@@ -86,21 +86,21 @@ export default function Invoices() {
                 <label className="text-xs text-slate-500">Due date</label>
                 <input className={inputCls} type="date" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })} required />
               </div>
-              <input className={inputCls} type="number" min={0} step="0.01" placeholder="Tax rate %" value={form.tax_rate} onChange={(e) => setForm({ ...form, tax_rate: e.target.value })} required />
+              <input aria-label="Tax rate %" className={inputCls} type="number" min={0} step="0.01" placeholder="Tax rate %" value={form.tax_rate} onChange={(e) => setForm({ ...form, tax_rate: e.target.value })} required />
             </div>
             <div>
               <div className="text-xs font-bold text-pamuted uppercase tracking-wide mb-2">Line items</div>
               {rows.map((r, i) => (
                 <div key={i} className="grid md:grid-cols-[1fr_110px_140px_36px] gap-2 mb-2">
-                  <input className={inputCls} placeholder="Description" value={r.description} onChange={(e) => setRow(i, { description: e.target.value })} required />
-                  <input className={inputCls} type="number" min={1} placeholder="Qty" value={r.quantity} onChange={(e) => setRow(i, { quantity: e.target.value })} required />
-                  <input className={inputCls} type="number" min={0} step="0.01" placeholder="Unit price (₹)" value={r.unit_price} onChange={(e) => setRow(i, { unit_price: e.target.value })} required />
+                  <input aria-label="Description" className={inputCls} placeholder="Description" value={r.description} onChange={(e) => setRow(i, { description: e.target.value })} required />
+                  <input aria-label="Qty" className={inputCls} type="number" min={1} placeholder="Qty" value={r.quantity} onChange={(e) => setRow(i, { quantity: e.target.value })} required />
+                  <input aria-label="Unit price (₹)" className={inputCls} type="number" min={0} step="0.01" placeholder="Unit price (₹)" value={r.unit_price} onChange={(e) => setRow(i, { unit_price: e.target.value })} required />
                   <button type="button" className="text-rose-600 font-bold text-xs hover:underline disabled:opacity-30" disabled={rows.length === 1} onClick={() => setRows((rs) => rs.filter((_, j) => j !== i))}>✕</button>
                 </div>
               ))}
               <button type="button" className={btnGhostCls} onClick={() => setRows((rs) => [...rs, { ...emptyItem }])}>+ Add line</button>
             </div>
-            <input className={inputCls} placeholder="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+            <input aria-label="Notes (optional)" className={inputCls} placeholder="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             <div><button className={btnCls}>Create invoice</button></div>
           </form>
         </Card>
@@ -111,12 +111,12 @@ export default function Invoices() {
             Recording payment for <b>{payFor.invoice_number}</b> · balance due <b>{inr(payFor.balance_due)}</b>
           </div>
           <form onSubmit={record} className="grid md:grid-cols-5 gap-3">
-            <input className={inputCls} type="number" placeholder="Amount (₹)" value={pay.amount} onChange={(e) => setPay({ ...pay, amount: e.target.value })} required max={payFor.balance_due} />
+            <input aria-label="Amount (₹)" className={inputCls} type="number" placeholder="Amount (₹)" value={pay.amount} onChange={(e) => setPay({ ...pay, amount: e.target.value })} required max={payFor.balance_due} />
             <input className={inputCls} type="date" value={pay.payment_date} onChange={(e) => setPay({ ...pay, payment_date: e.target.value })} required />
             <select className={inputCls} value={pay.payment_method} onChange={(e) => setPay({ ...pay, payment_method: e.target.value })}>
               <option value="bank_transfer">bank transfer</option><option value="upi">UPI</option><option value="cash">cash</option><option value="card">card</option><option value="cheque">cheque</option>
             </select>
-            <input className={inputCls} placeholder="UTR / reference" value={pay.transaction_reference} onChange={(e) => setPay({ ...pay, transaction_reference: e.target.value })} />
+            <input aria-label="UTR / reference" className={inputCls} placeholder="UTR / reference" value={pay.transaction_reference} onChange={(e) => setPay({ ...pay, transaction_reference: e.target.value })} />
             <div className="flex gap-2">
               <button className={btnCls}>Record</button>
               <button type="button" className={btnGhostCls} onClick={() => setPayFor(null)}>Cancel</button>

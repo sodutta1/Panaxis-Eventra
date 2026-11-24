@@ -2,17 +2,19 @@ import { Children, cloneElement, isValidElement, type ReactNode, type ReactEleme
 import { BulkDocuments, DocumentRow, isDocument } from './DocumentTools'
 import { RowActions, PdfAction } from './Actions'
 import { useLocation } from 'react-router-dom'
-import { FilterBar, Pagination, SortHeading, Highlight } from './ListTools'
+import { FilterBar, Pagination, SortHeading, Highlight, useList } from './ListTools'
+import { getUser } from '../api'
 import { STATUS_COLORS } from '../types'
 
 export function PageHeader({ title, sub, children, titleClassName = '' }: { title: string; sub?: string; children?: ReactNode; titleClassName?: string }) {
+  const role=getUser()?.role??'';const module=useLocation().pathname.split('/')[1];const admin=['super_admin','company_admin','admin'].includes(role);const canWrite=admin||(['leads','clients','quotations'].includes(module)?['event_manager','sales_executive']:['invoices','expenses'].includes(module)?['accountant']:module==='venues'?[]:['event_manager','staff']).includes(role)
   return (
     <><div className="page-header flex items-start justify-between mb-6">
       <div>
         <h1 className={`text-[22px] font-extrabold ${titleClassName || 'text-pa-900'} tracking-tight`}>{title}</h1>
         {sub && <p className="text-[13px] text-pamuted mt-0.5">{sub}</p>}
       </div>
-      <div className="header-actions flex gap-2">{children}</div>
+      <div className="header-actions flex gap-2">{Children.map(children,c=>isValidElement(c)&&typeof (c.props as any).children==='string'&&/^\+ (New|Ticket)/.test((c.props as any).children)&&!canWrite?null:c)}</div>
     </div><FilterBar /><BulkDocuments /></>
   )
 }
@@ -34,7 +36,7 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 // One table presentation, including nested detail lists. Main module tables use server metadata.
 function highlightTree(node:ReactNode):ReactNode {
  if(typeof node==='string') {
-   const text=/^\d{4}-\d{2}-\d{2}$/.test(node)?new Date(node+'T12:00:00+05:30').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}):node
+   const text=/^\d{4}-\d{2}-\d{2}(T[0-9:.Z+\-]+)?$/.test(node)?new Date(node.length===10?node+'T12:00:00+05:30':node).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}):node
    return <Highlight>{text}</Highlight>
  }
  if(!isValidElement(node)) return node
@@ -43,7 +45,7 @@ function highlightTree(node:ReactNode):ReactNode {
  return cloneElement(e,{},Children.map(e.props.children,highlightTree))
 }
 export function DataTable({ head, children }: { head: string[]; children: ReactNode }) {
- const loc=useLocation();const type=loc.pathname.slice(1);const document=isDocument(type)
+ const {busy}=useList();const loc=useLocation();const type=loc.pathname.slice(1);const document=isDocument(type)
  const rows=Children.map(children,(node)=>{
   if(!isValidElement(node)||node.type!=='tr')return node
   const row=node as ReactElement<{children?:ReactNode}>;const cells=Children.toArray(row.props.children)
@@ -53,7 +55,7 @@ export function DataTable({ head, children }: { head: string[]; children: ReactN
   let hasPdf=false;const check=(n:ReactNode):void=>{Children.forEach(n,x=>{if(isValidElement(x)){const e=x as ReactElement<{children?:ReactNode}>;if(e.type===PdfAction)hasPdf=true;check(e.props.children)}})};check(cells)
   return cloneElement(row,{},...grouped.map(c=>highlightTree(c)),<td className="px-4"><RowActions><DocumentRow type={type} id={id} pdfExists={hasPdf}/></RowActions></td>)
  })
- return <><div className="table-scroll"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{rows}</tbody></table></div><Pagination /></>
+ return <><div className="table-scroll"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{busy?<tr><td colSpan={head.length+(document?1:0)}><div className="skeleton" aria-label="Loading records"/></td></tr>:rows}</tbody></table></div><Pagination /></>
 }
 export const Table = DataTable
 

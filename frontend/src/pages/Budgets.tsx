@@ -123,11 +123,11 @@ export default function Budgets() {
           <Card className="p-5 max-w-2xl">
             <h2 className="text-sm font-extrabold text-pa-900 mb-3">Add budget item</h2>
             <form onSubmit={addItem} className="grid grid-cols-2 gap-3">
-              <input required placeholder="Category (e.g. Decor)" className={inputCls} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-              <input required placeholder="Item name" className={inputCls} value={form.item_name} onChange={(e) => setForm({ ...form, item_name: e.target.value })} />
-              <input required type="number" min="0" step="0.01" placeholder="Estimated cost ₹" className={inputCls} value={form.estimated_cost} onChange={(e) => setForm({ ...form, estimated_cost: e.target.value })} />
-              <input type="number" min="0" step="0.01" placeholder="Actual cost ₹ (optional)" className={inputCls} value={form.actual_cost} onChange={(e) => setForm({ ...form, actual_cost: e.target.value })} />
-              <input placeholder="Notes" className={`${inputCls} col-span-2`} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+              <input aria-label="Category (e.g. Decor)" required placeholder="Category (e.g. Decor)" className={inputCls} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+              <input aria-label="Item name" required placeholder="Item name" className={inputCls} value={form.item_name} onChange={(e) => setForm({ ...form, item_name: e.target.value })} />
+              <input aria-label="Estimated cost ₹" required type="number" min="0" step="0.01" placeholder="Estimated cost ₹" className={inputCls} value={form.estimated_cost} onChange={(e) => setForm({ ...form, estimated_cost: e.target.value })} />
+              <input aria-label="Actual cost ₹ (optional)" type="number" min="0" step="0.01" placeholder="Actual cost ₹ (optional)" className={inputCls} value={form.actual_cost} onChange={(e) => setForm({ ...form, actual_cost: e.target.value })} />
+              <input aria-label="Notes" placeholder="Notes" className={`${inputCls} col-span-2`} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               <div className="col-span-2">
                 <button className={btnCls} type="submit">Add item</button>
               </div>

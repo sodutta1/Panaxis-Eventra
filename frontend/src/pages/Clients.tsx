@@ -57,11 +57,11 @@ export default function Clients() {
         <Card className="p-5 mb-6">
           <div className="text-sm font-bold text-pa-900 mb-3">{editing ? `Edit client: ${editing.name}` : 'Add a client'}</div>
           <form onSubmit={submit} className="grid md:grid-cols-3 gap-4">
-            <input className={inputCls} placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <input className={inputCls} placeholder="Company" value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} />
-            <input className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <input className={inputCls} placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+            <input aria-label="Name" className={inputCls} placeholder="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <input aria-label="Company" className={inputCls} placeholder="Company" value={form.company_name} onChange={(e) => setForm({ ...form, company_name: e.target.value })} />
+            <input aria-label="Email" className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input aria-label="Phone" className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <input aria-label="City" className={inputCls} placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
             <select className={inputCls} value={form.client_type} onChange={(e) => setForm({ ...form, client_type: e.target.value })}>
               <option value="corporate">corporate</option><option value="individual">individual</option><option value="association">association</option>
             </select>

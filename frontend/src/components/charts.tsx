@@ -1,6 +1,6 @@
 // Small dependency-free chart components: colorful donuts and horizontal bars.
 
-export const PALETTE = ['#22543d', '#3e82f7', '#f59e0b', '#ef4444', '#8b5cf6', '#91b496', '#f472b6', '#163a2b']
+export const PALETTE = ['#22543d', '#77957c', '#a15d20', '#a9b8a7', '#5d6860', '#91b496', '#b6a58b', '#163a2b']
 
 export type Slice = { name: string; value: number }
 
@@ -29,7 +29,7 @@ export function Donut({ slices, size = 140 }: { slices: Slice[]; size?: number }
           offset += frac
           return el
         })}
-        <text x="60" y="64" textAnchor="middle" fontSize="18" fontWeight="700" fill="#14392a">{total}</text>
+        <text x="60" y="64" textAnchor="middle" fontSize="18" fontWeight="700" fill="var(--text)">{total}</text>
       </svg>
       <ul className="text-xs space-y-1">
         {slices.map((s, i) => (

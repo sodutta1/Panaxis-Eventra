@@ -1,3 +1,4 @@
+import {formatDate} from '../dateTime'
 import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -105,14 +106,14 @@ export default function Events() {
         <Card className="p-5 mb-6">
           <div className="text-sm font-bold text-pa-900 mb-3">{editing ? `Edit event: ${editing.title}` : 'Add an event'}</div>
           <form onSubmit={submit} className="grid md:grid-cols-3 gap-4">
-            <input className={inputCls} placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+            <input aria-label="Event title" className={inputCls} placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
             <select className={inputCls} value={form.client_id} onChange={(e) => setForm({ ...form, client_id: e.target.value })} required>
               <option value="">Select client…</option>
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
-            <input className={inputCls} placeholder="Contract value (₹)" type="number" value={form.contract_value} onChange={(e) => setForm({ ...form, contract_value: e.target.value })} />
+            <input aria-label="Contract value (₹)" className={inputCls} placeholder="Contract value (₹)" type="number" value={form.contract_value} onChange={(e) => setForm({ ...form, contract_value: e.target.value })} />
             <div>
               <label className="text-xs text-slate-500">Start date</label>
               <input className={inputCls} type="date" value={form.start_date} onChange={(e) => setForm({ ...form, start_date: e.target.value })} required />
@@ -153,7 +154,7 @@ export default function Events() {
                 <Link to={`/events/${e.id}`} className="text-pa-700 font-semibold hover:underline">{e.title}</Link>
               </td>
               <td className="px-4 py-3 text-slate-600">{e.client?.name ?? '-'}</td>
-              <td className="px-4 py-3 text-slate-600 text-xs">{String(e.start_date).slice(0, 10)} → {String(e.end_date).slice(0, 10)}</td>
+              <td className="px-4 py-3 text-slate-600 text-xs">{formatDate(e.start_date)} to {formatDate(e.end_date)}</td>
               <td className="px-4 py-3">{inr(e.contract_value)}</td>
               <td className="px-4 py-3">{inr(e.amount_received)}</td>
               <td className="px-4 py-3"><Badge value={e.status} /></td>

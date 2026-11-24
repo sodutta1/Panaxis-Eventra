@@ -105,7 +105,7 @@ export default function WorkOrders() {
               <td className="px-4 py-3">
                 {payFor === wo.id ? (
                   <form onSubmit={pay} className="flex gap-2 items-center">
-                    <input autoFocus required type="number" min="0.01" step="0.01" placeholder="₹ amount" className={`${inputCls} !w-28 !py-1.5`} value={payAmount} onChange={(e) => setPayAmount(e.target.value)} />
+                    <input aria-label="₹ amount" autoFocus required type="number" min="0.01" step="0.01" placeholder="₹ amount" className={`${inputCls} !w-28 !py-1.5`} value={payAmount} onChange={(e) => setPayAmount(e.target.value)} />
                     <button className="text-pa-700 font-bold text-xs" type="submit">Save</button>
                     <button className="text-pamuted text-xs" type="button" onClick={() => setPayFor(null)}>Cancel</button>
                   </form>
@@ -137,9 +137,9 @@ export default function WorkOrders() {
               <option key={v.id} value={v.id}>{v.name}</option>
             ))}
           </select>
-          <input required placeholder="Service (e.g. Catering)" className={inputCls} value={form.service_title} onChange={(e) => setForm({ ...form, service_title: e.target.value })} />
-          <input required type="number" min="0" step="0.01" placeholder="Contract amount ₹" className={inputCls} value={form.contract_amount} onChange={(e) => setForm({ ...form, contract_amount: e.target.value })} />
-          <input placeholder="Scope of work (optional)" className={inputCls} value={form.scope_of_work} onChange={(e) => setForm({ ...form, scope_of_work: e.target.value })} />
+          <input aria-label="Service (e.g. Catering)" required placeholder="Service (e.g. Catering)" className={inputCls} value={form.service_title} onChange={(e) => setForm({ ...form, service_title: e.target.value })} />
+          <input aria-label="Contract amount ₹" required type="number" min="0" step="0.01" placeholder="Contract amount ₹" className={inputCls} value={form.contract_amount} onChange={(e) => setForm({ ...form, contract_amount: e.target.value })} />
+          <input aria-label="Scope of work (optional)" placeholder="Scope of work (optional)" className={inputCls} value={form.scope_of_work} onChange={(e) => setForm({ ...form, scope_of_work: e.target.value })} />
           <div className="col-span-2">
             <button className={btnCls} type="submit">Create work order</button>
           </div>

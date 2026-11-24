@@ -81,17 +81,17 @@ export default function Vendors() {
         <Card className="p-5 mb-6">
           <div className="text-sm font-bold text-pa-900 mb-3">{editing ? `Edit vendor: ${editing.name}` : 'Add a vendor'}</div>
           <form onSubmit={submit} className="grid md:grid-cols-3 gap-4">
-            <input className={inputCls} placeholder="Contact person name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <input className={inputCls} placeholder="Business name" value={form.business_name} onChange={(e) => setForm({ ...form, business_name: e.target.value })} />
+            <input aria-label="Contact person name" className={inputCls} placeholder="Contact person name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <input aria-label="Business name" className={inputCls} placeholder="Business name" value={form.business_name} onChange={(e) => setForm({ ...form, business_name: e.target.value })} />
             <select className={inputCls} value={form.vendor_category_id} onChange={(e) => setForm({ ...form, vendor_category_id: e.target.value })} required>
               <option value="">Select category…</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <input className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <input className={inputCls} placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-            <input className={inputCls} placeholder="Services offered" value={form.services_offered} onChange={(e) => setForm({ ...form, services_offered: e.target.value })} />
-            <input className={inputCls} placeholder="Payment terms" value={form.payment_terms} onChange={(e) => setForm({ ...form, payment_terms: e.target.value })} />
+            <input aria-label="Email" className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input aria-label="Phone" className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <input aria-label="City" className={inputCls} placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+            <input aria-label="Services offered" className={inputCls} placeholder="Services offered" value={form.services_offered} onChange={(e) => setForm({ ...form, services_offered: e.target.value })} />
+            <input aria-label="Payment terms" className={inputCls} placeholder="Payment terms" value={form.payment_terms} onChange={(e) => setForm({ ...form, payment_terms: e.target.value })} />
             <div className="flex gap-2 items-end">
               <button className={btnCls}>{editing ? 'Save changes' : 'Create vendor'}</button>
               {editing && <button type="button" className={btnGhostCls} onClick={() => { setShowForm(false); setEditing(null) }}>Cancel</button>}

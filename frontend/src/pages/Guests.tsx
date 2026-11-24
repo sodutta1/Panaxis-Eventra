@@ -84,7 +84,7 @@ export default function Guests() {
   return (
     <div>
       <PageHeader title="Guests & RSVP" sub="Manage invitations, responses and guest check-in.">
-        <input className={`${inputCls} w-40`} placeholder="Filter event id" value={eventId} onChange={(e) => setEventId(e.target.value)} />
+        <input aria-label="Filter event id" className={`${inputCls} w-40`} placeholder="Filter event id" value={eventId} onChange={(e) => setEventId(e.target.value)} />
         <button className={btnCls} onClick={() => (showForm && !editing ? setShowForm(false) : openCreate())}>
           {showForm && !editing ? 'Close' : '+ New guest'}
         </button>
@@ -98,11 +98,11 @@ export default function Guests() {
               <option value="">Select event…</option>
               {events.map((ev2) => <option key={ev2.id} value={ev2.id}>{ev2.title}</option>)}
             </select>
-            <input className={inputCls} placeholder="Guest name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <input className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-            <input className={inputCls} type="number" min={0} placeholder="Plus ones" value={form.plus_ones} onChange={(e) => setForm({ ...form, plus_ones: e.target.value })} />
-            <input className={inputCls} placeholder="Table number" value={form.table_number} onChange={(e) => setForm({ ...form, table_number: e.target.value })} />
+            <input aria-label="Guest name" className={inputCls} placeholder="Guest name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <input aria-label="Email" className={inputCls} placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input aria-label="Phone" className={inputCls} placeholder="Phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <input aria-label="Plus ones" className={inputCls} type="number" min={0} placeholder="Plus ones" value={form.plus_ones} onChange={(e) => setForm({ ...form, plus_ones: e.target.value })} />
+            <input aria-label="Table number" className={inputCls} placeholder="Table number" value={form.table_number} onChange={(e) => setForm({ ...form, table_number: e.target.value })} />
             <select className={inputCls} value={form.dietary_preference} onChange={(e) => setForm({ ...form, dietary_preference: e.target.value })}>
               {DIETARY.map((d) => <option key={d} value={d}>{d.replaceAll('_', ' ')}</option>)}
             </select>
@@ -123,7 +123,7 @@ export default function Guests() {
           {items.map((g) => (
             <tr key={g.id} className={g.checked_in ? '' : 'hover:bg-slate-50 cursor-pointer'} onClick={() => { if (!g.checked_in) checkIn(g.id) }}>
               <td className="px-4 py-3 font-medium">{g.name}<div className="text-xs text-slate-400">{g.email}</div></td>
-              <td className="px-4 py-3 text-slate-600">#{g.event_id}</td>
+              <td className="px-4 py-3 text-slate-600">{events.find(e=>e.id===g.event_id)?.title??'Event not set'}</td>
               <td className="px-4 py-3">{g.plus_ones}</td>
               <td className="px-4 py-3">{g.table_number ?? '-'}</td>
               <td className="px-4 py-3 capitalize text-slate-600">{g.dietary_preference}</td>

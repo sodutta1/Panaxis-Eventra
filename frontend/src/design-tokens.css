@@ -122,3 +122,7 @@ td:nth-child(2) {white-space:normal;min-width:140px;}
 .detail-tabs {display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--line);}
 .detail-tabs button {padding:12px 20px;font-size:13px;border-bottom:2px solid transparent;}
 .detail-tabs [aria-selected=true] {border-bottom-color:var(--brand);color:var(--brand);font-weight:600;}
+@media(max-width:767px){.workspace-main>.flex,.workspace-main>div>.flex.gap-2.mb-4{flex-wrap:wrap;} .workspace-main .grid>*{min-width:0;} .table-scroll {max-width:100%;} .workspace-content{width:0;} .workspace-main input,.workspace-main select {max-width:100%;}}
+.action-menu-label:after {content:attr(data-label);}
+:root[data-theme=dark] .text-pamuted,:root[data-theme=dark] [class*=text-slate-4],:root[data-theme=dark] [class*=text-slate-5] {color:var(--muted)!important;}
+:root[data-theme=dark] input,:root[data-theme=dark] select,:root[data-theme=dark] textarea {background:var(--surface)!important;color:var(--text)!important;}

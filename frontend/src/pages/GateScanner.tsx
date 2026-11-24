@@ -147,7 +147,7 @@ export default function GateScanner() {
           </div>
           <p className="text-xs text-pamuted mt-2">Point the camera at a ticket QR code. The same code is ignored for 3 seconds after a scan.</p>
           <form onSubmit={submitManual} className="flex gap-2 mt-3">
-            <input className={inputCls} placeholder="Or paste QR token / ticket number" value={manual} onChange={(e) => setManual(e.target.value)} />
+            <input aria-label="Or paste QR token / ticket number" className={inputCls} placeholder="Or paste QR token / ticket number" value={manual} onChange={(e) => setManual(e.target.value)} />
             <button className={btnCls} disabled={verifying}>{verifying ? 'Verifying...' : 'Verify'}</button>
           </form>
         </Card>

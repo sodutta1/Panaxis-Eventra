@@ -1,3 +1,4 @@
+import {formatDate} from '../dateTime'
 import { PdfAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -85,7 +86,7 @@ export default function EventDetail() {
       <div className="detail-tabs" role="tablist" aria-label="Event sections">{['overview','schedules','tasks'].map(t=><button key={t} role="tab" aria-selected={tab===t} onClick={()=>{setTab(t);setStreamPage(1)}}>{t==='schedules'?'Run of show':t[0].toUpperCase()+t.slice(1)}</button>)}</div>
       {tab==='overview'&&<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4"><div className="text-xs text-slate-500">Status</div><div className="mt-1"><Badge value={event.status} /></div></Card>
-        <Card className="p-4"><div className="text-xs text-slate-500">Dates</div><div className="font-semibold text-sm mt-1">{String(event.start_date).slice(0, 10)} → {String(event.end_date).slice(0, 10)}</div></Card>
+        <Card className="p-4"><div className="text-xs text-slate-500">Dates</div><div className="font-semibold text-sm mt-1">{formatDate(event.start_date)} to {formatDate(event.end_date)}</div></Card>
         <Card className="p-4"><div className="text-xs text-slate-500">Contract value</div><div className="font-semibold mt-1">{inr(event.contract_value)}</div></Card>
         <Card className="p-4"><div className="text-xs text-slate-500">Amount received</div><div className="font-semibold mt-1">{inr(event.amount_received)}</div></Card>
       </div>
@@ -105,8 +106,8 @@ export default function EventDetail() {
           </ul>
           <form onSubmit={addSchedule} className="flex gap-2">
             <input className={`${inputCls} w-28`} type="time" value={sched.start_time} onChange={(e) => setSched({ ...sched, start_time: e.target.value })} required />
-            <input className={inputCls} placeholder="Segment title" value={sched.title} onChange={(e) => setSched({ ...sched, title: e.target.value })} required />
-            <input className={inputCls} placeholder="Location" value={sched.location_within_venue} onChange={(e) => setSched({ ...sched, location_within_venue: e.target.value })} />
+            <input aria-label="Segment title" className={inputCls} placeholder="Segment title" value={sched.title} onChange={(e) => setSched({ ...sched, title: e.target.value })} required />
+            <input aria-label="Location" className={inputCls} placeholder="Location" value={sched.location_within_venue} onChange={(e) => setSched({ ...sched, location_within_venue: e.target.value })} />
             <button className={btnGhostCls}>Add</button>
           </form>
         </Card>}
@@ -131,7 +132,7 @@ export default function EventDetail() {
             </div>
           ))}
           <form onSubmit={addTask} className="flex gap-2 flex-wrap">
-            <input className={inputCls} placeholder="Task title" value={task.title} onChange={(e) => setTask({ ...task, title: e.target.value })} required />
+            <input aria-label="Task title" className={inputCls} placeholder="Task title" value={task.title} onChange={(e) => setTask({ ...task, title: e.target.value })} required />
             <select className={`${inputCls} w-32`} value={task.phase} onChange={(e) => setTask({ ...task, phase: e.target.value })}>
               <option value="pre_event">pre-event</option><option value="on_event">on-event</option><option value="post_event">post-event</option>
             </select>

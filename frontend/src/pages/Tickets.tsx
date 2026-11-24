@@ -1,6 +1,6 @@
 import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
-import { api, allOptions, getUser, type Paginated } from '../api'
+import { api, allOptions, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type EventItem, type Ticket, type TicketType } from '../types'
 
@@ -22,7 +22,6 @@ export default function Tickets() {
   const [editing, setEditing] = useState<Ticket | null>(null)
   const [form, setForm] = useState(emptyTicketForm)
   const [typeForm, setTypeForm] = useState(emptyTypeForm)
-  const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Ticket>>('/tickets').then((r) => setItems(r.data)).catch(setError)
   const loadTypes = () => api<{ data: TicketType[] }>('/tickets/types').then((r) => setTypes(r.data)).catch(() => {})
@@ -122,14 +121,6 @@ export default function Tickets() {
     } catch (e) { setError(e) }
   }
 
-  const remove = async (t: Ticket) => {
-    if (!confirm(`Delete ticket ${t.ticket_number} (${t.holder_name})?`)) return
-    setError(null)
-    try {
-      await api(`/tickets/${t.id}`, { method: 'DELETE' })
-      load()
-    } catch (e) { setError(e) }
-  }
 
   const tone = result?.status === 'success' ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : result?.status === 'warning' ? 'bg-amber-50 border-amber-300 text-amber-800' : 'bg-rose-50 border-rose-300 text-rose-800'
   const formTypes = form.event_id ? types.filter((t) => String(t.event_id) === form.event_id) : types
@@ -151,9 +142,9 @@ export default function Tickets() {
               <option value="">Select event…</option>
               {events.map((ev2) => <option key={ev2.id} value={ev2.id}>{ev2.title}</option>)}
             </select>
-            <input className={inputCls} placeholder="Type name (e.g. VIP)" value={typeForm.name} onChange={(e) => setTypeForm({ ...typeForm, name: e.target.value })} required />
-            <input className={inputCls} type="number" min={0} step="0.01" placeholder="Price (₹)" value={typeForm.price} onChange={(e) => setTypeForm({ ...typeForm, price: e.target.value })} required />
-            <input className={inputCls} type="number" min={1} placeholder="Total capacity" value={typeForm.total_capacity} onChange={(e) => setTypeForm({ ...typeForm, total_capacity: e.target.value })} required />
+            <input aria-label="Type name (e.g. VIP)" className={inputCls} placeholder="Type name (e.g. VIP)" value={typeForm.name} onChange={(e) => setTypeForm({ ...typeForm, name: e.target.value })} required />
+            <input aria-label="Price (₹)" className={inputCls} type="number" min={0} step="0.01" placeholder="Price (₹)" value={typeForm.price} onChange={(e) => setTypeForm({ ...typeForm, price: e.target.value })} required />
+            <input aria-label="Total capacity" className={inputCls} type="number" min={1} placeholder="Total capacity" value={typeForm.total_capacity} onChange={(e) => setTypeForm({ ...typeForm, total_capacity: e.target.value })} required />
             <div><button className={btnCls}>Create type</button></div>
           </form>
         </Card>
@@ -174,13 +165,13 @@ export default function Tickets() {
                 </select>
               </>
             )}
-            <input className={inputCls} placeholder="Holder name" value={form.holder_name} onChange={(e) => setForm({ ...form, holder_name: e.target.value })} required />
-            <input className={inputCls} placeholder="Holder email" value={form.holder_email} onChange={(e) => setForm({ ...form, holder_email: e.target.value })} />
-            <input className={inputCls} placeholder="Holder phone" value={form.holder_phone} onChange={(e) => setForm({ ...form, holder_phone: e.target.value })} />
+            <input aria-label="Holder name" className={inputCls} placeholder="Holder name" value={form.holder_name} onChange={(e) => setForm({ ...form, holder_name: e.target.value })} required />
+            <input aria-label="Holder email" className={inputCls} placeholder="Holder email" value={form.holder_email} onChange={(e) => setForm({ ...form, holder_email: e.target.value })} />
+            <input aria-label="Holder phone" className={inputCls} placeholder="Holder phone" value={form.holder_phone} onChange={(e) => setForm({ ...form, holder_phone: e.target.value })} />
             {!editing && (
-              <input className={inputCls} type="number" min={1} max={20} placeholder="Quantity" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} required />
+              <input aria-label="Quantity" className={inputCls} type="number" min={1} max={20} placeholder="Quantity" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} required />
             )}
-            <input className={inputCls} type="number" min={0} step="0.01" placeholder="Price paid (₹, blank = type price)" value={form.price_paid} onChange={(e) => setForm({ ...form, price_paid: e.target.value })} />
+            <input aria-label="Price paid (₹, blank = type price)" className={inputCls} type="number" min={0} step="0.01" placeholder="Price paid (₹, blank = type price)" value={form.price_paid} onChange={(e) => setForm({ ...form, price_paid: e.target.value })} />
             <select className={inputCls} value={form.payment_status} onChange={(e) => setForm({ ...form, payment_status: e.target.value })}>
               {PAYMENT_STATUSES.map((s) => <option key={s} value={s}>{s.replaceAll('_', ' ')}</option>)}
             </select>
@@ -193,7 +184,7 @@ export default function Tickets() {
       )}
       <Card className="p-5 mb-6">
         <form onSubmit={verify} className="flex gap-3">
-          <input className={inputCls} placeholder="Scan or paste QR token / ticket number (try a qr_token from the list below)" value={token} onChange={(e) => setToken(e.target.value)} required />
+          <input aria-label="Scan or paste QR token / ticket number (try a qr_token from the list below)" className={inputCls} placeholder="Scan or paste QR token / ticket number (try a qr_token from the list below)" value={token} onChange={(e) => setToken(e.target.value)} required />
           <button className={btnCls}>Verify at gate</button>
         </form>
         {result && <div className={`mt-3 rounded-lg border px-4 py-3 text-sm font-medium ${tone}`}>{result.message}</div>}
@@ -211,7 +202,7 @@ export default function Tickets() {
               <td className="px-4 py-3"><Badge value={t.ticket_status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <IconAction label="Edit" onClick={() => openEdit(t)}/>
-                {isAdmin && <IconAction label="Delete" onClick={() => remove(t)}/>}
+                
               </td>
             </tr>
           ))}

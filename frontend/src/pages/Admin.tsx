@@ -81,9 +81,9 @@ export default function Admin() {
       <Card className="p-5 max-w-2xl">
         <h2 className="text-sm font-extrabold text-pa-900 mb-3">Create user</h2>
         <form onSubmit={create} className="grid grid-cols-2 gap-3">
-          <input required placeholder="Full name" className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <input required type="email" placeholder="Email" className={inputCls} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          <input required type="password" minLength={8} placeholder="Password (min 8 chars)" className={inputCls} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <input aria-label="Full name" required placeholder="Full name" className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <input aria-label="Email" required type="email" placeholder="Email" className={inputCls} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          <input aria-label="Password (min 8 chars)" required type="password" minLength={8} placeholder="Password (min 8 chars)" className={inputCls} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
           <select className={inputCls} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
             {roles.map((r) => (
               <option key={r} value={r}>{ROLE_LABELS[r] ?? r}</option>

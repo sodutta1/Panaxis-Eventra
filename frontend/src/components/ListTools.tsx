@@ -25,7 +25,7 @@ export type Meta = {total:number;current_page:number;last_page:number;from?:numb
 const ListContext = createContext<{config?:ListConfig;meta?:Meta;busy:boolean}>({busy:false})
 export function useList() { return useContext(ListContext) }
 export function ListScope({children}:{children:ReactNode}) {
- const {pathname,search}=useLocation();const base=lists[pathname];const eventId=new URLSearchParams(search).get('event_id');const config=base&&eventId&&['/budgets','/work-orders'].includes(pathname)?{...base,endpoint:`/events/${eventId}/${pathname==='/budgets'?'budget/items':'work-orders'}`}:base;const [meta,setMeta]=useState<Meta>();const [busy,setBusy]=useState(false)
+ const {pathname,search}=useLocation();const section=new URLSearchParams(search).get('section')??(pathname==='/portal/client'?'events':'work-orders');const base=pathname.startsWith('/portal/')?{...lists['/'+section],endpoint:pathname+'/records'}:lists[pathname];const eventId=new URLSearchParams(search).get('event_id');const config=base&&eventId&&['/budgets','/work-orders'].includes(pathname)?{...base,endpoint:`/events/${eventId}/${pathname==='/budgets'?'budget/items':'work-orders'}`}:base;const [meta,setMeta]=useState<Meta>();const [busy,setBusy]=useState(false)
  useEffect(()=>{setMeta(undefined)},[pathname])
  useEffect(()=>{const f=(event:Event)=>{const d=(event as CustomEvent).detail;if(d.endpoint===config?.endpoint){setBusy(d.busy);if(d.meta)setMeta(d.meta)}};window.addEventListener('list-state',f);return()=>window.removeEventListener('list-state',f)},[config])
  // Every page can retain its existing mutation and form flow; navigation invalidates its main list.
@@ -37,7 +37,7 @@ export function FilterBar(){
  const key=`views:${getUser()?.id}:${loc.pathname}`;const [views,setViews]=useState<{name:string;query:string}[]>(()=>JSON.parse(localStorage.getItem(key)??'[]'))
  useEffect(()=>{setViews(JSON.parse(localStorage.getItem(key)??'[]'));setSearch(params.get('search')??'')},[loc.pathname])
  useEffect(()=>{setSearch(params.get('search')??'')},[params.get('search')])
- const update=(name:string,value:string)=>{setParams(p=>{const n=new URLSearchParams(p);value?n.set(name,value):n.delete(name);n.delete('page');return n},{replace:true})}
+ const update=(name:string,value:string)=>{const n=new URLSearchParams(window.location.search);value?n.set(name,value):n.delete(name);n.delete('page');setParams(n,{replace:true})}
  useEffect(()=>{const t=setTimeout(()=>{if(search!==(params.get('search')??''))update('search',search)},300);return()=>clearTimeout(t)},[search])
  if(!config)return null
  const save=()=>{const name=prompt('Name this saved view');if(!name?.trim())return;const next=[...views.filter(v=>v.name!==name),{name:name.trim(),query:params.toString()}];setViews(next);localStorage.setItem(key,JSON.stringify(next))}

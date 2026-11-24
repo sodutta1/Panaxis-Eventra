@@ -82,17 +82,17 @@ export default function Venues() {
         <Card className="p-5 mb-6">
           <div className="text-sm font-bold text-pa-900 mb-3">{editing ? `Edit venue: ${editing.name}` : 'Add a venue'}</div>
           <form onSubmit={submit} className="grid md:grid-cols-3 gap-4">
-            <input className={inputCls} placeholder="Venue name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <input aria-label="Venue name" className={inputCls} placeholder="Venue name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             <select className={inputCls} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
               {TYPES.map((t) => <option key={t} value={t}>{t.replaceAll('_', ' ')}</option>)}
             </select>
-            <input className={inputCls} placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
-            <input className={inputCls} type="number" min={1} placeholder="Capacity" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} required />
-            <input className={inputCls} type="number" min={0} placeholder="Rent per day (₹)" value={form.rental_cost_per_day} onChange={(e) => setForm({ ...form, rental_cost_per_day: e.target.value })} required />
-            <input className={inputCls} placeholder="Contact person" value={form.contact_person} onChange={(e) => setForm({ ...form, contact_person: e.target.value })} />
-            <input className={inputCls} placeholder="Contact phone" value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} />
-            <input className={inputCls} placeholder="Contact email" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
-            <input className={inputCls} placeholder="Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+            <input aria-label="City" className={inputCls} placeholder="City" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
+            <input aria-label="Capacity" className={inputCls} type="number" min={1} placeholder="Capacity" value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })} required />
+            <input aria-label="Rent per day (₹)" className={inputCls} type="number" min={0} placeholder="Rent per day (₹)" value={form.rental_cost_per_day} onChange={(e) => setForm({ ...form, rental_cost_per_day: e.target.value })} required />
+            <input aria-label="Contact person" className={inputCls} placeholder="Contact person" value={form.contact_person} onChange={(e) => setForm({ ...form, contact_person: e.target.value })} />
+            <input aria-label="Contact phone" className={inputCls} placeholder="Contact phone" value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} />
+            <input aria-label="Contact email" className={inputCls} placeholder="Contact email" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
+            <input aria-label="Address" className={inputCls} placeholder="Address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
             <div className="flex gap-2 items-end">
               <button className={btnCls}>{editing ? 'Save changes' : 'Create venue'}</button>
               {editing && <button type="button" className={btnGhostCls} onClick={() => { setShowForm(false); setEditing(null) }}>Cancel</button>}
