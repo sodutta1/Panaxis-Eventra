@@ -122,13 +122,13 @@ export default function Leads() {
       )}
 
       {view === 'board' ? (
-        <div className="flex gap-3 overflow-x-auto pb-4">
+        <div className="flex gap-3 overflow-x-auto pb-4 max-md:flex-col max-md:overflow-visible">
           {STAGES.map((stage) => {
             const cards = leads.filter((l) => l.status === stage.key || (stage.key === 'new' && !STAGES.some((s) => s.key === l.status)))
             return (
               <div
                 key={stage.key}
-                className="min-w-[230px] w-[230px] shrink-0"
+                className="min-w-[230px] w-[230px] shrink-0 max-md:w-full max-md:min-w-0"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={() => { const lead = leads.find((l) => l.id === dragId); if (lead) moveTo(lead, stage.key); setDragId(null) }}
               >
