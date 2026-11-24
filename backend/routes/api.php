@@ -121,6 +121,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::get('/quotations', [QuotationController::class, 'index'])->name('quotations.index');
             Route::post('/quotations', [QuotationController::class, 'store'])->name('quotations.store')->middleware($sales);
             Route::get('/quotations/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
+            Route::put('/quotations/{quotation}', [QuotationController::class, 'update'])->name('quotations.update')->middleware($admins);
+            Route::patch('/quotations/{quotation}', [QuotationController::class, 'update'])->middleware($admins);
             Route::delete('/quotations/{quotation}', [QuotationController::class, 'destroy'])->name('quotations.destroy')->middleware($admins);
 
             // Invoices & Payments (finance)

@@ -80,6 +80,55 @@ class QuotationController extends Controller
         return new QuotationResource($this->findForCompany(Quotation::with(['items', 'client']), $request, $quotation));
     }
 
+    public function update(StoreQuotationRequest $request, int $quotation)
+    {
+        return DB::transaction(function () use ($request, $quotation) {
+            $model = $this->findForCompany(Quotation::query(), $request, $quotation);
+
+            if (! in_array($model->status, ['draft', 'sent'], true)) {
+                return response()->json(['message' => 'Only draft or sent quotations can be edited.'], 409);
+            }
+
+            $validated = $request->validated();
+
+            $subtotal = 0;
+            foreach ($validated['items'] as $item) {
+                $subtotal = round($subtotal + round($item['quantity'] * $item['unit_price'], 2), 2);
+            }
+            $taxAmount = round(($subtotal * $validated['tax_rate']) / 100, 2);
+            $grandTotal = round($subtotal + $taxAmount, 2);
+
+            if ($grandTotal > 9999999999.99) {
+                throw ValidationException::withMessages(['items' => 'Document total exceeds the supported amount.']);
+            }
+
+            $model->update([
+                'client_id' => $validated['client_id'],
+                'event_id' => $validated['event_id'] ?? $model->event_id,
+                'issue_date' => $validated['issue_date'],
+                'valid_until' => $validated['valid_until'] ?? null,
+                'subtotal' => $subtotal,
+                'tax_rate' => $validated['tax_rate'],
+                'tax_amount' => $taxAmount,
+                'grand_total' => $grandTotal,
+                'notes' => $validated['notes'] ?? null,
+            ]);
+
+            $model->items()->delete();
+            foreach ($validated['items'] as $item) {
+                $model->items()->create([
+                    'item_name' => $item['item_name'],
+                    'item_type' => 'service',
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'total_price' => round($item['quantity'] * $item['unit_price'], 2),
+                ]);
+            }
+
+            return new QuotationResource($model->load(['items', 'client']));
+        }, 3);
+    }
+
     public function destroy(Request $request, int $quotation)
     {
         $this->findForCompany(Quotation::query(), $request, $quotation)->delete();
