@@ -46,16 +46,28 @@ function highlightTree(node:ReactNode):ReactNode {
 }
 export function DataTable({ head, children }: { head: string[]; children: ReactNode }) {
  const {busy}=useList();const loc=useLocation();const type=loc.pathname.slice(1);const document=isDocument(type)
+ const cards:ReactNode[]=[]
  const rows=Children.map(children,(node)=>{
   if(!isValidElement(node)||node.type!=='tr')return node
   const row=node as ReactElement<{children?:ReactNode}>;const cells=Children.toArray(row.props.children)
   const id=Number(String(row.key??'').replace(/^.*?\$/,''));
   const grouped=cells.map(c=>{if(!isValidElement(c))return c;const cell=c as ReactElement<{children?:ReactNode;className?:string}>;if((cell.props.className??'').includes('text-right') && Children.toArray(cell.props.children).some(x=>isValidElement(x)&&typeof x.type!=='string'))return cloneElement(cell,{},<RowActions>{cell.props.children}</RowActions>);return cell})
-  if(!id||!document)return cloneElement(row,{},...grouped.map(c=>highlightTree(c)))
+  const processed=grouped.map(c=>highlightTree(c))
+  // Phone card: same cells, labelled by column, actions in a footer row.
+  const cardFields:ReactNode[]=[];const cardActions:ReactNode[]=[]
+  if(cells.length===1&&isValidElement(cells[0])&&((cells[0] as ReactElement<{colSpan?:number}>).props.colSpan??0)>1){cards.push(<div className="record-card rc-empty" key={row.key??cards.length}>{(cells[0] as ReactElement<{children?:ReactNode}>).props.children}</div>);return cloneElement(row,{},...processed)}
+  processed.forEach((c,i)=>{if(!isValidElement(c)){cardFields.push(<div className="rc-field" key={i}><span className="rc-label">{head[i]}</span><div className="rc-value">{c}</div></div>);return}
+   const cell=c as ReactElement<{children?:ReactNode;className?:string}>;const kids=Children.toArray(cell.props.children)
+   const isActions=(cell.props.className??'').includes('text-right')&&kids.some(x=>isValidElement(x)&&typeof x.type!=='string')
+   if(isActions)cardActions.push(...kids.map((k,j)=><span className="rc-action" key={`a${j}`}>{isValidElement(k)?(k as ReactElement<{children?:ReactNode}>).props.children??k:k}</span>))
+   else cardFields.push(<div className="rc-field" key={i}><span className="rc-label">{head[i]}</span><div className="rc-value">{kids}</div></div>)})
+  if(!id||!document){cards.push(<div className="record-card" key={row.key??cards.length}><div className="rc-fields">{cardFields}</div>{cardActions.length>0&&<div className="rc-actions">{cardActions}</div>}</div>);return cloneElement(row,{},...processed)}
   let hasPdf=false;const check=(n:ReactNode):void=>{Children.forEach(n,x=>{if(isValidElement(x)){const e=x as ReactElement<{children?:ReactNode}>;if(e.type===PdfAction)hasPdf=true;check(e.props.children)}})};check(cells)
-  return cloneElement(row,{},...grouped.map(c=>highlightTree(c)),<td className="px-4"><RowActions><DocumentRow type={type} id={id} pdfExists={hasPdf}/></RowActions></td>)
+  const docCell=<td className="px-4" key="docs"><RowActions><DocumentRow type={type} id={id} pdfExists={hasPdf}/></RowActions></td>
+  cards.push(<div className="record-card" key={row.key??cards.length}><div className="rc-fields">{cardFields}</div><div className="rc-actions">{cardActions}<span className="rc-action"><DocumentRow type={type} id={id} pdfExists={hasPdf}/></span></div></div>)
+  return cloneElement(row,{},...processed,docCell)
  })
- return <><div className="table-scroll"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{busy?<tr><td colSpan={head.length+(document?1:0)}><div className="skeleton" aria-label="Loading records"/></td></tr>:rows}</tbody></table></div><Pagination /></>
+ return <><div className="table-scroll dt-table"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{busy?<tr><td colSpan={head.length+(document?1:0)}><div className="skeleton" aria-label="Loading records"/></td></tr>:rows}</tbody></table></div><div className="record-cards">{busy?<div className="record-card"><div className="skeleton" aria-label="Loading records"/></div>:cards}</div><Pagination /></>
 }
 export const Table = DataTable
 
