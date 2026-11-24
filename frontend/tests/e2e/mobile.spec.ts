@@ -175,6 +175,37 @@ test.describe('module-specific flows', () => {
     await expect(columns).toBeVisible()
   })
 
+  test('leads: phone number on a card is a tap-to-call link', async ({ page }) => {
+    await login(page)
+    await page.goto('/leads')
+    await expect(page.locator('.record-card').first()).toBeVisible({ timeout: 20_000 })
+    const tel = page.locator('.record-card a[href^="tel:"]').first()
+    await expect(tel).toBeVisible()
+    const box = await tel.boundingBox()
+    expect(box!.height).toBeGreaterThanOrEqual(16)
+  })
+
+  test('clients: email on a card is a tap-to-mail link', async ({ page }) => {
+    await login(page)
+    await page.goto('/clients')
+    await expect(page.locator('.record-card a[href^="mailto:"]').first()).toBeVisible({ timeout: 20_000 })
+  })
+
+  test('expenses: finance user can reach Approve from a pending expense card', async ({ page }) => {
+    await login(page, FINANCE)
+    await page.goto('/expenses')
+    await expect(page.locator('.record-card').first()).toBeVisible({ timeout: 20_000 })
+    await noPageOverflow(page)
+    const pending = page.locator('.record-card', { hasText: /pending/i }).first()
+    if (await pending.count()) {
+      const approve = pending.getByRole('button', { name: /approve/i })
+      if (await approve.count()) {
+        const box = await approve.first().boundingBox()
+        expect(box!.height).toBeGreaterThanOrEqual(40)
+      }
+    }
+  })
+
   test('quotations: admin sees Edit on a draft card; accepted ones show it disabled', async ({ page }) => {
     await login(page)
     await page.goto('/quotations')

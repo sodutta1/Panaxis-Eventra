@@ -1,4 +1,4 @@
-import { Children, cloneElement, isValidElement, type ReactNode, type ReactElement } from 'react'
+import { Children, cloneElement, isValidElement, useEffect, useState, type ReactNode, type ReactElement } from 'react'
 import { BulkDocuments, DocumentRow, isDocument } from './DocumentTools'
 import { RowActions, PdfAction } from './Actions'
 import { useLocation } from 'react-router-dom'
@@ -44,8 +44,9 @@ function highlightTree(node:ReactNode):ReactNode {
  if(['button','select','option','input','svg'].includes(String(e.type))) return e
  return cloneElement(e,{},Children.map(e.props.children,highlightTree))
 }
+function useNarrow(){const mq=()=>typeof window!=='undefined'&&window.matchMedia?window.matchMedia('(max-width:767px)').matches:false;const [n,setN]=useState(mq);useEffect(()=>{if(!window.matchMedia)return;const m=window.matchMedia('(max-width:767px)');const f=()=>setN(m.matches);m.addEventListener('change',f);return()=>m.removeEventListener('change',f)},[]);return n}
 export function DataTable({ head, children }: { head: string[]; children: ReactNode }) {
- const {busy}=useList();const loc=useLocation();const type=loc.pathname.slice(1);const document=isDocument(type)
+ const {busy}=useList();const loc=useLocation();const type=loc.pathname.slice(1);const document=isDocument(type);const narrow=useNarrow()
  const cards:ReactNode[]=[]
  const rows=Children.map(children,(node)=>{
   if(!isValidElement(node)||node.type!=='tr')return node
@@ -67,7 +68,7 @@ export function DataTable({ head, children }: { head: string[]; children: ReactN
   cards.push(<div className="record-card" key={row.key??cards.length}><div className="rc-fields">{cardFields}</div><div className="rc-actions">{cardActions}<span className="rc-action"><DocumentRow type={type} id={id} pdfExists={hasPdf}/></span></div></div>)
   return cloneElement(row,{},...processed,docCell)
  })
- return <><div className="table-scroll dt-table"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{busy?<tr><td colSpan={head.length+(document?1:0)}><div className="skeleton" aria-label="Loading records"/></td></tr>:rows}</tbody></table></div><div className="record-cards">{busy?<div className="record-card"><div className="skeleton" aria-label="Loading records"/></div>:cards}</div><Pagination /></>
+ return <><div className="table-scroll dt-table"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{busy?<tr><td colSpan={head.length+(document?1:0)}><div className="skeleton" aria-label="Loading records"/></td></tr>:rows}</tbody></table></div>{narrow&&<div className="record-cards">{busy?<div className="record-card"><div className="skeleton" aria-label="Loading records"/></div>:cards}</div>}<Pagination /></>
 }
 export const Table = DataTable
 

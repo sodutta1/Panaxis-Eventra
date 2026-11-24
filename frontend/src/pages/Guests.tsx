@@ -126,7 +126,7 @@ export default function Guests() {
               <td className="px-4 py-3 text-slate-600">{events.find(e=>e.id===g.event_id)?.title??'Event not set'}</td>
               <td className="px-4 py-3">{g.plus_ones}</td>
               <td className="px-4 py-3">{g.table_number ?? '-'}</td>
-              <td className="px-4 py-3 capitalize text-slate-600">{g.dietary_preference}</td>
+              <td className="px-4 py-3 capitalize text-slate-600">{g.dietary_preference.replaceAll('_', ' ')}</td>
               <td className="px-4 py-3"><Badge value={g.rsvp_status} /></td>
               <td className="px-4 py-3">{g.checked_in ? <Badge value="checked_in" /> : <span className="text-xs text-slate-400">not yet</span>}</td>
               <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
