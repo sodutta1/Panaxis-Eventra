@@ -66,7 +66,7 @@ class EventController extends Controller
     public function show(Request $request, int $event)
     {
         return new EventResource($this->findForCompany(
-            Event::with(['client', 'category', 'venue', 'manager', 'schedules', 'tasks.assignedUser']),
+            Event::with(array_merge(['client', 'category', 'venue', 'manager'], $request->boolean('summary') ? [] : ['schedules','tasks.assignedUser'])),
             $request,
             $event
         ));
@@ -165,6 +165,15 @@ class EventController extends Controller
     }
 
     /** Tasks for one event, grouped by phase (pre_event / on_event / post_event). */
+    public function stream(Request $request,int $event,string $section) {
+        $model=$this->findForCompany(Event::query(),$request,$event);
+        abort_unless(in_array($section,['schedules','tasks']),404);
+        $q=$model->$section();if($section==='tasks')$q->with('assignedUser');
+        $p=$q->orderBy('id')->paginate(20);
+        $resource=$section==='tasks'?TaskResource::class:\App\Http\Resources\V1\ScheduleResource::class;
+        return $resource::collection($p);
+    }
+
     public function tasksIndex(Request $request, int $event)
     {
         $model = $this->findForCompany(Event::query(), $request, $event);

@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 class BudgetController extends Controller
 {
     use ScopesToCompany;
+    use Concerns\QueriesLists;
 
     private function budgetFor(Request $request, int $eventId): EventBudget
     {
@@ -28,6 +29,11 @@ class BudgetController extends Controller
     public function show(Request $request, int $event)
     {
         return DB::transaction(fn () => response()->json(['data' => $this->budgetFor($request, $event)->load('items')]), 3);
+    }
+
+    public function items(Request $request,int $event){
+        $budget=$this->budgetFor($request,$event);
+        return $this->listResponse($budget->items()->getQuery(),$request);
     }
 
     public function addItem(Request $request, int $event)

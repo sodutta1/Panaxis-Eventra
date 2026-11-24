@@ -113,7 +113,7 @@ export default function PublicBooking() {
               {tickets.map((t) => (
                 <li key={t.ticket_number}>
                   <strong>{t.ticket_number}</strong> — {t.holder_name}{' '}
-                  <a href={t.eticket_url} target="_blank" rel="noreferrer">Download e-ticket (PDF)</a>
+                  <a href={t.eticket_url} target="_blank" rel="noreferrer">Download PDF</a>
                 </li>
               ))}
             </ul>

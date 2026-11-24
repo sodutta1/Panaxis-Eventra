@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api, type Paginated } from '../api'
+import { api, allOptions } from '../api'
 import { Badge, Card, ErrorBox, PageHeader } from '../components/ui'
 import { inr, inrCompact, type EventItem, type Task } from '../types'
 
@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   const load = useCallback(() => {
     api<{ data: DashData }>('/dashboard').then((r) => setData(r.data)).catch(setError)
-    api<Paginated<EventItem>>('/events?per_page=100')
+    allOptions<EventItem>('/events?per_page=100')
       .then((r) => {
         const map: Record<number, string> = {}
         for (const e of r.data ?? []) map[e.id] = e.title

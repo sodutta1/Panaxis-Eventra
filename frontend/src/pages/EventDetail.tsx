@@ -1,3 +1,4 @@
+import { PdfAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '../api'
@@ -17,13 +18,24 @@ export default function EventDetail() {
   const [sched, setSched] = useState({ start_time: '', title: '', location_within_venue: '' })
   const [task, setTask] = useState({ title: '', priority: 'medium', due_date: '', phase: 'pre_event' })
   const [phases, setPhases] = useState<Record<string, Task[]>>({})
+  const [tab,setTab]=useState('overview')
+  const [streamPage,setStreamPage]=useState(1)
+  const [hasMore,setHasMore]=useState(false)
   const [taskError, setTaskError] = useState('')
 
   const load = () => {
-    api<{ data: EventItem }>(`/events/${id}`).then((r) => setEvent(r.data)).catch(setError)
-    api<{ data: Record<string, Task[]> }>(`/events/${id}/tasks`).then((r) => setPhases(r.data)).catch(() => {})
+    api<{ data: EventItem }>(`/events/${id}?summary=1`).then((r) => setEvent(r.data)).catch(setError)
+
   }
   useEffect(load, [id])
+  useEffect(()=>{
+    if(!['tasks','schedules'].includes(tab))return
+    api<{data:any[];meta:{last_page:number}}>(`/events/${id}/stream/${tab}?page=${streamPage}`).then(r=>{
+      setHasMore(streamPage<r.meta.last_page)
+      if(tab==='schedules')setEvent(e=>e?{...e,schedules:streamPage===1?r.data:[...(e.schedules??[]),...r.data]}:e)
+      else setPhases(old=>{const base:Record<string,Task[]>=streamPage===1?{}:{...old};for(const t of r.data)base[t.phase??'pre_event']=[...(base[t.phase??'pre_event']??[]),t];return base})
+    }).catch(setError)
+  },[id,tab,streamPage])
 
   if (error) return <ErrorBox error={error} />
   if (!event) return <div className="text-slate-500">Loading event…</div>
@@ -67,15 +79,19 @@ export default function EventDetail() {
             Move to {NEXT[event.status].replace('_', ' ')} →
           </button>
         )}
+        <PdfAction path={`/events/${event.id}/closeout-pdf`} name={`${event.event_code}-report.pdf`} label/>
       </PageHeader>
       <ErrorBox error={error} />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="detail-tabs" role="tablist" aria-label="Event sections">{['overview','schedules','tasks'].map(t=><button key={t} role="tab" aria-selected={tab===t} onClick={()=>{setTab(t);setStreamPage(1)}}>{t==='schedules'?'Run of show':t[0].toUpperCase()+t.slice(1)}</button>)}</div>
+      {tab==='overview'&&<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4"><div className="text-xs text-slate-500">Status</div><div className="mt-1"><Badge value={event.status} /></div></Card>
         <Card className="p-4"><div className="text-xs text-slate-500">Dates</div><div className="font-semibold text-sm mt-1">{String(event.start_date).slice(0, 10)} → {String(event.end_date).slice(0, 10)}</div></Card>
         <Card className="p-4"><div className="text-xs text-slate-500">Contract value</div><div className="font-semibold mt-1">{inr(event.contract_value)}</div></Card>
         <Card className="p-4"><div className="text-xs text-slate-500">Amount received</div><div className="font-semibold mt-1">{inr(event.amount_received)}</div></Card>
       </div>
-      <div className="grid lg:grid-cols-2 gap-6">
+      }
+      <div>
+        {tab==='schedules'&&
         <Card className="p-5">
           <h2 className="font-semibold mb-3">Run of show</h2>
           <ul className="space-y-2 mb-4">
@@ -93,8 +109,8 @@ export default function EventDetail() {
             <input className={inputCls} placeholder="Location" value={sched.location_within_venue} onChange={(e) => setSched({ ...sched, location_within_venue: e.target.value })} />
             <button className={btnGhostCls}>Add</button>
           </form>
-        </Card>
-        <Card className="p-5">
+        </Card>}
+        {tab==='tasks'&&<Card className="p-5">
           <h2 className="font-semibold mb-3">Tasks management</h2>
           {taskError && <p className="text-xs text-rose-600 mb-2">{taskError}</p>}
           {([['pre_event', 'Pre-event tasks'], ['on_event', 'On-event tasks'], ['post_event', 'Post-event tasks']] as const).map(([phase, label]) => (
@@ -125,7 +141,8 @@ export default function EventDetail() {
             <input className={`${inputCls} w-36`} type="date" value={task.due_date} onChange={(e) => setTask({ ...task, due_date: e.target.value })} />
             <button className={btnGhostCls}>Add task</button>
           </form>
-        </Card>
+        </Card>}
+        {hasMore&&tab!=='overview'&&<button className="tool-button mt-4" onClick={()=>setStreamPage(p=>p+1)}>Load more</button>}
       </div>
     </div>
   )

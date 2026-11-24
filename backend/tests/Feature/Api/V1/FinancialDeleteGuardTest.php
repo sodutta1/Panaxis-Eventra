@@ -96,14 +96,14 @@ class FinancialDeleteGuardTest extends TestCase
         $this->assertDatabaseMissing('clients', ['id' => $client->id]);
     }
 
-    public function test_unpaid_invoice_can_still_be_deleted(): void
+    public function test_unpaid_invoice_is_retained_as_a_financial_record(): void
     {
         $auth = $this->admin();
         $client = Client::findOrFail($this->postJson('/api/v1/clients', ['name' => 'Guard Co', 'client_type' => 'corporate'], $auth)->assertCreated()->json('data.id'));
         $invoice = $this->makeInvoice($client, $auth);
 
-        $this->deleteJson("/api/v1/invoices/{$invoice->id}", [], $auth)->assertOk();
+        $this->deleteJson("/api/v1/invoices/{$invoice->id}", [], $auth)->assertStatus(409);
 
-        $this->assertDatabaseMissing('invoices', ['id' => $invoice->id]);
+        $this->assertDatabaseHas('invoices', ['id' => $invoice->id]);
     }
 }

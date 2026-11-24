@@ -10,6 +10,7 @@ class ExpenseResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'created_by'=>$this->created_by, 'gst_amount'=>$this->gst_amount, 'campaign'=>$this->campaign, 'category_name'=>$this->category_name, 'bill_name'=>$this->bill_name, 'has_bill'=>(bool)$this->bill_data, 'reversal_reason'=>$this->reversal_reason,
             'id' => $this->id,
             'company_id' => $this->company_id,
             'expense_number' => $this->expense_number,

@@ -1,7 +1,6 @@
 import { PdfAction } from '../components/Actions'
-import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
-import { api, getUser, type Paginated } from '../api'
+import { api, allOptions, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type Client, type Invoice } from '../types'
 
@@ -17,12 +16,11 @@ export default function Invoices() {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ client_id: '', invoice_date: new Date().toISOString().slice(0, 10), due_date: '', tax_rate: '18', notes: '' })
   const [rows, setRows] = useState<ItemRow[]>([{ ...emptyItem }])
-  const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
 
   const load = () => api<Paginated<Invoice>>('/invoices').then((r) => setItems(r.data)).catch(setError)
   useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
   useEffect(() => {
-    api<Paginated<Client>>('/clients').then((r) => setClients(r.data)).catch(() => {})
+    allOptions<Client>('/clients').then((r) => setClients(r.data)).catch(() => {})
   }, [])
 
   const record = async (ev: React.FormEvent) => {
@@ -64,14 +62,6 @@ export default function Invoices() {
     } catch (e) { setError(e) }
   }
 
-  const remove = async (inv: Invoice) => {
-    if (!confirm(`Delete invoice ${inv.invoice_number}?`)) return
-    setError(null)
-    try {
-      await api(`/invoices/${inv.id}`, { method: 'DELETE' })
-      load()
-    } catch (e) { setError(e) }
-  }
 
   return (
     <div>
@@ -152,7 +142,7 @@ export default function Invoices() {
               </td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <PdfAction path={`/invoices/${inv.id}/pdf`} name={`${inv.invoice_number}.pdf`}/>
-                {isAdmin && <IconAction label="Delete" onClick={() => remove(inv)}/>}
+                
               </td>
             </tr>
           ))}

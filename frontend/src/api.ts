@@ -42,13 +42,15 @@ export async function api<T = any>(
   const token = getToken()
   if (token) headers['Authorization'] = `Bearer ${token}`
 
+  const activePath=window.location.pathname
+  const groupedList=['/budgets','/work-orders'].includes(activePath)&&/^\/events\/\d+\/(work-orders|budget\/items)/.test(path)
   const modulePath = window.location.pathname === '/admin' ? '/admin/users' : window.location.pathname
-  const isList = (!options.method || options.method === 'GET') && path.split('?')[0] === modulePath && ['leads','clients','events','venues','vendors','quotations','invoices','expenses','guests','tickets','admin'].includes(modulePath.split('/')[1])
+  const isList = groupedList || ((!options.method || options.method === 'GET') && path.split('?')[0] === modulePath && ['leads','clients','events','venues','vendors','quotations','invoices','expenses','guests','tickets','admin'].includes(modulePath.split('/')[1]))
   if (isList) {
     const [base,query] = path.split('?'); const p = new URLSearchParams(query)
     new URLSearchParams(window.location.search).forEach((v,k)=>p.set(k,v))
     path = base + '?' + p
-    window.dispatchEvent(new CustomEvent('list-state',{detail:{endpoint:modulePath,busy:true}}))
+    window.dispatchEvent(new CustomEvent('list-state',{detail:{endpoint:groupedList?path.split('?')[0]:modulePath,busy:true}}))
   }
   const res = await fetch(`${API_URL}${path}`, {
     method: options.method ?? 'GET',
@@ -58,7 +60,7 @@ export async function api<T = any>(
 
   const json = res.status === 204 ? {} : await res.json().catch(() => ({}))
 
-  if (isList) window.dispatchEvent(new CustomEvent('list-state',{detail:{endpoint:modulePath,busy:false,meta:json.meta}}))
+  if (isList) window.dispatchEvent(new CustomEvent('list-state',{detail:{endpoint:groupedList?path.split('?')[0]:modulePath,busy:false,meta:json.meta}}))
   if (!res.ok) {
     if (res.status === 401) clearSession()
     throw new ApiError(res.status, (json as any).message ?? `Request failed (${res.status})`, (json as any).errors)
@@ -74,7 +76,9 @@ export type Paginated<T> = {
 
 // Download an authenticated PDF (Bearer token) and trigger a browser save.
 export async function downloadPdf(path: string, filename: string) {
-  const res = await fetch(`${API_URL}${path}`, {
+  const match=path.match(/^\/(quotations|invoices|expenses|tickets|work-orders)\/(\d+)\/pdf$|^\/(events)\/(\d+)\/closeout-pdf$/)
+  if(match){const type=match[1]??match[3],id=match[2]??match[4];const link=await api<{url:string}>(`/documents/${type}/${id}/link`);path=link.url}
+  const res = await fetch(path.startsWith('http')?path:`${API_URL}${path}`, {
     headers: { Authorization: `Bearer ${getToken() ?? ''}`, Accept: 'application/pdf' },
   })
   if (!res.ok) throw new ApiError(res.status, "Couldn't create the PDF. Try again.")
@@ -82,7 +86,12 @@ export async function downloadPdf(path: string, filename: string) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = filename
+  a.download = res.headers.get('Content-Disposition')?.match(/filename="?([^";]+)/)?.[1] ?? filename
   a.click()
   URL.revokeObjectURL(url)
+}
+
+export async function allOptions<T>(path:string):Promise<Paginated<T>> {
+ let page=1,data:T[]=[],last=1;do{const r=await api<Paginated<T>>(`${path}${path.includes('?')?'&':'?'}per_page=100&page=${page}`);data=data.concat(r.data);last=r.meta.last_page;page++}while(page<=last)
+ return {data,meta:{total:data.length,current_page:1,last_page:1}}
 }

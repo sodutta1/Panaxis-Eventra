@@ -14,6 +14,7 @@ use Illuminate\Validation\ValidationException;
 class WorkOrderController extends Controller
 {
     use ScopesToCompany;
+    use Concerns\QueriesLists;
 
     private function findWo(Request $request, int $id): VendorAssignment
     {
@@ -23,10 +24,12 @@ class WorkOrderController extends Controller
     public function index(Request $request, int $event)
     {
         $ev = $this->findForCompany(Event::query(), $request, $event);
-        $orders = VendorAssignment::with('vendor')->where('event_id', $ev->id)->latest()->get();
+        $orders = $this->scopeCompany(VendorAssignment::with('vendor'),$request)->where('event_id', $ev->id);
 
-        return response()->json(['data' => $orders]);
+        return $this->listResponse($orders,$request);
     }
+
+    public function show(Request $request,int $workOrder){return response()->json(['data'=>$this->findForCompany(VendorAssignment::with(['vendor','event']),$request,$workOrder)]);}
 
     public function store(Request $request, int $event)
     {

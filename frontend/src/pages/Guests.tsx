@@ -1,6 +1,6 @@
 import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
-import { api, getUser, type Paginated } from '../api'
+import { api, allOptions, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import type { EventItem, Guest } from '../types'
 
@@ -24,7 +24,7 @@ export default function Guests() {
       .catch(setError)
   useEffect(() => { load(); window.addEventListener('list-query',load); return ()=>window.removeEventListener('list-query',load) }, [eventId])
   useEffect(() => {
-    api<Paginated<EventItem>>('/events').then((r) => setEvents(r.data)).catch(() => {})
+    allOptions<EventItem>('/events').then((r) => setEvents(r.data)).catch(() => {})
   }, [])
 
   const checkIn = async (id: number) => {

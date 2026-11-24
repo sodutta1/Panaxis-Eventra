@@ -1,7 +1,7 @@
 import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api, getUser, type Paginated } from '../api'
+import { api, allOptions, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type Client, type EventItem } from '../types'
 
@@ -27,7 +27,7 @@ export default function Events() {
 
   useEffect(() => { load(); window.addEventListener('list-query',load); return ()=>window.removeEventListener('list-query',load) }, [status])
   useEffect(() => {
-    api<Paginated<Client>>('/clients').then((r) => setClients(r.data)).catch(() => {})
+    allOptions<Client>('/clients').then((r) => setClients(r.data)).catch(() => {})
   }, [])
 
   const openCreate = () => { setEditing(null); setForm(emptyForm); setShowForm(true) }

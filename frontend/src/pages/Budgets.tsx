@@ -1,9 +1,11 @@
+import { useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { api, type Paginated } from '../api'
+import { api, allOptions } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, inputCls } from '../components/ui'
 import { inr, type Budget, type EventItem } from '../types'
 
 export default function Budgets() {
+  const [params,setParams]=useSearchParams()
   const [events, setEvents] = useState<EventItem[]>([])
   const [eventId, setEventId] = useState<number | null>(null)
   const [budget, setBudget] = useState<Budget | null>(null)
@@ -11,19 +13,19 @@ export default function Budgets() {
   const [form, setForm] = useState({ category: '', item_name: '', estimated_cost: '', actual_cost: '', notes: '' })
 
   useEffect(() => {
-    api<Paginated<EventItem>>('/events?per_page=50').then((r) => {
+    allOptions<EventItem>('/events?per_page=50').then((r) => {
       setEvents(r.data)
-      if (r.data.length > 0) setEventId(r.data[0].id)
+      if (r.data.length > 0) {const chosen=Number(params.get('event_id'))||r.data[0].id;setEventId(chosen);if(!params.has('event_id'))setParams({event_id:String(chosen)},{replace:true})}
     }).catch(setError)
   }, [])
 
   const load = (id: number) => {
-    api<{ data: Budget }>(`/events/${id}/budget`).then((r) => setBudget(r.data)).catch(setError)
+    Promise.all([api<{data:Budget}>(`/events/${id}/budget`),api<{data:Budget['items']}>(`/events/${id}/budget/items?${window.location.search.slice(1)}`)]).then(([summary,items])=>setBudget({...summary.data,items:items.data})).catch(setError)
   }
 
   useEffect(() => {
     if (eventId) load(eventId)
-  }, [eventId])
+  }, [eventId,params.toString()])
 
   const addItem = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,7 +69,7 @@ export default function Budgets() {
       <ErrorBox error={error} />
       <div className="mb-4 max-w-md">
         <label className="block text-[11.5px] font-bold uppercase tracking-wide text-pamuted mb-1">Event</label>
-        <select className={inputCls} value={eventId ?? ''} onChange={(e) => setEventId(Number(e.target.value))}>
+        <select className={inputCls} value={eventId ?? ''} onChange={(e) => {setEventId(Number(e.target.value));setParams({event_id:e.target.value})}}>
           {events.map((e) => (
             <option key={e.id} value={e.id}>{e.event_code} — {e.title}</option>
           ))}

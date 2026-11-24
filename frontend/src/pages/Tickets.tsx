@@ -1,6 +1,6 @@
 import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
-import { api, getUser, type Paginated } from '../api'
+import { api, allOptions, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type EventItem, type Ticket, type TicketType } from '../types'
 
@@ -28,7 +28,7 @@ export default function Tickets() {
   const loadTypes = () => api<{ data: TicketType[] }>('/tickets/types').then((r) => setTypes(r.data)).catch(() => {})
   useEffect(() => { load(); loadTypes() }, [])
   useEffect(() => {
-    api<Paginated<EventItem>>('/events').then((r) => setEvents(r.data)).catch(() => {})
+    allOptions<EventItem>('/events').then((r) => setEvents(r.data)).catch(() => {})
   }, [])
 
   const verify = async (ev: React.FormEvent) => {

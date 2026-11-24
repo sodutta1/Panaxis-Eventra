@@ -21,6 +21,9 @@
 </style>
 </head>
 <body>
+@if(!in_array($workOrder->status, ['accepted','approved','paid','completed']))
+<div style="position:fixed;top:42%;left:20%;font-size:90px;color:#e1e5e0;transform:rotate(-30deg);z-index:-1">DRAFT</div>
+@endif
   <table class="head"><tr>
     <td>
       @if($logo)<img src="{{ $logo }}" style="max-height:40px; max-width:140px; margin-bottom:4px;"><br>@endif

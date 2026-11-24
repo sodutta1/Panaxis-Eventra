@@ -15,6 +15,8 @@ export const lists: Record<string,ListConfig> = {
  '/expenses': {endpoint:'/expenses',fields:['expense_number','title','incurred_date','payment_method','amount','status'],statuses:['pending','approved','paid','rejected','reversed'],owner:true,extra:[['vendor_id','Vendor ID'],['expense_category_id','Category ID'],['event_id','Event ID'],['campaign','Campaign'],['payment_method','Payment mode']]},
  '/guests': {endpoint:'/guests',fields:['name','event_id','plus_ones','table_number','dietary_preference','rsvp_status','checked_in'],statuses:['pending','confirmed','declined','maybe'],extra:[['event_id','Event ID']]},
  '/tickets': {endpoint:'/tickets',fields:['ticket_number','holder_name','event_id','ticket_type_id','price_paid','payment_status','ticket_status'],statuses:['valid','checked_in','cancelled'],extra:[['event_id','Event ID']]},
+ '/work-orders': {endpoint:'/work-orders',fields:['vendor_id','service_title','contract_amount','paid_amount','balance','status'],statuses:['assigned','in_progress','completed','paid','cancelled'],extra:[['event_id','Event ID']]},
+ '/budgets': {endpoint:'/budget-items',fields:['category','item_name','estimated_cost','actual_cost','variance','notes']},
  '/admin': {endpoint:'/admin/users',fields:['name','email','role','status'],statuses:['active','inactive']},
 }
 const labels:Record<string,string> = {id:'Reference ID',title:'Name',client_id:'Client',vendor_id:'Vendor',event_id:'Event',created_by:'Maker',grand_total:'Total',estimated_budget:'Budget',contract_value:'Contract value',amount_received:'Received',rental_cost_per_day:'Rent per day',price_paid:'Price paid'}
@@ -23,7 +25,7 @@ export type Meta = {total:number;current_page:number;last_page:number;from?:numb
 const ListContext = createContext<{config?:ListConfig;meta?:Meta;busy:boolean}>({busy:false})
 export function useList() { return useContext(ListContext) }
 export function ListScope({children}:{children:ReactNode}) {
- const {pathname,search}=useLocation();const config=lists[pathname];const [meta,setMeta]=useState<Meta>();const [busy,setBusy]=useState(false)
+ const {pathname,search}=useLocation();const base=lists[pathname];const eventId=new URLSearchParams(search).get('event_id');const config=base&&eventId&&['/budgets','/work-orders'].includes(pathname)?{...base,endpoint:`/events/${eventId}/${pathname==='/budgets'?'budget/items':'work-orders'}`}:base;const [meta,setMeta]=useState<Meta>();const [busy,setBusy]=useState(false)
  useEffect(()=>{setMeta(undefined)},[pathname])
  useEffect(()=>{const f=(event:Event)=>{const d=(event as CustomEvent).detail;if(d.endpoint===config?.endpoint){setBusy(d.busy);if(d.meta)setMeta(d.meta)}};window.addEventListener('list-state',f);return()=>window.removeEventListener('list-state',f)},[config])
  // Every page can retain its existing mutation and form flow; navigation invalidates its main list.

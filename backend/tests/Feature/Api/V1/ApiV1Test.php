@@ -303,18 +303,15 @@ class ApiV1Test extends TestCase
         $this->assertGreaterThanOrEqual(5, count($response->json('data')));
     }
 
-    public function test_expense_update_and_destroy(): void
+    public function test_expenses_are_reviewed_and_never_deleted(): void
     {
-        $token = $this->tokenFor('admin@eventflow.test');
-        $id = $this->getJson('/api/v1/expenses', $this->auth($token))->json('data.0.id');
-        $this->assertNotNull($id, 'no seeded expenses');
-
-        $this->patchJson("/api/v1/expenses/{$id}", ['title' => 'Updated expense title'], $this->auth($token))
-            ->assertOk()
-            ->assertJsonPath('data.title', 'Updated expense title');
-
-        $this->deleteJson("/api/v1/expenses/{$id}", [], $this->auth($token))->assertOk();
-        $this->getJson("/api/v1/expenses/{$id}", $this->auth($token))->assertNotFound();
+        $token=$this->tokenFor('admin@eventflow.test');$auth=$this->auth($token);
+        $id=$this->postJson('/api/v1/expenses',['title'=>'Kolkata venue advance','amount'=>12000,'incurred_date'=>'2026-11-24','payment_method'=>'upi'],$auth)->assertCreated()->assertJsonPath('data.status','pending')->json('data.id');
+        $this->patchJson("/api/v1/expenses/{$id}",['title'=>'Kolkata venue booking'],$auth)->assertOk()->assertJsonPath('data.title','Kolkata venue booking');
+        $this->postJson("/api/v1/expenses/{$id}/approve",[],$auth)->assertStatus(422);
+        $this->deleteJson("/api/v1/expenses/{$id}",[],$auth)->assertStatus(422);
+        $this->postJson("/api/v1/expenses/{$id}/reverse",['reason'=>'Duplicate entry recorded in error'],$auth)->assertOk()->assertJsonPath('data.status','reversed');
+        $this->assertDatabaseHas('event_expenses',['id'=>$id,'status'=>'reversed']);
     }
 
     public function test_guest_update_and_destroy(): void

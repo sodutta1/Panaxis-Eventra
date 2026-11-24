@@ -20,7 +20,7 @@ trait QueriesLists
             if ($request->filled($param) && $fields) {
                 $term = '%'.str_replace(['\\','%','_'], ['\\\\','\\%','\\_'], mb_substr((string)$request->input($param),0,200)).'%';
                 $query->where(function ($q) use ($fields,$term,$param,$table) {
-                    foreach ($fields as $field) $q->orWhere($table.'.'.$field, 'like', $term);
+                    foreach ($fields as $field) {if($param==='reference'&&$field==='id')$q->orWhere($table.'.id',trim($term,'%'));else $q->orWhere($table.'.'.$field, 'like', $term);}
                     if (in_array($table,['quotations','invoices']) && in_array($param,['search','name'])) {
                         $q->orWhereHas('client', fn ($c) => $c->where('name','like',$term)->orWhere('email','like',$term)->orWhere('phone','like',$term));
                     }

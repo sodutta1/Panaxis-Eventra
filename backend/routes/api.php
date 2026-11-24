@@ -95,6 +95,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::patch('/tasks/{task}', [EventController::class, 'updateTask'])->middleware($ops);
             Route::post('/tasks/{task}/toggle', [EventController::class, 'toggleTask'])->name('tasks.toggle')->middleware($ops);
 
+            Route::get('/events/{event}/stream/{section}', [EventController::class,'stream']);
+
             // Analytics dashboard
             Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
@@ -137,16 +139,26 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->middleware($finance);
             Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy')->middleware($admins);
 
+            Route::post('/expenses/{expense}/reverse', [ExpenseController::class, 'reverse'])->middleware($finance);
+
+            Route::get('/events/{event}/budget/items', [BudgetController::class,'items']);
+
             // Budgets
             Route::get('/events/{event}/budget', [BudgetController::class, 'show'])->name('budgets.show');
             Route::post('/events/{event}/budget/items', [BudgetController::class, 'addItem'])->name('budgets.items.store')->middleware($ops);
             Route::patch('/budget-items/{item}', [BudgetController::class, 'updateItem'])->name('budgets.items.update')->middleware($finance);
+
+            Route::get('/work-orders/{workOrder}', [WorkOrderController::class,'show']);
 
             // Vendor work orders
             Route::get('/events/{event}/work-orders', [WorkOrderController::class, 'index'])->name('work-orders.index');
             Route::post('/events/{event}/work-orders', [WorkOrderController::class, 'store'])->name('work-orders.store')->middleware($ops);
             Route::post('/work-orders/{workOrder}/payment', [WorkOrderController::class, 'addPayment'])->name('work-orders.payment')->middleware($finance);
             Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus'])->name('work-orders.status')->middleware($ops);
+
+            Route::get('/documents/{type}/{id}/link', [\App\Http\Controllers\Api\V1\DocumentsController::class,'link']);
+            Route::get('/documents/{type}/{id}/download', [\App\Http\Controllers\Api\V1\DocumentsController::class,'download'])->name('documents.download');
+            Route::post('/documents/{type}/bulk', [\App\Http\Controllers\Api\V1\DocumentsController::class,'bulk']);
 
             // PDF documents
             Route::get('/invoices/{invoice}/pdf', [PdfController::class, 'invoice'])->name('invoices.pdf');

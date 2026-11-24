@@ -1,9 +1,11 @@
+import { useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { api, type Paginated } from '../api'
+import { api, allOptions } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, inputCls } from '../components/ui'
 import { inr, type EventItem, type Vendor, type WorkOrder } from '../types'
 
 export default function WorkOrders() {
+  const [params,setParams]=useSearchParams()
   const [events, setEvents] = useState<EventItem[]>([])
   const [vendors, setVendors] = useState<Vendor[]>([])
   const [eventId, setEventId] = useState<number | null>(null)
@@ -14,20 +16,20 @@ export default function WorkOrders() {
   const [form, setForm] = useState({ vendor_id: '', service_title: '', scope_of_work: '', contract_amount: '' })
 
   useEffect(() => {
-    api<Paginated<EventItem>>('/events?per_page=50').then((r) => {
+    allOptions<EventItem>('/events?per_page=50').then((r) => {
       setEvents(r.data)
-      if (r.data.length > 0) setEventId(r.data[0].id)
+      if (r.data.length > 0) {const chosen=Number(params.get('event_id'))||r.data[0].id;setEventId(chosen);if(!params.has('event_id'))setParams({event_id:String(chosen)},{replace:true})}
     }).catch(setError)
-    api<Paginated<Vendor>>('/vendors?per_page=100').then((r) => setVendors(r.data)).catch(setError)
+    allOptions<Vendor>('/vendors?per_page=100').then((r) => setVendors(r.data)).catch(setError)
   }, [])
 
   const load = (id: number) => {
-    api<{ data: WorkOrder[] }>(`/events/${id}/work-orders`).then((r) => setOrders(r.data)).catch(setError)
+    api<{ data: WorkOrder[] }>(`/events/${id}/work-orders?${window.location.search.slice(1)}`).then((r) => setOrders(r.data)).catch(setError)
   }
 
   useEffect(() => {
     if (eventId) load(eventId)
-  }, [eventId])
+  }, [eventId,params.toString()])
 
   const create = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,7 +82,7 @@ export default function WorkOrders() {
       <ErrorBox error={error} />
       <div className="mb-4 max-w-md">
         <label className="block text-[11.5px] font-bold uppercase tracking-wide text-pamuted mb-1">Event</label>
-        <select className={inputCls} value={eventId ?? ''} onChange={(e) => setEventId(Number(e.target.value))}>
+        <select className={inputCls} value={eventId ?? ''} onChange={(e) => {setEventId(Number(e.target.value));setParams({event_id:e.target.value})}}>
           {events.map((e) => (
             <option key={e.id} value={e.id}>{e.event_code} — {e.title}</option>
           ))}

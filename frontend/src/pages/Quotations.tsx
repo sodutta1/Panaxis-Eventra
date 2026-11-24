@@ -1,7 +1,7 @@
 import { PdfAction } from '../components/Actions'
 import { IconAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
-import { api, getUser, type Paginated } from '../api'
+import { api, allOptions, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
 import { inr, type Client, type Quotation } from '../types'
 
@@ -20,7 +20,7 @@ export default function Quotations() {
   const load = () => api<Paginated<Quotation>>('/quotations').then((r) => setItems(r.data)).catch(setError)
   useEffect(() => { load(); window.addEventListener('list-query', load); return () => window.removeEventListener('list-query', load) }, [])
   useEffect(() => {
-    api<Paginated<Client>>('/clients').then((r) => setClients(r.data)).catch(() => {})
+    allOptions<Client>('/clients').then((r) => setClients(r.data)).catch(() => {})
   }, [])
 
   const setRow = (i: number, patch: Partial<ItemRow>) => setRows((rs) => rs.map((r, j) => (j === i ? { ...r, ...patch } : r)))
@@ -111,7 +111,7 @@ export default function Quotations() {
               <td className="px-4 py-3"><Badge value={q.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <PdfAction path={`/quotations/${q.id}/pdf`} name={`${q.quotation_number}.pdf`}/>
-                {isAdmin && <IconAction label="Delete" onClick={() => remove(q)}/>}
+                {isAdmin && q.status==='draft' && <IconAction label="Delete" onClick={() => remove(q)}/>}
               </td>
             </tr>
           ))}

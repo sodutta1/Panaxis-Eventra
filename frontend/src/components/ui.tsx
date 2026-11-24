@@ -1,4 +1,7 @@
 import { Children, cloneElement, isValidElement, type ReactNode, type ReactElement } from 'react'
+import { BulkDocuments, DocumentRow, isDocument } from './DocumentTools'
+import { RowActions, PdfAction } from './Actions'
+import { useLocation } from 'react-router-dom'
 import { FilterBar, Pagination, SortHeading, Highlight } from './ListTools'
 import { STATUS_COLORS } from '../types'
 
@@ -10,7 +13,7 @@ export function PageHeader({ title, sub, children, titleClassName = '' }: { titl
         {sub && <p className="text-[13px] text-pamuted mt-0.5">{sub}</p>}
       </div>
       <div className="header-actions flex gap-2">{children}</div>
-    </div><FilterBar /></>
+    </div><FilterBar /><BulkDocuments /></>
   )
 }
 
@@ -30,14 +33,27 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 
 // One table presentation, including nested detail lists. Main module tables use server metadata.
 function highlightTree(node:ReactNode):ReactNode {
- if(typeof node==='string') return <Highlight>{node}</Highlight>
+ if(typeof node==='string') {
+   const text=/^\d{4}-\d{2}-\d{2}$/.test(node)?new Date(node+'T12:00:00+05:30').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}):node
+   return <Highlight>{text}</Highlight>
+ }
  if(!isValidElement(node)) return node
  const e=node as ReactElement<{children?:ReactNode}>
  if(['button','select','option','input','svg'].includes(String(e.type))) return e
  return cloneElement(e,{},Children.map(e.props.children,highlightTree))
 }
 export function DataTable({ head, children }: { head: string[]; children: ReactNode }) {
- return <><div className="table-scroll"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}</tr></thead><tbody>{Children.map(children,highlightTree)}</tbody></table></div><Pagination /></>
+ const loc=useLocation();const type=loc.pathname.slice(1);const document=isDocument(type)
+ const rows=Children.map(children,(node)=>{
+  if(!isValidElement(node)||node.type!=='tr')return node
+  const row=node as ReactElement<{children?:ReactNode}>;const cells=Children.toArray(row.props.children)
+  const id=Number(String(row.key??'').replace(/^.*?\$/,''));
+  const grouped=cells.map(c=>{if(!isValidElement(c))return c;const cell=c as ReactElement<{children?:ReactNode;className?:string}>;if((cell.props.className??'').includes('text-right') && Children.toArray(cell.props.children).some(x=>isValidElement(x)&&typeof x.type!=='string'))return cloneElement(cell,{},<RowActions>{cell.props.children}</RowActions>);return cell})
+  if(!id||!document)return cloneElement(row,{},...grouped.map(c=>highlightTree(c)))
+  let hasPdf=false;const check=(n:ReactNode):void=>{Children.forEach(n,x=>{if(isValidElement(x)){const e=x as ReactElement<{children?:ReactNode}>;if(e.type===PdfAction)hasPdf=true;check(e.props.children)}})};check(cells)
+  return cloneElement(row,{},...grouped.map(c=>highlightTree(c)),<td className="px-4"><RowActions><DocumentRow type={type} id={id} pdfExists={hasPdf}/></RowActions></td>)
+ })
+ return <><div className="table-scroll"><table className="w-full text-[13.5px]"><thead><tr>{head.map((h,i)=><th key={i}><SortHeading label={h} index={i}/></th>)}{document&&<th>Documents</th>}</tr></thead><tbody>{rows}</tbody></table></div><Pagination /></>
 }
 export const Table = DataTable
 
