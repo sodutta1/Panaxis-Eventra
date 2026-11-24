@@ -1,0 +1,33 @@
+import { chromium } from '@playwright/test'
+const BASE='http://127.0.0.1:5173'
+const browser=await chromium.launch()
+const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2})
+const page=await ctx.newPage()
+// public booking, no login
+await page.goto(BASE+'/book/7',{waitUntil:'networkidle',timeout:20000}).catch(e=>console.log('book nav',String(e).slice(0,80)))
+await page.waitForTimeout(600)
+await page.screenshot({path:'/tmp/mobile-v3/public-booking.png'})
+console.log('booking overflowX='+await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth))
+// vendor portal
+await page.goto(BASE+'/login')
+await page.fill('input[type="email"]','vendor@eventflow.test')
+await page.fill('input[type="password"]','password')
+await page.getByRole('button',{name:/sign in/i}).click()
+await page.waitForURL(u=>!u.pathname.includes('/login'),{timeout:15000})
+await page.waitForTimeout(800)
+await page.screenshot({path:'/tmp/mobile-v3/vendor-portal.png'})
+console.log('vendor overflowX='+await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth))
+// admin: reports + budgets + quotation form
+await page.goto(BASE+'/login')
+await page.fill('input[type="email"]','admin@eventflow.test')
+await page.fill('input[type="password"]','password')
+await page.getByRole('button',{name:/sign in/i}).click()
+await page.waitForURL(u=>!u.pathname.includes('/login'),{timeout:15000})
+await page.goto(BASE+'/reports',{waitUntil:'networkidle'}); await page.waitForTimeout(400)
+await page.screenshot({path:'/tmp/mobile-v3/reports.png'})
+await page.goto(BASE+'/quotations',{waitUntil:'networkidle'}); await page.waitForTimeout(400)
+await page.getByRole('button',{name:/new quotation/i}).first().click().catch(()=>{})
+await page.waitForTimeout(500)
+await page.screenshot({path:'/tmp/mobile-v3/quotation-form.png'})
+console.log('qform overflowX='+await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth))
+await browser.close()
