@@ -13,6 +13,7 @@ export default function Quotations() {
   const [clients, setClients] = useState<Client[]>([])
   const [error, setError] = useState<unknown>(null)
   const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<number | null>(null)
   const [form, setForm] = useState({ client_id: '', issue_date: new Date().toISOString().slice(0, 10), valid_until: '', tax_rate: '18', notes: '' })
   const [rows, setRows] = useState<ItemRow[]>([{ ...emptyItem }])
   const isAdmin = ['super_admin', 'company_admin', 'admin'].includes(getUser()?.role ?? '')
@@ -25,12 +26,38 @@ export default function Quotations() {
 
   const setRow = (i: number, patch: Partial<ItemRow>) => setRows((rs) => rs.map((r, j) => (j === i ? { ...r, ...patch } : r)))
 
+  const resetForm = () => {
+    setEditingId(null)
+    setForm({ client_id: '', issue_date: new Date().toISOString().slice(0, 10), valid_until: '', tax_rate: '18', notes: '' })
+    setRows([{ ...emptyItem }])
+  }
+
+  const startEdit = async (q: Quotation) => {
+    setError(null)
+    try {
+      const r = await api<{ data: any }>(`/quotations/${q.id}`)
+      const d = r.data
+      setEditingId(q.id)
+      setForm({
+        client_id: String(d.client_id ?? d.client?.id ?? ''),
+        issue_date: String(d.issue_date ?? '').slice(0, 10),
+        valid_until: d.valid_until ? String(d.valid_until).slice(0, 10) : '',
+        tax_rate: String(Number(d.tax_rate ?? 0)),
+        notes: d.notes ?? '',
+      })
+      const lines = (d.items ?? []).map((i: any) => ({ item_name: i.item_name, quantity: String(Number(i.quantity)), unit_price: String(Number(i.unit_price)) }))
+      setRows(lines.length ? lines : [{ ...emptyItem }])
+      setShowForm(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (e) { setError(e) }
+  }
+
   const create = async (ev: React.FormEvent) => {
     ev.preventDefault()
     setError(null)
     try {
-      await api('/quotations', {
-        method: 'POST',
+      await api(editingId ? `/quotations/${editingId}` : '/quotations', {
+        method: editingId ? 'PUT' : 'POST',
         body: {
           client_id: Number(form.client_id),
           issue_date: form.issue_date,
@@ -41,8 +68,7 @@ export default function Quotations() {
         },
       })
       setShowForm(false)
-      setForm({ client_id: '', issue_date: new Date().toISOString().slice(0, 10), valid_until: '', tax_rate: '18', notes: '' })
-      setRows([{ ...emptyItem }])
+      resetForm()
       load()
     } catch (e) { setError(e) }
   }
@@ -59,12 +85,13 @@ export default function Quotations() {
   return (
     <div>
       <PageHeader title="Quotations" sub="Prepare and review itemised quotations for your clients.">
-        <button className={btnCls} onClick={() => setShowForm(!showForm)}>{showForm ? 'Close' : '+ New quotation'}</button>
+        <button className={btnCls} onClick={() => { if (showForm) { setShowForm(false); resetForm() } else { resetForm(); setShowForm(true) } }}>{showForm ? 'Close' : '+ New quotation'}</button>
       </PageHeader>
       <ErrorBox error={error} />
       {showForm && (
         <Card className="p-5 mb-6">
           <form onSubmit={create} className="space-y-4">
+            {editingId && <div className="text-sm font-semibold">Editing quotation {items.find((x) => x.id === editingId)?.quotation_number}</div>}
             <div className="grid md:grid-cols-4 gap-4">
               <select className={inputCls} value={form.client_id} onChange={(e) => setForm({ ...form, client_id: e.target.value })} required>
                 <option value="">Select client…</option>
@@ -93,7 +120,7 @@ export default function Quotations() {
               <button type="button" className={btnGhostCls} onClick={() => setRows((rs) => [...rs, { ...emptyItem }])}>+ Add line</button>
             </div>
             <input aria-label="Notes (optional)" className={inputCls} placeholder="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-            <div><button className={btnCls}>Create quotation</button></div>
+            <div className="flex gap-2"><button className={btnCls}>{editingId ? 'Save changes' : 'Create quotation'}</button>{editingId && <button type="button" className={btnGhostCls} onClick={() => { setShowForm(false); resetForm() }}>Cancel</button>}</div>
           </form>
         </Card>
       )}
@@ -111,6 +138,7 @@ export default function Quotations() {
               <td className="px-4 py-3"><Badge value={q.status} /></td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <PdfAction path={`/quotations/${q.id}/pdf`} name={`${q.quotation_number}.pdf`}/>
+                {isAdmin && <IconAction label="Edit" disabled={!['draft', 'sent'].includes(q.status)} reason={['draft', 'sent'].includes(q.status) ? undefined : `${q.status[0].toUpperCase()}${q.status.slice(1)} quotations can't be edited`} onClick={() => startEdit(q)}/>}
                 {isAdmin && q.status==='draft' && <IconAction label="Delete" onClick={() => remove(q)}/>}
               </td>
             </tr>
