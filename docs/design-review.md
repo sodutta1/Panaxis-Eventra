@@ -19,6 +19,7 @@ The acceptance suite checks name/reference filtering, numeric high-to-low sortin
 - Wide tables remain compact and scroll inside their table region on phones. The page itself does not scroll sideways. The action menu lives at the end of the row; reaching it can require horizontal table scrolling.
 - Dark-theme subtitle and input colours were too faint. Increased muted-text contrast and replaced residual white inputs. Final dark quotation evidence was inspected again.
 - Quotation details originally showed raw foreign keys, machine dates and an empty line amount. Details now use relation names, Indian currency/date formatting and the line total. The eye opens this details panel, not a PDF preview.
+- A later phone check found the details dialog inherited visibility from its desktop action wrapper. It now renders outside the action wrapper, so the same details panel stays visible on phones. Rechecked the actual phone panel and reran all 20 browser tests.
 - The expense vendor field was an ID box. Replaced it with a vendor selector. Expense records retain maker/checker separation and reversal reasons.
 - Fast consecutive filter/sort changes exposed a router-state race. Each control now updates the current URL, preventing a later change from dropping an earlier filter. List responses also follow the newest request instead of overwriting it with stale rows.
 - Ticket cancellation originally left capacity booked. Cancellation now updates capacity and confirmed guest counts atomically while keeping the ticket record.
