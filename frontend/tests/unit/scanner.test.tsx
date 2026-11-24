@@ -2,6 +2,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import GateScanner from '../../src/pages/GateScanner'
 
 const mocks = vi.hoisted(() => ({ start: vi.fn(), stop: vi.fn(), clear: vi.fn(), api: vi.fn() }))
@@ -10,7 +11,7 @@ vi.mock('html5-qrcode', () => ({ Html5Qrcode: class {
   stop = mocks.stop
   clear = mocks.clear
 } }))
-vi.mock('../../src/api', () => ({ api: mocks.api }))
+vi.mock('../../src/api', () => ({ api: mocks.api, getUser:()=>({id:1}), API_URL:'/api/v1',getToken:()=>null }))
 
 let root: Root
 let host: HTMLDivElement
@@ -21,7 +22,7 @@ beforeEach(async () => {
   host = document.createElement('div')
   document.body.appendChild(host)
   root = createRoot(host)
-  await act(async () => root.render(<GateScanner />))
+  await act(async () => root.render(<MemoryRouter><GateScanner /></MemoryRouter>))
 })
 afterEach(async () => {
   await act(async () => root.unmount())

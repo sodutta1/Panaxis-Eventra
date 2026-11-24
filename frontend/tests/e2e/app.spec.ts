@@ -34,6 +34,7 @@ test('login lands on a dashboard populated from the API', async ({ page }) => {
 test('leads kanban drag moves a card between stages via the API', async ({ page }) => {
   await login(page)
   await page.goto('/leads')
+  await page.getByRole('button',{name:'Board view',exact:true}).click()
   await expect(page.getByRole('heading', { name: /Leads/ })).toBeVisible()
   await page.waitForTimeout(1000)
 
@@ -80,9 +81,9 @@ test('invoice PDF downloads a real PDF document', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Invoices/ })).toBeVisible()
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('button', { name: 'PDF' }).first().click(),
+    page.getByLabel('Download PDF', {exact:true}).first().click(),
   ])
-  expect(download.suggestedFilename()).toMatch(/^INV-.*\.pdf$/)
+  expect(download.suggestedFilename()).toMatch(/^invoice-.*\.pdf$/i)
   const path = await download.path()
   const fs = await import('node:fs')
   const buf = fs.readFileSync(path!)

@@ -76,14 +76,15 @@ class DeepRegressionTest extends TestCase
         $this->assertSame(1, $type->fresh()->sold_count);
     }
 
-    public function test_ticket_delete_releases_capacity_and_event_count(): void
+    public function test_ticket_cancel_releases_capacity_and_event_count(): void
     {
         $type = TicketType::firstOrFail();
         $before = $type->sold_count;
         $eventBefore = $type->event->confirmed_guests;
         $id = $this->postJson('/api/v1/tickets', ['event_id' => $type->event_id, 'ticket_type_id' => $type->id,
             'holder_name' => 'Probe', 'payment_status' => 'paid'])->assertCreated()->json('data.0.id');
-        $this->deleteJson('/api/v1/tickets/'.$id)->assertOk();
+        $this->deleteJson('/api/v1/tickets/'.$id)->assertStatus(409);
+        $this->patchJson('/api/v1/tickets/'.$id,['ticket_status'=>'cancelled'])->assertOk();
         $this->assertSame($before, $type->fresh()->sold_count);
         $this->assertSame($eventBefore, $type->event->fresh()->confirmed_guests);
     }

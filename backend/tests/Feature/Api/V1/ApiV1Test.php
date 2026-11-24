@@ -344,8 +344,8 @@ class ApiV1Test extends TestCase
             ->assertOk()
             ->assertJsonPath('data.holder_name', 'Updated Holder');
 
-        $this->deleteJson("/api/v1/tickets/{$id}", [], $this->auth($token))->assertOk();
-        $this->getJson("/api/v1/tickets/{$id}", $this->auth($token))->assertNotFound();
+        $this->deleteJson("/api/v1/tickets/{$id}", [], $this->auth($token))->assertStatus(409);
+        $this->getJson("/api/v1/tickets/{$id}", $this->auth($token))->assertOk();
     }
 
     public function test_guest_delete_requires_admin(): void

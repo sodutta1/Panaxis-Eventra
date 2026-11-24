@@ -18,14 +18,15 @@ async function login(page: Page, user = 'admin@eventflow.test') {
 test('client role lands in the client portal with only their data', async ({ page }) => {
   await login(page, 'client@eventflow.test')
   await page.goto('/portal/client')
-  await expect(page.getByRole('heading', { name: 'Client Portal' })).toBeVisible()
-  await expect(page.locator('text=Rahul & Sanjana Oberoi').first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Client portal/i })).toBeVisible()
+  await expect(page.locator('tbody').getByText(/Royal Heritage Wedding/)).toBeVisible()
+  await expect(page.locator('tbody').getByText(/Lumina X/)).toHaveCount(0)
 })
 
 test('unlinked vendor login is denied instead of receiving another vendor profile', async ({ page }) => {
   await login(page, 'vendor@eventflow.test')
   await page.goto('/portal/vendor')
-  await expect(page.getByRole('heading', { name: 'Vendor Portal' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Vendor preview/i })).toBeVisible()
   await expect(page.getByText('Vendor account linking is not configured. Contact your company administrator.')).toBeVisible()
   await expect(page.getByText('SoundCraft', { exact: false })).toHaveCount(0)
   await expect(page.locator('table tbody tr')).toHaveCount(0)
@@ -49,7 +50,7 @@ test('create a client end to end', async ({ page }) => {
   await page.fill('input[placeholder="Company"]', 'E2E Corp')
   await page.fill('input[placeholder="Email"]', `e2e${stamp}@example.com`)
   await page.fill('input[placeholder="City"]', 'Kolkata')
-  await page.getByRole('button', { name: /add|create|save/i }).click()
+  await page.getByRole('button', { name: 'Create client',exact:true }).click()
   await expect(page.locator(`text=${name}`)).toBeVisible({ timeout: 8000 })
 })
 
@@ -71,7 +72,7 @@ test('work order overpayment rejected, exact balance marks paid', async ({ page 
   await login(page)
   await page.goto('/work-orders')
   await expect(page.getByRole('heading', { name: 'Vendor Work Orders' })).toBeVisible()
-  await page.locator('select').nth(1).selectOption({ index: 1 })
+  await page.locator('form select').first().selectOption({ index: 1 })
   const svc = `E2E Rigging ${Date.now() % 100000}`
   await page.fill('input[placeholder*="Service"]', svc)
   await page.fill('input[placeholder="Contract amount ₹"]', '10000')
@@ -110,7 +111,7 @@ test('guest check-in is one-way via the API', async ({ page }) => {
   // create a fresh guest so the test does not depend on seeded check-in state
   const name = `E2E Checkin ${Date.now() % 100000}`
   await page.getByRole('button', { name: '+ New guest' }).click()
-  await page.selectOption('form select', { index: 1 })
+  await page.selectOption('form select', { label: 'Royal Heritage Wedding of Aryan & Sanjana' })
   await page.fill('input[placeholder="Guest name"]', name)
   await page.getByRole('button', { name: 'Add guest' }).click()
   const row = page.locator('table tbody tr', { hasText: name }).first()
@@ -132,7 +133,6 @@ test('lead create then convert asks for confirmation and creates a client', asyn
   await page.fill('input[placeholder="Contact name"]', 'E2E Contact')
   await page.getByRole('button', { name: 'Create lead' }).click()
   await expect(page.locator(`text=${title}`)).toBeVisible({ timeout: 8000 })
-  await page.getByRole('button', { name: 'Table view' }).click()
   const row = page.locator('tr', { hasText: title })
   page.once('dialog', (d) => d.accept())
   await row.getByRole('button', { name: 'Convert → client' }).click()
@@ -148,9 +148,9 @@ test('quotation PDF downloads a real PDF', async ({ page }) => {
   await page.goto('/quotations')
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.getByRole('button', { name: 'PDF' }).first().click(),
+    page.getByLabel('Download PDF', {exact:true}).first().click(),
   ])
-  expect(download.suggestedFilename()).toMatch(/^QTN-.*\.pdf$/)
+  expect(download.suggestedFilename()).toMatch(/^quotation-.*\.pdf$/i)
 })
 
 test('reports page shows server-computed figures', async ({ page }) => {
