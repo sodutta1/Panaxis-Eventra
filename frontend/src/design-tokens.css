@@ -178,3 +178,4 @@ td:nth-child(2) {white-space:normal;min-width:140px;}
 @media(max-width:767px){.notice-panel{position:fixed;inset:0;width:100%;max-height:none;height:100dvh;border-radius:0;border:0;}.notice-close{display:inline-flex;}.notice-row{padding:14px 16px;min-height:64px;}}
 
 .undo-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:12px;background:#14201a;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 8px 40px #0004;max-width:calc(100vw - 24px);flex-wrap:wrap}.undo-toast .tool-button{background:#fff;color:#14201a;min-height:44px;padding:0 16px;border-radius:8px;font-weight:700}.undo-toast .icon-action{color:#fff;min-width:44px;min-height:44px}.undo-error{color:#fecaca;font-size:12px}
+kbd[data-key]::after{content:attr(data-key)}
