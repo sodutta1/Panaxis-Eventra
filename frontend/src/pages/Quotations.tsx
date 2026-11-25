@@ -1,5 +1,5 @@
 import { PdfAction } from '../components/Actions'
-import { IconAction } from '../components/Actions'
+import { IconAction, TextAction } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, allOptions, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -73,6 +73,12 @@ export default function Quotations() {
     } catch (e) { setError(e) }
   }
 
+  const canSend = ['super_admin', 'company_admin', 'admin', 'event_manager', 'sales_executive'].includes(getUser()?.role ?? '')
+  const send = async (q: Quotation) => {
+    setError(null)
+    try { await api(`/quotations/${q.id}/send`, { method: 'POST' }); load() } catch (e) { setError(e) }
+  }
+
   const remove = async (q: Quotation) => {
     if (!confirm(`Delete quotation ${q.quotation_number}?`)) return
     setError(null)
@@ -135,9 +141,10 @@ export default function Quotations() {
               <td className="px-4 py-3">{inr(q.subtotal)}</td>
               <td className="px-4 py-3">{inr(q.tax_amount)} ({q.tax_rate}%)</td>
               <td className="px-4 py-3 font-semibold">{inr(q.grand_total)}</td>
-              <td className="px-4 py-3"><Badge value={q.status} /></td>
+              <td className="px-4 py-3"><Badge value={q.status} />{q.response_note && <div className="text-xs text-slate-500 mt-1">Client note: {q.response_note}</div>}</td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <PdfAction path={`/quotations/${q.id}/pdf`} name={`${q.quotation_number}.pdf`}/>
+                {canSend && q.status === 'draft' && <TextAction label="Send to client" onClick={() => send(q)}/>}
                 {isAdmin && <IconAction label="Edit" disabled={!['draft', 'sent'].includes(q.status)} reason={['draft', 'sent'].includes(q.status) ? undefined : `${q.status[0].toUpperCase()}${q.status.slice(1)} quotations can't be edited`} onClick={() => startEdit(q)}/>}
                 {isAdmin && q.status==='draft' && <IconAction label="Delete" onClick={() => remove(q)}/>}
               </td>
