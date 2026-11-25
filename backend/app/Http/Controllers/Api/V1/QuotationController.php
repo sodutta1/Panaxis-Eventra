@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\StoreQuotationRequest;
 use App\Http\Resources\V1\QuotationResource;
 use App\Models\Quotation;
-use App\Services\Notifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -125,62 +124,6 @@ class QuotationController extends Controller
                     'total_price' => round($item['quantity'] * $item['unit_price'], 2),
                 ]);
             }
-
-            return new QuotationResource($model->load(['items', 'client']));
-        }, 3);
-    }
-
-    /** Staff: release a draft to the client. POST /quotations/{id}/send */
-    public function send(Request $request, int $quotation)
-    {
-        $model = $this->findForCompany(Quotation::with('client'), $request, $quotation);
-        if ($model->status !== 'draft') {
-            return response()->json(['message' => 'Only a draft quotation can be sent.'], 409);
-        }
-        $model->update(['status' => 'sent', 'sent_at' => now()]);
-        Notifier::user($model->client?->user_id, $model->company_id, 'quotation_sent',
-            "New quotation {$model->quotation_number}", Notifier::rupees($model->grand_total).' awaiting your response.',
-            '/portal/client?section=quotations', $request->user()->id);
-
-        return new QuotationResource($model->load(['items', 'client']));
-    }
-
-    /** Client: accept or decline their own sent quotation. POST /portal/quotations/{id}/respond */
-    public function respond(Request $request, int $quotation)
-    {
-        $data = $request->validate([
-            'decision' => ['required', 'in:accepted,rejected'],
-            'note' => ['nullable', 'string', 'max:500'],
-        ]);
-        $user = $request->user();
-
-        return DB::transaction(function () use ($request, $quotation, $data, $user) {
-            $model = Quotation::where('company_id', $this->companyId($request))
-                ->whereHas('client', fn ($q) => $q->where('user_id', $user->id))
-                ->whereKey($quotation)->lockForUpdate()->firstOrFail();
-
-            if ($model->status !== 'sent') {
-                return response()->json(['message' => $model->status === 'draft'
-                    ? 'This quotation has not been sent yet.'
-                    : 'This quotation has already been '.$model->status.'.'], 409);
-            }
-            if ($model->valid_until && $model->valid_until < now()->toDateString()) {
-                return response()->json(['message' => 'This quotation has expired. Ask your event team for a new one.'], 409);
-            }
-
-            $model->update([
-                'status' => $data['decision'],
-                'responded_at' => now(),
-                'responded_by' => $user->id,
-                'response_note' => $data['note'] ?? null,
-            ]);
-
-            $verb = $data['decision'] === 'accepted' ? 'accepted' : 'declined';
-            $clientName = $model->client->name ?? 'The client';
-            Notifier::roles(Notifier::SALES, $model->company_id, 'quotation_'.$data['decision'],
-                "Quotation {$model->quotation_number} {$verb}",
-                "{$clientName} {$verb} it (".Notifier::rupees($model->grand_total).')'.(! empty($data['note']) ? ': '.$data['note'] : '.'),
-                '/quotations', $user->id);
 
             return new QuotationResource($model->load(['items', 'client']));
         }, 3);

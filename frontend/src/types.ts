@@ -119,9 +119,6 @@ export type Vendor = {
 export type Quotation = {
   id: number
   quotation_number: string
-  response_note?: string | null
-  sent_at?: string | null
-  responded_at?: string | null
   client?: Client
   issue_date: string
   valid_until?: string

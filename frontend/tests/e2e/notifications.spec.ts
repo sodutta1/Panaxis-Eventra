@@ -65,8 +65,8 @@ test.describe('notification centre', () => {
     await expect(page.getByText(/Payment received/)).toHaveCount(0)
   })
 
-  test('empty state for a user with nothing yet (vendor portal)', async ({ page }) => {
-    await login(page, 'vendor@eventflow.test')
+  test('empty state for a user with nothing yet (client portal)', async ({ page }) => {
+    await login(page, 'client@eventflow.test')
     await page.getByRole('button', { name: /^Notifications/ }).click()
     await expect(page.getByText('You are all caught up.')).toBeVisible()
   })
