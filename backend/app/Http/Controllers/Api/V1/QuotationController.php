@@ -173,8 +173,6 @@ class QuotationController extends Controller
                 'responded_at' => now(),
                 'responded_by' => $user->id,
                 'response_note' => $data['note'] ?? null,
-                'response_source' => 'client_portal',
-                'response_method' => null,
             ]);
 
             $verb = $data['decision'] === 'accepted' ? 'accepted' : 'declined';
@@ -182,49 +180,6 @@ class QuotationController extends Controller
             Notifier::roles(Notifier::SALES, $model->company_id, 'quotation_'.$data['decision'],
                 "Quotation {$model->quotation_number} {$verb}",
                 "{$clientName} {$verb} it (".Notifier::rupees($model->grand_total).')'.(! empty($data['note']) ? ': '.$data['note'] : '.'),
-                '/quotations', $user->id);
-
-            return new QuotationResource($model->load(['items', 'client']));
-        }, 3);
-    }
-
-    /**
-     * Staff: record the client's answer given verbally, by phone, in person or on paper.
-     * The trail marks it as recorded by the staff member, never as a client portal response.
-     * POST /quotations/{id}/record-response
-     */
-    public function recordResponse(Request $request, int $quotation)
-    {
-        $data = $request->validate([
-            'decision' => ['required', 'in:accepted,rejected'],
-            'method' => ['required', 'in:verbal,phone,in_person,written'],
-            'note' => ['nullable', 'string', 'max:500'],
-        ]);
-        $user = $request->user();
-
-        return DB::transaction(function () use ($request, $quotation, $data, $user) {
-            $model = Quotation::with('client')->where('company_id', $this->companyId($request))
-                ->whereKey($quotation)->lockForUpdate()->firstOrFail();
-
-            if (! in_array($model->status, ['draft', 'sent'], true)) {
-                return response()->json(['message' => 'This quotation has already been '.$model->status.'.'], 409);
-            }
-
-            $model->update([
-                'status' => $data['decision'],
-                'sent_at' => $model->sent_at ?? now(),
-                'responded_at' => now(),
-                'responded_by' => $user->id,
-                'response_note' => $data['note'] ?? null,
-                'response_source' => 'staff_recorded',
-                'response_method' => $data['method'],
-            ]);
-
-            $verb = $data['decision'] === 'accepted' ? 'accepted' : 'declined';
-            $clientName = $model->client->name ?? 'The client';
-            Notifier::roles(Notifier::SALES, $model->company_id, 'quotation_'.$data['decision'],
-                "Quotation {$model->quotation_number} {$verb}",
-                "{$user->name} recorded that {$clientName} {$verb} it (".Notifier::rupees($model->grand_total).').',
                 '/quotations', $user->id);
 
             return new QuotationResource($model->load(['items', 'client']));

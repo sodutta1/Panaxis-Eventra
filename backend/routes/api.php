@@ -129,7 +129,6 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('/quotations', [QuotationController::class, 'store'])->name('quotations.store')->middleware($sales);
             Route::get('/quotations/{quotation}', [QuotationController::class, 'show'])->name('quotations.show');
             Route::post('/quotations/{quotation}/send', [QuotationController::class, 'send'])->name('quotations.send')->middleware($sales);
-            Route::post('/quotations/{quotation}/record-response', [QuotationController::class, 'recordResponse'])->name('quotations.record-response')->middleware($sales);
             Route::put('/quotations/{quotation}', [QuotationController::class, 'update'])->name('quotations.update')->middleware($admins);
             Route::patch('/quotations/{quotation}', [QuotationController::class, 'update'])->middleware($admins);
             Route::delete('/quotations/{quotation}', [QuotationController::class, 'destroy'])->name('quotations.destroy')->middleware($admins);

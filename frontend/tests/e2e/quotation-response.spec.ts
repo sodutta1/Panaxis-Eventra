@@ -41,7 +41,7 @@ test('staff sends a quotation, client accepts it, staff is notified', async ({ p
   await crow.getByRole('button', { name: 'Accept' }).click()
   await cp.getByLabel('Note for the event team').fill('Looks good, please proceed')
   await cp.getByRole('button', { name: 'Confirm accept' }).click()
-  await expect(crow.getByText('accepted').first()).toBeVisible({ timeout: 20000 })
+  await expect(crow.getByText('accepted').first()).toBeVisible()
   await expect(crow.getByRole('button', { name: 'Accept' })).toHaveCount(0)
   await ctx.close()
 
@@ -76,23 +76,4 @@ test('draft quotations show no Accept or Decline to the client', async ({ page }
   const crow = page.locator(page.viewportSize()!.width < 700 ? '.record-card' : 'tr', { hasText: q.quotation_number }).first()
   await expect(crow).toBeVisible()
   await expect(crow.getByRole('button', { name: 'Accept' })).toHaveCount(0)
-})
-
-test('staff records a verbal acceptance and the trail says so', async ({ page }) => {
-  const token = await login(page, 'sales@eventflow.test')
-  const admin = await (await page.request.post(`${API}/auth/login`, { data: { email: 'admin@eventflow.test', password: 'password' } })).json()
-  const q = await makeQuotation(page, admin.token, 'rec-verbal-' + Date.now())
-  await page.goto('/quotations')
-  const narrow = (page.viewportSize()?.width ?? 1440) < 700
-  const row = page.locator(narrow ? '.record-card' : 'tbody tr', { hasText: q.quotation_number }).first()
-  await expect(row).toBeVisible({ timeout: 20000 })
-  await row.getByRole('button', { name: 'Record client response' }).first().click()
-  await page.getByRole('combobox', { name: "Client's answer" }).selectOption('accepted')
-  await page.getByRole('combobox', { name: 'How did they tell you' }).selectOption('phone')
-  await page.getByRole('textbox', { name: "Note about the client's answer" }).fill('Client agreed on a call')
-  await page.getByRole('button', { name: 'Save response' }).click()
-  await expect(row.getByText('accepted').first()).toBeVisible()
-  await expect(row.getByText(/Recorded by .* on the client's behalf \(phone\)/)).toBeVisible()
-  await expect(row.getByText('Answered by the client in the portal')).toHaveCount(0)
-  expect(token).toBeTruthy()
 })
