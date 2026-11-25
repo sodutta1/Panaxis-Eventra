@@ -102,7 +102,10 @@ test.describe('every list module on a phone', () => {
       const cards = page.locator('.record-card')
       await expect(cards.first()).toBeVisible({ timeout: 20_000 })
       // labels are shown inside cards so no column meaning is lost (first field is the title, its label is hidden)
-      await expect(cards.first().locator('.rc-label').nth(1)).toBeVisible()
+      // the first event on a fresh seed can have no budget items / work orders: that is the plain empty state, not a broken card
+      const real = page.locator('.record-card:not(.rc-empty)')
+      if (await real.count()) await expect(real.first().locator('.rc-label').nth(1)).toBeVisible()
+      else await expect(page.locator('.rc-empty').first()).toBeVisible()
       // the desktop table is hidden
       await expect(page.locator('.dt-table table')).toBeHidden()
       // search field is reachable and accepts input
