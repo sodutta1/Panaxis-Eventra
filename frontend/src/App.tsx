@@ -1,4 +1,5 @@
 import type React from 'react'
+import Notifications from './pages/Notifications'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { getToken, getUser, homeFor } from './api'
 import Layout from './components/Layout'
@@ -65,6 +66,7 @@ export default function App() {
         <Route path="work-orders" element={<WorkOrders />} />
         <Route path="portal/client" element={<ClientPortal />} />
         <Route path="portal/vendor" element={<VendorPortal />} />
+        <Route path="notifications" element={<Notifications />} />
         <Route path="reports" element={<Reports />} />
         <Route path="admin" element={<Admin />} />
       </Route>

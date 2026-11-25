@@ -20,7 +20,7 @@ export default defineConfig({
         browserName: 'chromium',
         baseURL: 'http://127.0.0.1:5173',
       },
-      testMatch: /mobile\.spec\.ts/,
+      testMatch: /(mobile|notifications)\.spec\.ts/,
     },
   ],
 })

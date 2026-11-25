@@ -37,6 +37,13 @@ class LeadController extends Controller
             'status' => 'new',
         ]));
 
+        $name = $lead->contact_name ?? 'A new lead';
+        if ($lead->assigned_to) {
+            \App\Services\Notifier::user((int) $lead->assigned_to, (int) $lead->company_id, 'lead_assigned', 'New lead assigned to you', $name.' is waiting for a first call.', '/leads', $request->user()->id);
+        } else {
+            \App\Services\Notifier::roles(\App\Services\Notifier::SALES, (int) $lead->company_id, 'lead_new', 'New unassigned lead', $name.' just came in.', '/leads', $request->user()->id);
+        }
+
         return (new LeadResource($lead))->response()->setStatusCode(201);
     }
 
@@ -48,7 +55,11 @@ class LeadController extends Controller
     public function update(UpdateLeadRequest $request, int $lead)
     {
         $model = $this->findForCompany(Lead::query(), $request, $lead);
+        $before = $model->assigned_to;
         $model->update($request->validated());
+        if ($model->assigned_to && (int) $model->assigned_to !== (int) $before) {
+            \App\Services\Notifier::user((int) $model->assigned_to, (int) $model->company_id, 'lead_assigned', 'Lead assigned to you', ($model->contact_name ?? 'A lead').' was assigned to you.', '/leads', $request->user()->id);
+        }
 
         return new LeadResource($model->fresh());
     }
@@ -64,6 +75,7 @@ class LeadController extends Controller
     {
         $model = $this->findForCompany(Lead::query(), $request, $lead);
         $model->update(['status' => $request->status]);
+        \App\Services\Notifier::user($model->assigned_to ? (int) $model->assigned_to : null, (int) $model->company_id, 'lead_status', 'Lead moved to '.str_replace('_', ' ', $request->status), ($model->contact_name ?? 'A lead').' was updated.', '/leads', $request->user()->id);
 
         return new LeadResource($model->fresh());
     }

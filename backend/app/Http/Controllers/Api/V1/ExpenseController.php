@@ -39,6 +39,9 @@ class ExpenseController extends Controller
             'status' => 'pending',
         ]));
 
+        \App\Services\Notifier::roles(\App\Services\Notifier::FINANCE, (int) $expense->company_id, 'expense_pending',
+            'Expense waiting for approval', $expense->expense_number.' needs a second person to approve it.', '/expenses?status=pending', $request->user()->id);
+
         return (new ExpenseResource($expense))->response()->setStatusCode(201);
     }
 
@@ -49,6 +52,8 @@ class ExpenseController extends Controller
             abort_if((int)$model->created_by===(int)$request->user()->id,422,'Another team member must approve this expense.');
             abort_unless($model->status==='pending',422,'Only pending expenses can be approved.');
             $model->update(['status'=>'approved','approved_by'=>$request->user()->id]);
+            \App\Services\Notifier::user($model->created_by, (int) $model->company_id, 'expense_approved',
+                'Expense approved', $model->expense_number.' was approved.', '/expenses', $request->user()->id);
             return new ExpenseResource($model->fresh());
         });
     }

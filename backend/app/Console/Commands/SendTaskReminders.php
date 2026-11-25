@@ -26,6 +26,7 @@ class SendTaskReminders extends Command
             if (! $task->assignedUser) {
                 continue;
             }
+            \App\Services\Notifier::user($task->assigned_to, (int) $task->assignedUser->company_id, 'task_due', 'Task due soon', $task->title.($task->due_date ? ' is due '.\Illuminate\Support\Carbon::parse($task->due_date)->format('d M') : ''), $task->event_id ? '/events/'.$task->event_id : '/events');
             $task->assignedUser->notify(new TaskDueReminderNotification($task));
             $task->forceFill(['reminder_sent_at' => now()])->save();
         }

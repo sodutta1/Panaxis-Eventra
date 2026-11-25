@@ -153,3 +153,26 @@ td:nth-child(2) {white-space:normal;min-width:140px;}
 .action-menu-label:after {content:attr(data-label);}
 :root[data-theme=dark] .text-pamuted,:root[data-theme=dark] [class*=text-slate-4],:root[data-theme=dark] [class*=text-slate-5] {color:var(--muted)!important;}
 :root[data-theme=dark] input,:root[data-theme=dark] select,:root[data-theme=dark] textarea {background:var(--surface)!important;color:var(--text)!important;}
+
+/* Notification centre */
+.notice-wrap{position:relative;}
+.notice-bell{min-width:44px;min-height:44px;}
+.notice-badge{position:absolute;top:2px;right:2px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;line-height:1;}
+.notice-panel{position:absolute;right:0;top:calc(100% + 8px);width:380px;max-height:70vh;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 8px 40px #0003;z-index:50;}
+.notice-panel header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);}
+.notice-panel header h2{font-size:15px;font-weight:700;}
+.notice-panel header>span{display:flex;gap:8px;align-items:center;}
+.notice-panel footer{padding:10px 16px;border-top:1px solid var(--line);text-align:center;}
+.notice-close{display:none;}
+.notice-list{overflow:auto;}
+.notice-page .notice-list{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);max-width:760px;}
+.notice-row{display:flex;gap:12px;width:100%;text-align:left;padding:12px 16px;min-height:56px;border-bottom:1px solid var(--line);background:transparent;color:var(--text);}
+.notice-row:hover{background:var(--brand-light);}
+.notice-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;background:transparent;}
+.notice-row.unread .notice-dot{background:var(--accent);}
+.notice-row.unread strong{font-weight:700;}
+.notice-text{display:grid;gap:2px;min-width:0;font-size:13.5px;}
+.notice-text span,.notice-text small{color:var(--muted);overflow-wrap:anywhere;}
+.notice-text small{font-size:11.5px;}
+.notice-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:13px;}
+@media(max-width:767px){.notice-panel{position:fixed;inset:0;width:100%;max-height:none;height:100dvh;border-radius:0;border:0;}.notice-close{display:inline-flex;}.notice-row{padding:14px 16px;min-height:64px;}}

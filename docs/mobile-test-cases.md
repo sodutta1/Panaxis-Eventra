@@ -170,3 +170,20 @@ also covered implicitly because every list test asserts no sideways scroll at
 - Column-header sorting is desktop-only; phones sort via Filters and sorting.
 - Kanban drag-and-drop is pointer-only; on touch, cards move via their
   Convert/action buttons.
+
+## Notification centre (added after the mobile pass)
+
+Spec: `frontend/tests/e2e/notifications.spec.ts` (runs on the desktop and iPhone 13 projects) and `backend/tests/Feature/Api/V1/NotificationCenterTest.php`.
+
+| # | Case | Type | Result |
+|---|---|---|---|
+| N1 | Payment recorded: admin sees a badge, opens the panel, taps the item, lands on invoices, count drops | automated | pass |
+| N2 | Mark all read clears the badge | automated | pass |
+| N3 | Sales exec is not told about payments (role scoping, API and UI) | automated | pass |
+| N4 | Empty state ("You are all caught up") for a client | automated | pass |
+| N5 | Full page, unread filter, no sideways scroll | automated | pass |
+| N6 | Network failure shows a retry message, retry recovers | automated | pass |
+| N7 | Escape closes the panel, bell has an accessible name | automated | pass |
+| N8 | Phone: panel is full screen, rows 44px or more, bell 44px, no overflow | automated (mobile) | pass |
+| N9 | Backend: login required; feed private per user; cross-company rows never visible; paging, read, read-all; payment, lead and expense triggers notify the right people and not the actor | automated (7 tests) | pass |
+| N10 | Lock-screen push on a real phone | manual | not built (needs PWA install) |

@@ -117,6 +117,9 @@ class InvoiceController extends Controller
                 Event::whereKey($model->event_id)->increment('amount_received', $validated['amount']);
             }
 
+            \App\Services\Notifier::roles(\App\Services\Notifier::FINANCE, (int) $model->company_id, 'payment_recorded',
+                'Payment recorded', $payment->payment_number.' for '.number_format((float) $validated['amount'], 2).' against '.$model->invoice_number.($balance <= 0 ? ' (invoice fully paid)' : '').'.', '/invoices', $request->user()->id);
+
             return response()->json(['message' => 'Payment recorded.', 'data' => new PaymentResource($payment),
                 'invoice' => new InvoiceResource($model->fresh())], 201);
         }, 3);
