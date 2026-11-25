@@ -15,6 +15,18 @@ class Notifier
     public const FINANCE = ['super_admin', 'company_admin', 'admin', 'accountant'];
     public const SALES = ['super_admin', 'company_admin', 'admin', 'event_manager', 'sales_executive'];
 
+    /** Indian grouping, e.g. 1234567.5 -> "₹12,34,567.50". */
+    public static function rupees(float|int|string $amount): string
+    {
+        [$int, $dec] = explode('.', number_format((float) $amount, 2, '.', ''));
+        $last3 = substr($int, -3);
+        $rest = substr($int, 0, -3);
+        if ($rest !== '') {
+            $last3 = preg_replace('/\B(?=(\d{2})+(?!\d))/', ',', $rest).','.$last3;
+        }
+        return '₹'.$last3.'.'.$dec;
+    }
+
     /** Notify one user. Never notifies the person who caused the event. */
     public static function user(?int $userId, int $companyId, string $type, string $title, ?string $body = null, ?string $link = null, ?int $actorId = null): void
     {

@@ -39,6 +39,10 @@ class NotificationCenterTest extends TestCase
         $this->postJson("/api/v1/invoices/{$inv->id}/payments", ['amount' => 100, 'payment_method' => 'cash', 'payment_date' => now()->toDateString()])->assertCreated();
         $admin = $this->u('admin@eventflow.test');
         $this->assertSame(1, AppNotification::where('user_id', $admin->id)->where('type', 'payment_recorded')->count());
+        $n = AppNotification::where('user_id', $admin->id)->where('type', 'payment_recorded')->first();
+        $this->assertStringStartsWith('Payment received on INV-', $n->title);
+        $this->assertStringContainsString('₹100.00 received', $n->body);
+        $this->assertStringNotContainsString('PAY-', $n->title.$n->body);
         $this->assertSame(0, AppNotification::where('user_id', $actor->id)->count());
         $this->assertSame(0, AppNotification::where('user_id', $this->u('sales@eventflow.test')->id)->count());
         $this->assertSame(0, AppNotification::where('user_id', $this->u('client@eventflow.test')->id)->count());

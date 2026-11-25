@@ -7,7 +7,7 @@ A bell in the top bar (all roles, desktop and phone) with an unread count, a fee
 |---|---|---|
 | Expense created (needs a second approver) | Admins and accountants, except the creator | /expenses?status=pending |
 | Expense approved | The person who created it | /expenses |
-| Payment recorded on an invoice (notes if fully paid) | Admins and accountants, except the person who recorded it | /invoices |
+| Payment received on an invoice (notes if fully paid) | Admins and accountants, except the person who recorded it | /invoices |
 | Lead created with an owner | The assigned user | /leads |
 | Lead created without an owner | Admins, managers, sales execs | /leads |
 | Lead reassigned | The new owner | /leads |

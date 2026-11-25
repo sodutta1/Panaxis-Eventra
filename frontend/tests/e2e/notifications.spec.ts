@@ -40,7 +40,7 @@ test.describe('notification centre', () => {
     const before = Number(await badge.innerText())
     await page.getByRole('button', { name: /^Notifications/ }).click()
     await expect(page.getByRole('dialog', { name: 'Notifications', exact: true })).toBeVisible()
-    await page.getByTestId('notice-row').filter({ hasText: 'Payment recorded' }).first().click()
+    await page.getByTestId('notice-row').filter({ hasText: 'Payment received' }).first().click()
     await expect(page).toHaveURL(/\/invoices/)
     if (before > 1) await expect(page.getByTestId('notice-badge')).toHaveText(String(before - 1))
     else await expect(page.getByTestId('notice-badge')).toHaveCount(0)
@@ -62,7 +62,7 @@ test.describe('notification centre', () => {
     expect(r.data.filter((n: any) => n.type === 'payment_recorded')).toHaveLength(0)
     await login(page, 'sales@eventflow.test')
     await page.getByRole('button', { name: /^Notifications/ }).click()
-    await expect(page.getByText(/Payment recorded/)).toHaveCount(0)
+    await expect(page.getByText(/Payment received/)).toHaveCount(0)
   })
 
   test('empty state for a user with nothing yet (client portal)', async ({ page }) => {
