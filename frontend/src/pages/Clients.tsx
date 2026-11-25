@@ -77,7 +77,7 @@ export default function Clients() {
           {clients.map((c) => (
             <tr key={c.id} className="hover:bg-slate-50">
               <td className="px-4 py-3 font-mono text-xs text-slate-500">{c.client_code}</td>
-              <td className="px-4 py-3 font-medium">{c.name}<div className="text-xs text-slate-400">{c.company_name}</div></td>
+              <td className="px-4 py-3 font-medium">{c.name}<div className="text-xs text-slate-500">{c.company_name}</div></td>
               <td className="px-4 py-3 text-slate-600">{c.email && <a className="hover:underline" href={`mailto:${c.email}`}>{c.email}</a>}{c.phone && <a className="block text-xs text-pa-700 hover:underline" href={`tel:${c.phone}`}>{c.phone}</a>}</td>
               <td className="px-4 py-3 text-slate-600">{c.city ?? '-'}</td>
               <td className="px-4 py-3 capitalize text-slate-600">{c.client_type}</td>
@@ -90,7 +90,7 @@ export default function Clients() {
             </tr>
           ))}
           {clients.length === 0 && (
-            <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-400">No clients yet.</td></tr>
+            <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-500">No clients yet.</td></tr>
           )}
         </Table>
       </Card>

@@ -69,7 +69,7 @@ export default function Budgets() {
       <ErrorBox error={error} />
       <div className="mb-4 max-w-md">
         <label className="block text-[11.5px] font-bold uppercase tracking-wide text-pamuted mb-1">Event</label>
-        <select className={inputCls} value={eventId ?? ''} onChange={(e) => {setEventId(Number(e.target.value));setParams({event_id:e.target.value})}}>
+        <select aria-label="Event" className={inputCls} value={eventId ?? ''} onChange={(e) => {setEventId(Number(e.target.value));setParams({event_id:e.target.value})}}>
           {events.map((e) => (
             <option key={e.id} value={e.id}>{e.event_code} — {e.title}</option>
           ))}

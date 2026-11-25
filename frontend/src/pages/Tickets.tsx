@@ -193,7 +193,7 @@ export default function Tickets() {
         <Table head={['Ticket #', 'Holder', 'Event', 'Type', 'Price paid', 'Payment', 'Ticket status', '']}>
           {items.map((t) => (
             <tr key={t.id} className="hover:bg-slate-50">
-              <td className="px-4 py-3 font-mono text-xs text-slate-500">{t.ticket_number}<div className="text-[10px] text-slate-400">{t.qr_token}</div></td>
+              <td className="px-4 py-3 font-mono text-xs text-slate-500">{t.ticket_number}<div className="text-[10px] text-slate-500">{t.qr_token}</div></td>
               <td className="px-4 py-3 font-medium">{t.holder_name}</td>
               <td className="px-4 py-3 text-slate-600">{(t.event as any)?.title ?? `#${(t as any).event_id}`}</td>
               <td className="px-4 py-3 text-slate-600">{t.ticket_type?.name ?? '-'}</td>
@@ -207,7 +207,7 @@ export default function Tickets() {
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-400">No tickets yet.</td></tr>
+            <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-500">No tickets yet.</td></tr>
           )}
         </Table>
       </Card>

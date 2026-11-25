@@ -55,7 +55,7 @@ export function FilterBar(){
  <label>From date<input type="date" value={params.get('from')??''} onChange={e=>update('from',e.target.value)}/></label><label>To date<input type="date" value={params.get('to')??''} onChange={e=>update('to',e.target.value)}/></label>
  <label>Sort by<select aria-label="Sort by" value={params.get('sort')??'id'} onChange={e=>update('sort',e.target.value)}><option value="id">Reference ID</option>{config.fields.map(f=><option key={f} value={f}>{human(f)}</option>)}</select></label><label>Order<select aria-label="Sort order" value={params.get('direction')??'desc'} onChange={e=>update('direction',e.target.value)}><option value="desc">High to low / Z to A</option><option value="asc">Low to high / A to Z</option></select></label>
  </div></details>
- {params.size>0&&<div className="filter-chips">{Array.from(params).filter(([k])=>!['page','per_page'].includes(k)).map(([k,v])=><button key={k} onClick={()=>{update(k,'');if(k==='search')setSearch('')}} aria-label={`Remove ${human(k)} filter`}>{human(k)}: {human(v)}<X size={12}/></button>)}<button onClick={()=>{setParams({});setSearch('')}}>Clear all</button></div>}
+ {params.size>0&&<div className="filter-chips">{Array.from(params).filter(([k])=>!['page','per_page'].includes(k)).map(([k,v])=><button key={k} onClick={()=>{update(k,'');if(k==='search')setSearch('')}} aria-label={`Remove ${human(k)}: ${human(v)} filter`}>{human(k)}: {human(v)}<X size={12}/></button>)}<button onClick={()=>{setParams({});setSearch('')}}>Clear all</button></div>}
  </section>
 }
 export function Pagination(){const {config,meta,busy}=useList();const [params,setParams]=useSearchParams();if(!config)return null

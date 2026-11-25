@@ -121,7 +121,7 @@ export default function Venues() {
             </tr>
           ))}
           {venues.length === 0 && (
-            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-400">No venues yet.</td></tr>
+            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-500">No venues yet.</td></tr>
           )}
         </Table>
       </Card>

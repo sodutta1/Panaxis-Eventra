@@ -142,7 +142,7 @@ export default function GateScanner() {
           <div className="rounded-xl overflow-hidden bg-slate-900 aspect-[4/3] flex items-center justify-center">
             <div id={READER_ID} className="w-full h-full" />
             {!running && (
-              <div className="absolute text-slate-400 text-sm pointer-events-none">Camera off</div>
+              <div className="absolute text-slate-500 text-sm pointer-events-none">Camera off</div>
             )}
           </div>
           <p className="text-xs text-pamuted mt-2">Point the camera at a ticket QR code. The same code is ignored for 3 seconds after a scan.</p>

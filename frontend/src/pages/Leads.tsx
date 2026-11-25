@@ -173,7 +173,7 @@ export default function Leads() {
             {leads.map((l) => (
               <tr key={l.id} className="hover:bg-slate-50">
                 <td className="px-4 py-3 font-medium">{l.title}</td>
-                <td className="px-4 py-3 text-slate-600">{l.contact_name}{l.phone && <a className="block text-xs text-pa-700 hover:underline" href={`tel:${l.phone}`}>{l.phone}</a>}{l.email && <a className="block text-xs text-slate-400 hover:underline" href={`mailto:${l.email}`}>{l.email}</a>}</td>
+                <td className="px-4 py-3 text-slate-600">{l.contact_name}{l.phone && <a className="block text-xs text-pa-700 hover:underline" href={`tel:${l.phone}`}>{l.phone}</a>}{l.email && <a className="block text-xs text-slate-500 hover:underline" href={`mailto:${l.email}`}>{l.email}</a>}</td>
                 <td className="px-4 py-3 text-slate-600">{l.source}</td>
                 <td className="px-4 py-3 text-slate-600">{l.event_date ?? '-'}</td>
                 <td className="px-4 py-3">{inr(l.estimated_budget)}</td>

@@ -2,3 +2,7 @@
 
 - Saved list views are stored per user in `saved_views` (GET/POST /api/v1/saved-views, DELETE /api/v1/saved-views/{id}). The UI merges them with browser-local views, so views follow the user across devices.
 - The legacy bearer-auth PDF routes (`/invoices/{id}/pdf`, `/quotations/{id}/pdf`, `/tickets/{id}/pdf`, `/work-orders/{id}/pdf`, `/events/{id}/closeout-pdf`) are removed. PDFs are only available through signed `/documents/{type}/{id}/link` URLs.
+
+# Accessibility check
+
+`frontend/tests/e2e/accessibility.spec.ts` scans the login page and every staff page with axe-core (WCAG 2.0/2.1 A and AA) and fails on any serious or critical issue. Light theme only.

@@ -60,7 +60,7 @@ export default function Admin() {
               <td className="px-4 py-3"><Badge value={u.status} /></td>
               <td className="px-4 py-3">
                 <div className="flex gap-2">
-                  <select className="text-xs border border-paline rounded-lg px-1.5 py-1 text-ink" value={u.role} onChange={(e) => update(u.id, { role: e.target.value })}>
+                  <select aria-label={`Role for ${u.name}`} className="text-xs border border-paline rounded-lg px-1.5 py-1 text-ink" value={u.role} onChange={(e) => update(u.id, { role: e.target.value })}>
                     {roles.map((r) => (
                       <option key={r} value={r}>{ROLE_LABELS[r] ?? r}</option>
                     ))}
@@ -84,7 +84,7 @@ export default function Admin() {
           <input aria-label="Full name" required placeholder="Full name" className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <input aria-label="Email" required type="email" placeholder="Email" className={inputCls} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           <input aria-label="Password (min 8 chars)" required type="password" minLength={8} placeholder="Password (min 8 chars)" className={inputCls} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          <select className={inputCls} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+          <select aria-label="Role" className={inputCls} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
             {roles.map((r) => (
               <option key={r} value={r}>{ROLE_LABELS[r] ?? r}</option>
             ))}

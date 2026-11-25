@@ -131,7 +131,7 @@ export default function Expenses() {
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-400">No expenses yet. Add an expense to start tracking event costs.</td></tr>
+            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-500">No expenses yet. Add an expense to start tracking event costs.</td></tr>
           )}
         </Table>
       </Card>

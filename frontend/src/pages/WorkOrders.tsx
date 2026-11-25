@@ -82,7 +82,7 @@ export default function WorkOrders() {
       <ErrorBox error={error} />
       <div className="mb-4 max-w-md">
         <label className="block text-[11.5px] font-bold uppercase tracking-wide text-pamuted mb-1">Event</label>
-        <select className={inputCls} value={eventId ?? ''} onChange={(e) => {setEventId(Number(e.target.value));setParams({event_id:e.target.value})}}>
+        <select aria-label="Event" className={inputCls} value={eventId ?? ''} onChange={(e) => {setEventId(Number(e.target.value));setParams({event_id:e.target.value})}}>
           {events.map((e) => (
             <option key={e.id} value={e.id}>{e.event_code} — {e.title}</option>
           ))}
@@ -112,7 +112,7 @@ export default function WorkOrders() {
                 ) : (
                   <div className="flex gap-3">
                     <button className="text-pa-700 font-bold text-xs hover:underline" onClick={() => { setPayFor(wo.id); setPayAmount('') }}>Add payment</button>
-                    <select className="text-xs border border-paline rounded-lg px-1.5 py-1 text-ink" value={wo.status} onChange={(e) => setStatus(wo.id, e.target.value)}>
+                    <select aria-label={`Status for work order ${wo.id}`} className="text-xs border border-paline rounded-lg px-1.5 py-1 text-ink" value={wo.status} onChange={(e) => setStatus(wo.id, e.target.value)}>
                       {['assigned', 'in_progress', 'completed', 'paid', 'cancelled'].map((st) => (
                         <option key={st} value={st}>{st.replaceAll('_', ' ')}</option>
                       ))}
@@ -131,7 +131,7 @@ export default function WorkOrders() {
       <Card className="p-5 max-w-2xl">
         <h2 className="text-sm font-extrabold text-pa-900 mb-3">New work order</h2>
         <form onSubmit={create} className="grid grid-cols-2 gap-3">
-          <select required className={inputCls} value={form.vendor_id} onChange={(e) => setForm({ ...form, vendor_id: e.target.value })}>
+          <select aria-label="Vendor" required className={inputCls} value={form.vendor_id} onChange={(e) => setForm({ ...form, vendor_id: e.target.value })}>
             <option value="">Select vendor…</option>
             {vendors.map((v) => (
               <option key={v.id} value={v.id}>{v.name}</option>

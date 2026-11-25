@@ -122,13 +122,13 @@ export default function Guests() {
         <Table head={['Guest', 'Event', 'Plus ones', 'Table', 'Dietary', 'RSVP', 'Checked in', '']}>
           {items.map((g) => (
             <tr key={g.id} className={g.checked_in ? '' : 'hover:bg-slate-50 cursor-pointer'} onClick={() => { if (!g.checked_in) checkIn(g.id) }}>
-              <td className="px-4 py-3 font-medium">{g.name}<div className="text-xs text-slate-400">{g.email}</div></td>
+              <td className="px-4 py-3 font-medium">{g.name}<div className="text-xs text-slate-500">{g.email}</div></td>
               <td className="px-4 py-3 text-slate-600">{events.find(e=>e.id===g.event_id)?.title??'Event not set'}</td>
               <td className="px-4 py-3">{g.plus_ones}</td>
               <td className="px-4 py-3">{g.table_number ?? '-'}</td>
               <td className="px-4 py-3 capitalize text-slate-600">{g.dietary_preference.replaceAll('_', ' ')}</td>
               <td className="px-4 py-3"><Badge value={g.rsvp_status} /></td>
-              <td className="px-4 py-3">{g.checked_in ? <Badge value="checked_in" /> : <span className="text-xs text-slate-400">not yet</span>}</td>
+              <td className="px-4 py-3">{g.checked_in ? <Badge value="checked_in" /> : <span className="text-xs text-slate-500">not yet</span>}</td>
               <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                 <IconAction label="Edit" onClick={() => openEdit(g)}/>
                 {isAdmin && <IconAction label="Delete" onClick={() => remove(g)}/>}
@@ -136,7 +136,7 @@ export default function Guests() {
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-400">No guests found.</td></tr>
+            <tr><td colSpan={8} className="px-4 py-6 text-center text-slate-500">No guests found.</td></tr>
           )}
         </Table>
       </Card>

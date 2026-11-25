@@ -144,7 +144,7 @@ export default function Quotations() {
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={9} className="px-4 py-6 text-center text-slate-400">No quotations yet. Create a quotation for a client.</td></tr>
+            <tr><td colSpan={9} className="px-4 py-6 text-center text-slate-500">No quotations yet. Create a quotation for a client.</td></tr>
           )}
         </Table>
       </Card>

@@ -62,7 +62,7 @@ export function Bars({ slices, format }: { slices: Slice[]; format?: (v: number)
           </div>
         </div>
       ))}
-      {slices.length === 0 && <p className="text-xs text-slate-400">No data yet.</p>}
+      {slices.length === 0 && <p className="text-xs text-slate-500">No data yet.</p>}
     </div>
   )
 }

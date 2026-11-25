@@ -147,7 +147,7 @@ export default function Invoices() {
             </tr>
           ))}
           {items.length === 0 && (
-            <tr><td colSpan={9} className="px-4 py-6 text-center text-slate-400">No invoices yet.</td></tr>
+            <tr><td colSpan={9} className="px-4 py-6 text-center text-slate-500">No invoices yet.</td></tr>
           )}
         </Table>
       </Card>

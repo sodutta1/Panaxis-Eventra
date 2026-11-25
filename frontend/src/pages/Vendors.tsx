@@ -104,7 +104,7 @@ export default function Vendors() {
           {vendors.map((v) => (
             <tr key={v.id} className="hover:bg-slate-50">
               <td className="px-4 py-3 font-mono text-xs text-slate-500">{v.vendor_code}</td>
-              <td className="px-4 py-3 font-medium">{v.name}<div className="text-xs text-slate-400">{v.business_name}</div></td>
+              <td className="px-4 py-3 font-medium">{v.name}<div className="text-xs text-slate-500">{v.business_name}</div></td>
               <td className="px-4 py-3 text-slate-600">{v.category?.name ?? '-'}</td>
               <td className="px-4 py-3 text-slate-600">{v.city ?? '-'}</td>
               <td className="px-4 py-3">★ {v.rating}</td>
@@ -116,7 +116,7 @@ export default function Vendors() {
             </tr>
           ))}
           {vendors.length === 0 && (
-            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-400">No vendors yet.</td></tr>
+            <tr><td colSpan={7} className="px-4 py-6 text-center text-slate-500">No vendors yet.</td></tr>
           )}
         </Table>
       </Card>

@@ -99,10 +99,10 @@ export default function EventDetail() {
             {(event.schedules ?? []).map((s) => (
               <li key={s.id} className="text-sm flex gap-3">
                 <span className="font-mono text-xs text-slate-500 w-24 shrink-0">{String(s.start_time).slice(0, 5)}{s.end_time ? `–${String(s.end_time).slice(0, 5)}` : ''}</span>
-                <span>{s.title}{s.location_within_venue ? <span className="text-slate-400"> · {s.location_within_venue}</span> : null}</span>
+                <span>{s.title}{s.location_within_venue ? <span className="text-slate-500"> · {s.location_within_venue}</span> : null}</span>
               </li>
             ))}
-            {(event.schedules ?? []).length === 0 && <li className="text-sm text-slate-400">No schedule items yet. Add the first segment below.</li>}
+            {(event.schedules ?? []).length === 0 && <li className="text-sm text-slate-500">No schedule items yet. Add the first segment below.</li>}
           </ul>
           <form onSubmit={addSchedule} className="flex gap-2">
             <input className={`${inputCls} w-28`} type="time" value={sched.start_time} onChange={(e) => setSched({ ...sched, start_time: e.target.value })} required />
@@ -116,18 +116,18 @@ export default function EventDetail() {
           {taskError && <p className="text-xs text-rose-600 mb-2">{taskError}</p>}
           {([['pre_event', 'Pre-event tasks'], ['on_event', 'On-event tasks'], ['post_event', 'Post-event tasks']] as const).map(([phase, label]) => (
             <div key={phase} className="mb-4">
-              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">{label} <span className="text-slate-400">({(phases[phase] ?? []).length})</span></div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5">{label} <span className="text-slate-500">({(phases[phase] ?? []).length})</span></div>
               <ul className="space-y-1.5">
                 {(phases[phase] ?? []).map((t) => (
                   <li key={t.id} className="text-sm flex items-center gap-3">
                     <input type="checkbox" checked={t.status === 'completed'} onChange={() => toggle(t.id)} className="rounded" disabled={t.blocked} />
-                    <span className={t.status === 'completed' ? 'line-through text-slate-400' : ''}>{t.title}</span>
+                    <span className={t.status === 'completed' ? 'line-through text-slate-500' : ''}>{t.title}</span>
                     {t.blocked && <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">blocked</span>}
                     <span className={`text-[10px] px-1.5 py-0.5 rounded ${t.priority === 'urgent' ? 'bg-rose-100 text-rose-700' : t.priority === 'high' ? 'bg-amber-100 text-amber-800' : t.priority === 'medium' ? 'bg-sky-100 text-sky-800' : 'bg-slate-200 text-slate-600'}`}>{t.priority}</span>
-                    <span className="text-xs text-slate-400 ml-auto">{t.due_date ? String(t.due_date).slice(0, 10) : ''}{t.assigned_user ? ` · ${t.assigned_user.name}` : ''}</span>
+                    <span className="text-xs text-slate-500 ml-auto">{t.due_date ? String(t.due_date).slice(0, 10) : ''}{t.assigned_user ? ` · ${t.assigned_user.name}` : ''}</span>
                   </li>
                 ))}
-                {(phases[phase] ?? []).length === 0 && <li className="text-xs text-slate-400">No tasks yet. Add a task below.</li>}
+                {(phases[phase] ?? []).length === 0 && <li className="text-xs text-slate-500">No tasks yet. Add a task below.</li>}
               </ul>
             </div>
           ))}
