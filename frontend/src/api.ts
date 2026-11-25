@@ -24,7 +24,30 @@ export function setSession(token: string, user: unknown) {
 export function clearSession() {
   localStorage.removeItem('ef_token')
   localStorage.removeItem('ef_user')
+  clearOfflineCache()
 }
+
+// Offline support: the last successful read of each screen is kept on this device (per user) so staff can still look
+// things up when the connection drops. Writes are never queued; they fail with a plain message instead.
+const CACHE_PREFIX = 'ef_cache:'
+export function clearOfflineCache() {
+  try { Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX)).forEach((k) => localStorage.removeItem(k)) } catch { /* ignore */ }
+}
+const cacheKey = (path: string) => {
+  const u = localStorage.getItem('ef_user')
+  let id = 'anon'
+  try { id = String(JSON.parse(u ?? 'null')?.id ?? 'anon') } catch { /* ignore */ }
+  return `${CACHE_PREFIX}${id}:${path}`
+}
+const cacheable = (path: string) => !path.startsWith('/auth') && !path.startsWith('/documents') && !path.startsWith('/saved-views')
+function readCache(path: string): unknown | undefined {
+  try { const raw = localStorage.getItem(cacheKey(path)); return raw ? JSON.parse(raw) : undefined } catch { return undefined }
+}
+function writeCache(path: string, json: unknown) {
+  try { localStorage.setItem(cacheKey(path), JSON.stringify(json)) } catch { /* storage full: skip */ }
+}
+const announce=(stale:boolean)=>{if(typeof window!=='undefined')window.dispatchEvent(new CustomEvent('offline-state',{detail:{stale}}))}
+export const OFFLINE_MESSAGE = 'You are offline. Changes cannot be saved until the connection is back.'
 
 export function homeFor(role?: string): string {
   if (role === 'client') return '/portal/client'
@@ -65,6 +88,18 @@ export async function api<T = any>(
     headers,
     body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
   }).then(async res=>({res,json:res.status===204?{}:await res.json().catch(()=>({}))}))
+    .then(r=>{
+      if(r.res.ok&&(!options.method||options.method==='GET')&&cacheable(path)){writeCache(path,r.json);announce(false)}
+      return r
+    })
+    .catch(err=>{
+      if(err instanceof ApiError)throw err
+      const isGet=!options.method||options.method==='GET'
+      const saved=isGet&&cacheable(path)?readCache(path):undefined
+      if(saved!==undefined){announce(true);return {res:new Response(null,{status:200}),json:saved}}
+      if(!isGet)throw new ApiError(0,OFFLINE_MESSAGE)
+      throw err
+    })
   const listKey=activePath+':'+path.split('?')[0]
   if(isList)latestLists.set(listKey,request)
   let result=await request
