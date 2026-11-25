@@ -119,4 +119,52 @@ class QuotationResponseTest extends TestCase
         $this->postJson("/api/v1/quotations/{$q->id}/send")->assertForbidden();
         $this->assertSame('sent', $q->refresh()->status);
     }
+
+    public function test_staff_records_a_verbal_acceptance_honestly(): void
+    {
+        $q = $this->quote('draft');
+        $sales = $this->u('sales@eventflow.test');
+        Sanctum::actingAs($sales);
+        $this->postJson("/api/v1/quotations/{$q->id}/record-response", ['decision' => 'accepted', 'method' => 'phone', 'note' => 'Agreed on call with the client'])
+            ->assertOk()
+            ->assertJsonPath('data.status', 'accepted')
+            ->assertJsonPath('data.response_source', 'staff_recorded')
+            ->assertJsonPath('data.response_method', 'phone')
+            ->assertJsonPath('data.responded_by_name', $sales->name);
+        $q->refresh();
+        $this->assertSame($sales->id, (int) $q->responded_by);
+        $this->assertNotNull($q->sent_at);
+        $n = AppNotification::where('user_id', $this->u('admin@eventflow.test')->id)->where('type', 'quotation_accepted')->first();
+        $this->assertStringContainsString($sales->name.' recorded that', $n->body);
+        $this->assertSame(0, AppNotification::where('user_id', $sales->id)->where('type', 'quotation_accepted')->count());
+        $this->postJson("/api/v1/quotations/{$q->id}/record-response", ['decision' => 'rejected', 'method' => 'phone'])->assertStatus(409);
+    }
+
+    public function test_client_portal_response_is_marked_as_client_portal(): void
+    {
+        $q = $this->quote('sent');
+        Sanctum::actingAs($this->u('client@eventflow.test'));
+        $this->postJson("/api/v1/portal/quotations/{$q->id}/respond", ['decision' => 'accepted'])
+            ->assertOk()->assertJsonPath('data.response_source', 'client_portal');
+    }
+
+    public function test_record_response_validation_and_permissions(): void
+    {
+        $q = $this->quote('sent');
+        Sanctum::actingAs($this->u('admin@eventflow.test'));
+        $this->postJson("/api/v1/quotations/{$q->id}/record-response", ['decision' => 'accepted'])->assertStatus(422);
+        $this->postJson("/api/v1/quotations/{$q->id}/record-response", ['decision' => 'accepted', 'method' => 'telepathy'])->assertStatus(422);
+        foreach (['client@eventflow.test', 'finance@eventflow.test'] as $email) {
+            Sanctum::actingAs($this->u($email));
+            $this->postJson("/api/v1/quotations/{$q->id}/record-response", ['decision' => 'accepted', 'method' => 'verbal'])->assertForbidden();
+        }
+        $this->assertSame('sent', $q->refresh()->status);
+    }
+
+    public function test_recording_works_after_expiry_because_staff_heard_it_directly(): void
+    {
+        $q = $this->quote('sent', '2020-01-01');
+        Sanctum::actingAs($this->u('admin@eventflow.test'));
+        $this->postJson("/api/v1/quotations/{$q->id}/record-response", ['decision' => 'accepted', 'method' => 'in_person'])->assertOk();
+    }
 }

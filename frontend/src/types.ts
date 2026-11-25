@@ -120,6 +120,9 @@ export type Quotation = {
   id: number
   quotation_number: string
   response_note?: string | null
+  response_source?: string | null
+  response_method?: string | null
+  responded_by_name?: string | null
   sent_at?: string | null
   responded_at?: string | null
   client?: Client

@@ -1,5 +1,5 @@
 import { PdfAction } from '../components/Actions'
-import { IconAction, TextAction } from '../components/Actions'
+import { IconAction, TextAction, RecordPanel } from '../components/Actions'
 import { useEffect, useState } from 'react'
 import { api, allOptions, getUser, type Paginated } from '../api'
 import { Badge, Card, ErrorBox, PageHeader, Table, btnCls, btnGhostCls, inputCls } from '../components/ui'
@@ -73,6 +73,15 @@ export default function Quotations() {
     } catch (e) { setError(e) }
   }
 
+  const [rec, setRec] = useState<Quotation | null>(null)
+  const [recForm, setRecForm] = useState({ decision: 'accepted', method: 'phone', note: '' })
+  const [recBusy, setRecBusy] = useState(false)
+  const [recError, setRecError] = useState<unknown>(null)
+  const submitRec = async () => {
+    if (!rec) return
+    setRecBusy(true); setRecError(null)
+    try { await api(`/quotations/${rec.id}/record-response`, { method: 'POST', body: { decision: recForm.decision, method: recForm.method, note: recForm.note.trim() || undefined } }); setRec(null); load() } catch (e) { setRecError(e) } finally { setRecBusy(false) }
+  }
   const canSend = ['super_admin', 'company_admin', 'admin', 'event_manager', 'sales_executive'].includes(getUser()?.role ?? '')
   const send = async (q: Quotation) => {
     setError(null)
@@ -141,9 +150,10 @@ export default function Quotations() {
               <td className="px-4 py-3">{inr(q.subtotal)}</td>
               <td className="px-4 py-3">{inr(q.tax_amount)} ({q.tax_rate}%)</td>
               <td className="px-4 py-3 font-semibold">{inr(q.grand_total)}</td>
-              <td className="px-4 py-3"><Badge value={q.status} />{q.response_note && <div className="text-xs text-slate-500 mt-1">Client note: {q.response_note}</div>}</td>
+              <td className="px-4 py-3"><Badge value={q.status} />{(q as any).response_source === 'staff_recorded' && <div className="text-xs text-slate-500 mt-1">Recorded by {(q as any).responded_by_name ?? 'staff'} on the client's behalf ({String((q as any).response_method ?? '').replace('_', ' ')})</div>}{(q as any).response_source === 'client_portal' && <div className="text-xs text-slate-500 mt-1">Answered by the client in the portal</div>}{q.response_note && <div className="text-xs text-slate-500 mt-1">Note: {q.response_note}</div>}</td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <PdfAction path={`/quotations/${q.id}/pdf`} name={`${q.quotation_number}.pdf`}/>
+                {canSend && ['draft', 'sent'].includes(q.status) && <TextAction label="Record client response" onClick={() => { setRecForm({ decision: 'accepted', method: 'phone', note: '' }); setRecError(null); setRec(q) }}/>}
                 {canSend && q.status === 'draft' && <TextAction label="Send to client" onClick={() => send(q)}/>}
                 {isAdmin && <IconAction label="Edit" disabled={!['draft', 'sent'].includes(q.status)} reason={['draft', 'sent'].includes(q.status) ? undefined : `${q.status[0].toUpperCase()}${q.status.slice(1)} quotations can't be edited`} onClick={() => startEdit(q)}/>}
                 {isAdmin && q.status==='draft' && <IconAction label="Delete" onClick={() => remove(q)}/>}
@@ -155,6 +165,28 @@ export default function Quotations() {
           )}
         </Table>
       </Card>
+      {rec && (
+        <RecordPanel title="Record client response" onClose={() => setRec(null)}>
+          <div className="p-4 space-y-3">
+            <p>{rec.quotation_number} · {inr(rec.grand_total)}. Use this when the client answered without using the portal. It is logged as recorded by you on their behalf.</p>
+            <label className="block text-sm">Client's answer
+              <select aria-label="Client's answer" className={inputCls} value={recForm.decision} onChange={(e) => setRecForm({ ...recForm, decision: e.target.value })}>
+                <option value="accepted">Accepted</option><option value="rejected">Declined</option>
+              </select>
+            </label>
+            <label className="block text-sm">How did they tell you?
+              <select aria-label="How did they tell you" className={inputCls} value={recForm.method} onChange={(e) => setRecForm({ ...recForm, method: e.target.value })}>
+                <option value="phone">Phone call</option><option value="in_person">In person</option><option value="verbal">Verbal (other)</option><option value="written">Written or paper</option>
+              </select>
+            </label>
+            <label className="block text-sm">Note (optional)
+              <textarea aria-label="Note about the client's answer" className={inputCls} maxLength={500} rows={3} value={recForm.note} onChange={(e) => setRecForm({ ...recForm, note: e.target.value })}/>
+            </label>
+            <ErrorBox error={recError}/>
+            <div className="flex gap-2"><button className={btnCls} disabled={recBusy} onClick={submitRec}>Save response</button><button className={btnGhostCls} onClick={() => setRec(null)}>Cancel</button></div>
+          </div>
+        </RecordPanel>
+      )}
     </div>
   )
 }
