@@ -167,11 +167,6 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('/work-orders/{workOrder}/status', [WorkOrderController::class, 'updateStatus'])->name('work-orders.status')->middleware($ops);
 
             // PDF documents
-            Route::get('/invoices/{invoice}/pdf', [PdfController::class, 'invoice'])->name('invoices.pdf');
-            Route::get('/quotations/{quotation}/pdf', [PdfController::class, 'quotation'])->name('quotations.pdf');
-            Route::get('/tickets/{ticket}/pdf', [PdfController::class, 'ticketPdf'])->name('tickets.pdf');
-            Route::get('/work-orders/{workOrder}/pdf', [PdfController::class, 'workOrder'])->name('work-orders.pdf');
-            Route::get('/events/{event}/closeout-pdf', [PdfController::class, 'closeout'])->name('events.closeout-pdf')->middleware($finance);
 
             // CSV exports
             Route::get('/events/{event}/guests/export', [ExportController::class, 'guestList'])->name('events.guests.export');
@@ -192,6 +187,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::patch('/guests/{guest}', [GuestController::class, 'update'])->middleware($ops);
             Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy')->middleware($admins);
 
+            Route::get('/saved-views', [\App\Http\Controllers\Api\V1\SavedViewController::class, 'index']);
+            Route::post('/saved-views', [\App\Http\Controllers\Api\V1\SavedViewController::class, 'store']);
+            Route::delete('/saved-views/{id}', [\App\Http\Controllers\Api\V1\SavedViewController::class, 'destroy']);
             Route::post('/restore/{type}/{id}', [\App\Http\Controllers\Api\V1\RestoreController::class, 'restore'])->name('restore')->middleware($admins);
 
             // Tickets & Gate Scan
@@ -206,9 +204,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy')->middleware($admins);
         });
 
-            Route::get('/documents/{type}/{id}/record', [\App\Http\Controllers\Api\V1\DocumentsController::class,'show']);
-            Route::get('/documents/{type}/{id}/link', [\App\Http\Controllers\Api\V1\DocumentsController::class,'link']);
-            Route::get('/documents/{type}/{id}/download', [\App\Http\Controllers\Api\V1\DocumentsController::class,'download'])->name('documents.download');
+            Route::get('/documents/{type}/{id}/record', [\App\Http\Controllers\Api\V1\DocumentsController::class,'show'])->whereNumber('id');
+            Route::get('/documents/{type}/{id}/link', [\App\Http\Controllers\Api\V1\DocumentsController::class,'link'])->whereNumber('id');
+            Route::get('/documents/{type}/{id}/download', [\App\Http\Controllers\Api\V1\DocumentsController::class,'download'])->name('documents.download')->whereNumber('id');
             Route::post('/documents/{type}/bulk', [\App\Http\Controllers\Api\V1\DocumentsController::class,'bulk']);
 
 

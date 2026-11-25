@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
-import { API_URL, getToken, getUser } from '../api'
+import { API_URL, api, getToken, getUser } from '../api'
 import { Search, X, ArrowDown, ArrowUp, Download, Bookmark, ChevronLeft, ChevronRight } from 'lucide-react'
 
 export type ListConfig = { endpoint: string; fields: string[]; statuses?: string[]; owner?: boolean; extra?: [string,string][] }
@@ -35,12 +35,14 @@ export function ListScope({children}:{children:ReactNode}) {
 export function FilterBar(){
  const {config,busy}=useList();const [params,setParams]=useSearchParams();const loc=useLocation();const [search,setSearch]=useState(params.get('search')??'');
  const key=`views:${getUser()?.id}:${loc.pathname}`;const [views,setViews]=useState<{name:string;query:string}[]>(()=>JSON.parse(localStorage.getItem(key)??'[]'))
- useEffect(()=>{setViews(JSON.parse(localStorage.getItem(key)??'[]'));setSearch(params.get('search')??'')},[loc.pathname])
+ useEffect(()=>{const local:{name:string;query:string}[]=JSON.parse(localStorage.getItem(key)??'[]');setViews(local);setSearch(params.get('search')??'')
+  // Saved views follow the user across devices: the server copy is merged with anything saved only on this browser.
+  let live=true;api<{data:{name:string;query:string}[]}>(`/saved-views?module=${encodeURIComponent(loc.pathname)}`).then(r=>{if(!live)return;const names=new Set(r.data.map(v=>v.name));const extra=local.filter(v=>!names.has(v.name));extra.forEach(v=>api('/saved-views',{method:'POST',body:{module:loc.pathname,name:v.name,query:v.query}}).catch(()=>{}));const merged=[...r.data.map(v=>({name:v.name,query:v.query})),...extra];setViews(merged);localStorage.setItem(key,JSON.stringify(merged))}).catch(()=>{});return()=>{live=false}},[loc.pathname])
  useEffect(()=>{setSearch(params.get('search')??'')},[params.get('search')])
  const update=(name:string,value:string)=>{const n=new URLSearchParams(window.location.search);value?n.set(name,value):n.delete(name);n.delete('page');setParams(n,{replace:true})}
  useEffect(()=>{const t=setTimeout(()=>{if(search!==(params.get('search')??''))update('search',search)},300);return()=>clearTimeout(t)},[search])
  if(!config)return null
- const save=()=>{const name=prompt('Name this saved view');if(!name?.trim())return;const next=[...views.filter(v=>v.name!==name),{name:name.trim(),query:params.toString()}];setViews(next);localStorage.setItem(key,JSON.stringify(next))}
+ const save=()=>{const name=prompt('Name this saved view');if(!name?.trim())return;const next=[...views.filter(v=>v.name!==name),{name:name.trim(),query:params.toString()}];setViews(next);localStorage.setItem(key,JSON.stringify(next));api('/saved-views',{method:'POST',body:{module:loc.pathname,name:name.trim(),query:params.toString()}}).catch(()=>{})}
  const exportList=async(format:string)=>{try{const p=new URLSearchParams(params);p.set('format',format);const r=await fetch(`${API_URL}${config.endpoint}?${p}`,{headers:{Authorization:`Bearer ${getToken()}`}});if(!r.ok)throw Error();const u=URL.createObjectURL(await r.blob());const a=document.createElement('a');a.href=u;a.download=`${loc.pathname.slice(1)}.${format}`;a.click();URL.revokeObjectURL(u)}catch{alert('Could not export these records. Try again.')}}
  return <section className="filter-bar" aria-label="List filters" aria-busy={busy}>
  <div className="filter-primary"><label className="search-field"><Search size={16}/><input aria-label="Search this module" placeholder="Search this module" value={search} onChange={e=>setSearch(e.target.value)}/></label>

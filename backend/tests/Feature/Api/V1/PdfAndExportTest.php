@@ -37,7 +37,7 @@ class PdfAndExportTest extends TestCase
         $auth = $this->admin();
         $ticket = Ticket::firstOrFail();
 
-        $this->get('/api/v1/tickets/'.$ticket->id.'/pdf', $auth)
+        $this->signedPdf('tickets', $ticket->id, $auth)
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
 
@@ -53,7 +53,7 @@ class PdfAndExportTest extends TestCase
         $auth = $this->admin();
         $wo = VendorAssignment::firstOrFail();
 
-        $this->get('/api/v1/work-orders/'.$wo->id.'/pdf', $auth)
+        $this->signedPdf('work-orders', $wo->id, $auth)
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
     }
@@ -63,7 +63,7 @@ class PdfAndExportTest extends TestCase
         $auth = $this->admin();
         $event = Event::firstOrFail();
 
-        $this->get('/api/v1/events/'.$event->id.'/closeout-pdf', $auth)
+        $this->signedPdf('events', $event->id, $auth)
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
     }
@@ -101,12 +101,12 @@ class PdfAndExportTest extends TestCase
         $this->assertNotNull($company->fresh()->logo_url);
 
         $quotation = Quotation::firstOrFail();
-        $this->get('/api/v1/quotations/'.$quotation->id.'/pdf', $auth)
+        $this->signedPdf('quotations', $quotation->id, $auth)
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
 
         $invoice = Invoice::firstOrFail();
-        $this->get('/api/v1/invoices/'.$invoice->id.'/pdf', $auth)
+        $this->signedPdf('invoices', $invoice->id, $auth)
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
     }

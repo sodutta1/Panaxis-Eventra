@@ -283,12 +283,12 @@ class ApiV1Test extends TestCase
         $invoiceId = $this->getJson('/api/v1/invoices', $this->auth($token))->json('data.0.id');
         $quotationId = $this->getJson('/api/v1/quotations', $this->auth($token))->json('data.0.id');
 
-        $inv = $this->get("/api/v1/invoices/{$invoiceId}/pdf", $this->auth($token));
+        $inv = $this->signedPdf('invoices', $invoiceId, $this->auth($token));
         $inv->assertOk();
         $this->assertSame('application/pdf', $inv->headers->get('content-type'));
         $this->assertStringStartsWith('%PDF', $inv->getContent());
 
-        $qtn = $this->get("/api/v1/quotations/{$quotationId}/pdf", $this->auth($token));
+        $qtn = $this->signedPdf('quotations', $quotationId, $this->auth($token));
         $qtn->assertOk();
         $this->assertStringStartsWith('%PDF', $qtn->getContent());
     }

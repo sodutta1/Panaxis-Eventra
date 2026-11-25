@@ -123,7 +123,7 @@ class InputAndConsistencyTest extends TestCase
         $payload['items'] = array_fill(0, 65, ['description' => str_repeat('Long unbroken description ', 6), 'quantity' => 1, 'unit_price' => 10]);
         $payload['items'][0]['description'] = str_repeat('W', 255);
         $id = $this->postJson('/api/v1/invoices', $payload)->assertCreated()->json('data.id');
-        $pdf = $this->get('/api/v1/invoices/'.$id.'/pdf')->assertOk();
+        $pdf = $this->signedPdf('invoices', $id)->assertOk();
         $this->assertStringStartsWith('%PDF-', $pdf->getContent());
         $this->assertSame('application/pdf', $pdf->headers->get('Content-Type'));
         file_put_contents('/tmp/eventra-edge-invoice.pdf', $pdf->getContent());
@@ -135,7 +135,7 @@ class InputAndConsistencyTest extends TestCase
             'items' => array_fill(0, 35, ['item_name' => 'Café ₹ service with a readable description', 'quantity' => 1, 'unit_price' => 10])];
         $payload['items'][0]['item_name'] = str_repeat('W', 255);
         $id = $this->postJson('/api/v1/quotations', $payload)->assertCreated()->json('data.id');
-        $pdf = $this->get('/api/v1/quotations/'.$id.'/pdf')->assertOk();
+        $pdf = $this->signedPdf('quotations', $id)->assertOk();
         $this->assertStringStartsWith('%PDF-', $pdf->getContent());
         file_put_contents('/tmp/eventra-edge-quotation.pdf', $pdf->getContent());
     }

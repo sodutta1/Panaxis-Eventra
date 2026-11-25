@@ -85,7 +85,7 @@ class AuthorizationMatrixTest extends TestCase
         $ticket = Ticket::firstOrFail();
         $this->postJson('/api/v1/tickets/verify', ['token' => $ticket->qr_token])->assertNotFound();
         foreach (['invoices' => Invoice::firstOrFail()->id, 'quotations' => Quotation::firstOrFail()->id] as $type => $id) {
-            $this->getJson('/api/v1/'.$type.'/'.$id.'/pdf')->assertNotFound();
+            $this->getJson('/api/v1/documents/'.$type.'/'.$id.'/link')->assertNotFound();
         }
     }
 
