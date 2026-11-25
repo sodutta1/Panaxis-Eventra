@@ -81,7 +81,7 @@ class VendorDeleteGuardTest extends TestCase
 
         $this->deleteJson("/api/v1/vendors/{$vendor->id}", [], $auth)->assertOk();
 
-        $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);
+        $this->assertSoftDeleted('vendors', ['id' => $vendor->id]);
     }
 
     public function test_vendor_without_work_orders_can_be_deleted(): void
@@ -91,6 +91,6 @@ class VendorDeleteGuardTest extends TestCase
 
         $this->deleteJson("/api/v1/vendors/{$vendor->id}", [], $auth)->assertOk();
 
-        $this->assertDatabaseMissing('vendors', ['id' => $vendor->id]);
+        $this->assertSoftDeleted('vendors', ['id' => $vendor->id]);
     }
 }

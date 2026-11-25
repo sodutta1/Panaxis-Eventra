@@ -192,6 +192,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::patch('/guests/{guest}', [GuestController::class, 'update'])->middleware($ops);
             Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy')->middleware($admins);
 
+            Route::post('/restore/{type}/{id}', [\App\Http\Controllers\Api\V1\RestoreController::class, 'restore'])->name('restore')->middleware($admins);
+
             // Tickets & Gate Scan
             Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
             Route::get('/tickets/types', [TicketController::class, 'types'])->name('tickets.types.index');

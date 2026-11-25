@@ -1,8 +1,10 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Event extends Model {
+    use SoftDeletes;
     public const STATUSES = ['proposed', 'in_planning', 'confirmed', 'in_progress', 'completed', 'cancelled'];
 
     // Forward lifecycle stages in rank order; an event may move forward

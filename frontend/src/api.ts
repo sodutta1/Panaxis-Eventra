@@ -77,6 +77,10 @@ export async function api<T = any>(
     if (res.status === 401) clearSession()
     throw new ApiError(res.status, (json as any).message ?? `Request failed (${res.status})`, (json as any).errors)
   }
+  if ((options.method ?? 'GET') === 'DELETE') {
+    const m = path.split('?')[0].match(/^\/(leads|clients|venues|vendors|guests|events|quotations)\/(\d+)$/)
+    if (m) window.dispatchEvent(new CustomEvent('record-deleted', { detail: { type: m[1], id: Number(m[2]) } }))
+  }
   return json as T
 }
 

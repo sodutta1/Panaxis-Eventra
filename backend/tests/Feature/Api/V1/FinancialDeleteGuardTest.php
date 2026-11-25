@@ -93,7 +93,7 @@ class FinancialDeleteGuardTest extends TestCase
 
         $this->deleteJson("/api/v1/clients/{$client->id}", [], $auth)->assertOk();
 
-        $this->assertDatabaseMissing('clients', ['id' => $client->id]);
+        $this->assertSoftDeleted('clients', ['id' => $client->id]);
     }
 
     public function test_unpaid_invoice_is_retained_as_a_financial_record(): void

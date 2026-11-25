@@ -131,7 +131,11 @@ class QuotationController extends Controller
 
     public function destroy(Request $request, int $quotation)
     {
-        $this->findForCompany(Quotation::query(), $request, $quotation)->delete();
+        $model = $this->findForCompany(Quotation::query(), $request, $quotation);
+        if ($model->status !== 'draft') {
+            return response()->json(['message' => 'Only draft quotations can be deleted. This one is '.$model->status.'.'], 409);
+        }
+        $model->delete();
 
         return response()->json(['message' => 'Quotation deleted.']);
     }

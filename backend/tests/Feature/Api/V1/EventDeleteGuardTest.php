@@ -114,6 +114,6 @@ class EventDeleteGuardTest extends TestCase
 
         $this->deleteJson("/api/v1/events/{$event->id}", [], $auth)->assertOk();
 
-        $this->assertDatabaseMissing('events', ['id' => $event->id]);
+        $this->assertSoftDeleted('events', ['id' => $event->id]);
     }
 }
