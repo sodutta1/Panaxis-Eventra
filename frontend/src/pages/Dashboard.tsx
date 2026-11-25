@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ArrowDown, ArrowUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { api, allOptions } from '../api'
 import { Badge, Card, ErrorBox, PageHeader } from '../components/ui'
@@ -28,11 +29,78 @@ const PRIORITY_PILL: Record<string, string> = {
   low: 'bg-slate-200 text-slate-600',
 }
 
+type SortDir = 'asc' | 'desc'
+const PRIORITY_RANK: Record<string, number> = { urgent: 0, high: 1, medium: 2, low: 3 }
+const PAGE = 6
+
+function useControls<T>(rows: T[], text: (r: T) => string, sortValue: (r: T, key: string) => string | number, initial: string) {
+  const [q, setQ] = useState('')
+  const [key, setKey] = useState(initial)
+  const [dir, setDir] = useState<SortDir>('asc')
+  const [limit, setLimit] = useState(PAGE)
+  const visible = useMemo(() => {
+    const needle = q.trim().toLowerCase()
+    const filtered = needle ? rows.filter((r) => text(r).toLowerCase().includes(needle)) : rows
+    const sorted = [...filtered].sort((a, b) => {
+      const x = sortValue(a, key), y = sortValue(b, key)
+      const c = typeof x === 'number' && typeof y === 'number' ? x - y : String(x).localeCompare(String(y))
+      return dir === 'asc' ? c : -c
+    })
+    return { total: filtered.length, rows: sorted.slice(0, limit) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, q, key, dir, limit])
+  const toggle = (k: string) => {
+    if (k === key) setDir(dir === 'asc' ? 'desc' : 'asc')
+    else { setKey(k); setDir('asc') }
+  }
+  return { q, setQ: (v: string) => { setQ(v); setLimit(PAGE) }, key, dir, toggle, visible, more: () => setLimit(limit + PAGE), less: () => setLimit(PAGE), limit }
+}
+
+function SortTh({ label, k, c, className = '' }: { label: string; k: string; c: { key: string; dir: SortDir; toggle: (k: string) => void }; className?: string }) {
+  const active = c.key === k
+  return (
+    <th className={`py-2.5 font-bold ${className}`} aria-sort={active ? (c.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
+      <button type="button" onClick={() => c.toggle(k)} className="inline-flex items-center gap-1 uppercase tracking-wide font-bold">
+        {label}
+        {active && (c.dir === 'asc' ? <ArrowUp size={12} aria-hidden /> : <ArrowDown size={12} aria-hidden />)}
+      </button>
+    </th>
+  )
+}
+
+function ListFooter({ c }: { c: { visible: { total: number; rows: unknown[] }; more: () => void; less: () => void; limit: number } }) {
+  const shown = c.visible.rows.length
+  if (c.visible.total <= PAGE) return null
+  return (
+    <div className="flex items-center justify-between pt-3 text-xs text-pamuted">
+      <span>Showing {shown} of {c.visible.total}</span>
+      <span className="flex gap-2">
+        {shown < c.visible.total && <button type="button" onClick={c.more} className="font-bold text-pa-700 hover:underline">Show more</button>}
+        {c.limit > PAGE && <button type="button" onClick={c.less} className="font-bold text-pa-700 hover:underline">Show fewer</button>}
+      </span>
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const [data, setData] = useState<DashData | null>(null)
   const [eventNames, setEventNames] = useState<Record<number, string>>({})
   const [error, setError] = useState<unknown>(null)
   const [busyTask, setBusyTask] = useState<number | null>(null)
+  const evRows = useMemo(() => data?.upcoming_events ?? [], [data])
+  const taskRows = useMemo(() => data?.pending_tasks ?? [], [data])
+  const evC = useControls<EventItem>(
+    evRows,
+    (e) => `${e.title} ${e.client?.name ?? ''} ${e.venue?.name ?? ''} ${e.status}`,
+    (e, k) => (k === 'title' ? e.title : k === 'client' ? e.client?.name ?? '' : k === 'venue' ? e.venue?.name ?? '' : k === 'status' ? e.status : String(e.start_date)),
+    'date',
+  )
+  const taskC = useControls<Task>(
+    taskRows,
+    (t) => `${t.title} ${eventNames[t.event_id ?? -1] ?? ''} ${t.assigned_user?.name ?? ''} ${t.priority}`,
+    (t, k) => (k === 'title' ? t.title : k === 'event' ? eventNames[t.event_id ?? -1] ?? '' : k === 'owner' ? t.assigned_user?.name ?? '' : k === 'priority' ? PRIORITY_RANK[t.priority] ?? 9 : String((t as { due_date?: string }).due_date ?? '9999')),
+    'priority',
+  )
 
   const load = useCallback(() => {
     api<{ data: DashData }>('/dashboard').then((r) => setData(r.data)).catch(setError)
@@ -95,20 +163,23 @@ export default function Dashboard() {
       </div>
 
       <Card className="p-5 mb-5">
-        <h2 className="text-[16px] font-bold text-pa-900 mb-3">Upcoming events</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 className="text-[16px] font-bold text-pa-900">Upcoming events</h2>
+          <input type="search" aria-label="Search upcoming events" placeholder="Search events" value={evC.q} onChange={(e) => evC.setQ(e.target.value)} className="rounded-full border border-paline px-3 py-1.5 text-xs" />
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[13.5px]">
             <thead>
               <tr className="text-left text-[11.5px] uppercase tracking-wide text-pamuted border-b border-paline">
-                <th className="py-2.5 pr-4 font-bold">Event</th>
-                <th className="py-2.5 pr-4 font-bold">Client</th>
-                <th className="py-2.5 pr-4 font-bold">Date</th>
-                <th className="py-2.5 pr-4 font-bold">Venue</th>
-                <th className="py-2.5 font-bold">Status</th>
+                <SortTh label="Event" k="title" c={evC} className="pr-4" />
+                <SortTh label="Client" k="client" c={evC} className="pr-4" />
+                <SortTh label="Date" k="date" c={evC} className="pr-4" />
+                <SortTh label="Venue" k="venue" c={evC} className="pr-4" />
+                <SortTh label="Status" k="status" c={evC} className="" />
               </tr>
             </thead>
             <tbody>
-              {data.upcoming_events.map((e) => (
+              {evC.visible.rows.map((e) => (
                 <tr key={e.id} className="border-b border-slate-100 last:border-0">
                   <td className="py-3 pr-4">
                     <Link to={`/events/${e.id}`} className="font-semibold text-pa-700 hover:text-pa-700 hover:underline">
@@ -128,33 +199,37 @@ export default function Dashboard() {
                   </td>
                 </tr>
               ))}
-              {data.upcoming_events.length === 0 && (
+              {evC.visible.rows.length === 0 && (
                 <tr>
                   <td colSpan={5} className="py-6 text-center text-pamuted">
-                    No upcoming events
+                    {evC.q ? 'No events match your search' : 'No upcoming events'}
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+        <ListFooter c={evC} />
       </Card>
 
       <Card className="p-5">
-        <h2 className="text-[16px] font-bold text-pa-900 mb-3">Urgent tasks</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 className="text-[16px] font-bold text-pa-900">Urgent tasks</h2>
+          <input type="search" aria-label="Search tasks" placeholder="Search tasks" value={taskC.q} onChange={(e) => taskC.setQ(e.target.value)} className="rounded-full border border-paline px-3 py-1.5 text-xs" />
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-[13.5px]">
             <thead>
               <tr className="text-left text-[11.5px] uppercase tracking-wide text-pamuted border-b border-paline">
-                <th className="py-2.5 pr-4 font-bold">Task</th>
-                <th className="py-2.5 pr-4 font-bold">Event</th>
-                <th className="py-2.5 pr-4 font-bold">Owner</th>
-                <th className="py-2.5 pr-4 font-bold">Priority</th>
+                <SortTh label="Task" k="title" c={taskC} className="pr-4" />
+                <SortTh label="Event" k="event" c={taskC} className="pr-4" />
+                <SortTh label="Owner" k="owner" c={taskC} className="pr-4" />
+                <SortTh label="Priority" k="priority" c={taskC} className="pr-4" />
                 <th className="py-2.5 font-bold text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {data.pending_tasks.map((t) => (
+              {taskC.visible.rows.map((t) => (
                 <tr key={t.id} className="border-b border-slate-100 last:border-0">
                   <td className="py-3 pr-4 font-medium text-ink">{t.title}</td>
                   <td className="py-3 pr-4 text-slate-600">{eventNames[t.event_id ?? -1] ?? '-'}</td>
@@ -179,16 +254,17 @@ export default function Dashboard() {
                   </td>
                 </tr>
               ))}
-              {data.pending_tasks.length === 0 && (
+              {taskC.visible.rows.length === 0 && (
                 <tr>
                   <td colSpan={5} className="py-6 text-center text-pamuted">
-                    Nothing pending. All caught up.
+                    {taskC.q ? 'No tasks match your search' : 'Nothing pending. All caught up.'}
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+        <ListFooter c={taskC} />
       </Card>
 
       <div className="mt-5 text-xs text-pamuted">

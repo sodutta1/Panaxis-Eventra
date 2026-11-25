@@ -46,13 +46,13 @@ class DashboardController extends Controller
                 'upcoming_events' => EventResource::collection(
                     $company(Event::with(['client', 'venue', 'category', 'manager']))
                         ->where('start_date', '>=', Carbon::now()->subDays(1))
-                        ->orderBy('start_date', 'asc')->take(6)->get()
+                        ->orderBy('start_date', 'asc')->take(30)->get()
                 ),
                 'pending_tasks' => TaskResource::collection(
                     EventTask::with('assignedUser')
                         ->whereIn('status', ['pending', 'in_progress'])
                         ->whereHas('event', fn ($q) => $q->where('company_id', $companyId))
-                        ->orderBy('due_date', 'asc')->take(6)->get()
+                        ->orderBy('due_date', 'asc')->take(30)->get()
                 ),
                 'events_by_category' => Event::query()
                     ->where('events.company_id', $companyId)
